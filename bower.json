@@ -1,12 +1,22 @@
 {
   "name": "streamhub-wall",
+<<<<<<< HEAD
   "version": "2.6.0",
+=======
+  "version": "3.0.0",
+>>>>>>> upgrade bower, streamhub-sdk, dep on streamhub-input
   "main": [
     "./src/main.js"
   ],
   "dependencies": {
+<<<<<<< HEAD
     "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~v2.11",
     "cajon": "git://github.com/requirejs/cajon.git#~0.1.11"
+=======
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~v2.9",
+    "cajon": "git://github.com/requirejs/cajon.git#0.1.11",
+    "streamhub-input": "Livefyre/streamhub-input#combine_inputs"
+>>>>>>> upgrade bower, streamhub-sdk, dep on streamhub-input
   },
   "devDependencies": {
     "jasmine": "1.3.1",
@@ -27,6 +37,10 @@
   },
   "resolutions": {
     "view": "~1.1",
+<<<<<<< HEAD
     "base64": "~0.4.0"
+=======
+    "livefyre-bootstrap": "1.0.0"
+>>>>>>> upgrade bower, streamhub-sdk, dep on streamhub-input
   }
 }
