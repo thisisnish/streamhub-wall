@@ -5,7 +5,11 @@ var wallComponentTemplate = require('hgn!./templates/wall-component');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/content-editor/button');
 
-// Construct a MediaWall component
+/**
+ * LiveMediaWall Component
+ * It has a wall-view and a streamhub-input
+ * @constructor
+ */
 var WallComponent = module.exports = function (opts) {
     View.apply(this, arguments);
     opts = opts || {};
