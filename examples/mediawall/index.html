@@ -22,7 +22,7 @@
             'streamhub-sdk/collection',
             'streamhub-sdk/content',
             'streamhub-wall'
-        ],function (Collection, Content, MediaWallView) {
+        ],function (Collection, Content, LiveMediaWall) {
             var opts = {
                 "network": "labs-t402.fyre.co",
                 "siteId": "303827",
@@ -32,26 +32,14 @@
                 "environment": "t402.livefyre.com"
             };
 
-            var view = window.view = new MediaWallView({
-                el: document.getElementById("view"),
-                minContentWidth: 300,
-                initial: 50
-                ,showMore: 5
-                //,columns: 6
-                //,modal: false
-            });
+
 
             var collection = new Collection(opts);
-            window.archive = collection.createArchive();
-            archive.pipe(view.more);
 
-            var count = 10;
-            setInterval(function () {
-                var rand = Math.floor((Math.random()*2)+1);
-                var body = rand == 1 ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere porttitor diam sit amet laoreet. Etiam eu eleifend odio.' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere porttitor diam sit amet laoreet. Etiam eu eleifend odio. Suspendisse convallis molestie euismod. Aenean rutrum sagittis dui nec pharetra.';
-                if (count > 0) { view.write(new Content({ body: new Date() + body })); }
-                count--;
-            }, 1000);
+            var view = window.view = new LiveMediaWall({
+                el: document.getElementById("view"),
+                collection: collection
+            });
         });
         </script>
     </body>
