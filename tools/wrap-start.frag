@@ -1,8 +1,10 @@
 (function (root, factory) {
     if ((typeof Livefyre === 'object') && (typeof Livefyre.define === 'function') && Livefyre.define.amd) {
+        if (Livefyre.require.almond) {
+            return Livefyre.define('streamhub-wall', [], factory);
+        }
         // Livefyre.define is defined by https://github.com/Livefyre/require
         Livefyre.define([], factory);
-
     } else if (typeof define === 'function' && define.amd) {
         //Allow using this built library as an AMD module
         //in another project. That other project will only

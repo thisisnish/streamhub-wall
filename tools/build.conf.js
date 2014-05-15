@@ -27,6 +27,9 @@
     startFile: 'wrap-start.frag',
     endFile: 'wrap-end.frag'
   },
+  css: {
+    transformEach: './tools/prefix-css'
+  },
   generateSourceMaps: true,
   onBuildRead: function(moduleName, path, contents) {
     switch (moduleName) {

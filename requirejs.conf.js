@@ -13,6 +13,11 @@ require.config({
     json: 'lib/requirejs-plugins/src/json',
     debug: 'lib/debug/debug'
   },
+  map: {
+    '*': {
+      css: 'lib/require-css/css'
+    }
+  },
   packages: [{
     name: "streamhub-wall",
     location: "./src"

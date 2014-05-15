@@ -2,6 +2,7 @@ var inherits = require('inherits');
 var View = require('view');
 var WallView = require('./wall-view');
 var wallComponentTemplate = require('hgn!./templates/wall-component');
+var wallComponentStyles = require('css!./styles/wall-component.css');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/content-editor/button');
 
