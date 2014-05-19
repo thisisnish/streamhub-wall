@@ -13,7 +13,7 @@ require.config({
     json: 'lib/requirejs-plugins/src/json',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
-    observer: 'lib/event-emitter/src/observer'
+    observer: 'lib/observer/src/observer'
   },
   packages: [{
     name: "streamhub-wall",
