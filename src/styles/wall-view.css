@@ -1,6 +1,7 @@
 .streamhub-media-wall-view {
     position:relative;
 }
+
 .streamhub-media-wall-view .hub-wall-column {
     display: inline-block;
     vertical-align: top;

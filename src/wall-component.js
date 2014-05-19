@@ -1,6 +1,7 @@
 var inherits = require('inherits');
 var View = require('view');
 var WallView = require('./wall-view');
+var WallHeaderView = require('./wall-header-view');
 var wallComponentTemplate = require('hgn!./templates/wall-component');
 var wallComponentStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:./styles/wall-component.css');
 var inputButtonStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:streamhub-input/../dist/streamhub-input.min.css');
@@ -16,15 +17,12 @@ var PostContentButton = require('streamhub-input/javascript/content-editor/butto
 var WallComponent = module.exports = function (opts) {
     View.apply(this, arguments);
     opts = opts || {};
+    this._headerView = opts.headerView || new WallHeaderView();
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
         initial: opts.initial,
         showMore: opts.showMore,
         modal: opts.modal
-    });
-    // TODO: Put in app header
-    this._postButton = opts.postButton || new PostContentButton({
-        mediaEnabled: true
     });
     if (opts.collection) {
         this.setCollection(opts.collection);
@@ -36,8 +34,6 @@ var WallComponent = module.exports = function (opts) {
 
 inherits(WallComponent, View);
 
-WallComponent.prototype.template = wallComponentTemplate;
-
 WallComponent.prototype.setElement = function () {
     View.prototype.setElement.apply(this, arguments);
     this.$el.attr('data-lf-module','streamhub-wall#3.0.0');
@@ -47,13 +43,29 @@ WallComponent.prototype.setElement = function () {
  * Render the WallComponent
  */
 WallComponent.prototype.render = function () {
+    var el = this.el;
+    var subviews = [this._headerView, this._wallView];
+
     View.prototype.render.apply(this, arguments);
-    var $wallEl = this.$("*[data-lf-view='streamhub-wall/wall-view']");
-    this._wallView.setElement($wallEl);
-    this._wallView.render();
-    var $postButtonContainer = this.$('.hub-wall-post-button');
-    $postButtonContainer.append(this._postButton.$el);
-    this._postButton.render();
+
+    // Clear children
+    while (el.firstChild) {
+        el.removeChild(el.firstChild);
+    }
+
+    // append subviews
+    var frag = document.createDocumentFragment();
+    subviews.forEach(function (view) {
+        frag.appendChild(view.el);
+    });
+    el.appendChild(frag);
+
+    // then render them
+    subviews.forEach(function (view) {
+        view.render();
+    });
+
+    return el;
 };
 
 /**
@@ -66,6 +78,5 @@ WallComponent.prototype.setCollection = function (collection) {
     }
     this._collection = collection;
     this._collection.pipe(this._wallView);
-    // pipe zeh button
-    this._postButton.pipe(collection);
+    this._headerView.setCollection(collection);
 };

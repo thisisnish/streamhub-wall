@@ -2,7 +2,7 @@ define([
     'streamhub-sdk/jquery',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-sdk/content/views/content-view',
-    'text!streamhub-wall/style.css',
+    'text!./styles/wall-view.css',
     'inherits'
 ], function($, ContentListView, ContentView, MEDIA_WALL_CSS, inherits) {
     'use strict';
@@ -166,13 +166,14 @@ define([
         this.$el
             .addClass(this.mediaWallClassName)
             .addClass('streamhub-media-wall-' + this._id);
-
-        this.fitColumns();
     };
 
     MediaWallView.prototype.render = function () {
         ContentListView.prototype.render.call(this);
         var columnView;
+        // ensure we know the correct number of columns
+        this.fitColumns();
+        // then render the columns
         if (this._columnViews.length === 0) {
             for (var i=0; i < this._numberOfColumns; i++) {
                 columnView = this._createColumnView();
