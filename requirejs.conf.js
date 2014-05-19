@@ -11,12 +11,9 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    debug: 'lib/debug/debug'
-  },
-  map: {
-    '*': {
-      css: 'lib/require-css/css'
-    }
+    debug: 'lib/debug/debug',
+    rework: 'lib/rework/rework',
+    observer: 'lib/event-emitter/src/observer'
   },
   packages: [{
     name: "streamhub-wall",
@@ -61,6 +58,10 @@ require.config({
   },{
     name: 'streamhub-editor/templates',
     location: 'lib/streamhub-editor/src/templates'
+  },{
+    name: "css",
+    location: "lib/require-css",
+    main: "css"
   }],
   shim: {
     jquery: {
@@ -75,6 +76,12 @@ require.config({
     },
     'jasmine-jquery': {
         deps: ['jquery', 'jasmine']
+    },
+    rework: {
+        exports: 'rework'
     }
-  }
+  },
+  css: {
+    transformEach: './tools/prefix-css'
+  },
 });

@@ -12,7 +12,8 @@
   stubModules: ['text', 'hgn', 'json'],
   out: "../dist/streamhub-wall.min.js",
   pragmasOnSave: {
-    excludeHogan: true
+    excludeHogan: true,
+    excludeRequireCss: true
   },
   cjsTranslate: true,
   optimize: "none",
@@ -26,9 +27,6 @@
   wrap: {
     startFile: 'wrap-start.frag',
     endFile: 'wrap-end.frag'
-  },
-  css: {
-    transformEach: './tools/prefix-css'
   },
   generateSourceMaps: true,
   onBuildRead: function(moduleName, path, contents) {
