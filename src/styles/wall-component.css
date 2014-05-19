@@ -1,3 +1,5 @@
-body {
-    background-color: blue;
-}
+/**
+ * The rules in this file will be inserted at runtime
+ * by wall-component. But they will all be prefixed
+ * with [data-lf-module="streamhub-wall#{version}"]
+ */

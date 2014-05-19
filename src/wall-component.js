@@ -2,9 +2,11 @@ var inherits = require('inherits');
 var View = require('view');
 var WallView = require('./wall-view');
 var wallComponentTemplate = require('hgn!./templates/wall-component');
-var wallComponentStyles = require('css!./styles/wall-component.css');
+var wallComponentStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:./styles/wall-component.css');
+var inputButtonStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:streamhub-input/../dist/streamhub-input.min.css');
+// var wallComponentStyles1 = require('css!./style.css');
 var Passthrough = require('stream/passthrough');
-var PostContentButton = require('streamhub-input/content-editor/button');
+var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 
 /**
  * LiveMediaWall Component
@@ -21,7 +23,9 @@ var WallComponent = module.exports = function (opts) {
         modal: opts.modal
     });
     // TODO: Put in app header
-    this._postButton = opts.postButton || new PostContentButton();
+    this._postButton = opts.postButton || new PostContentButton({
+        mediaEnabled: true
+    });
     if (opts.collection) {
         this.setCollection(opts.collection);
     }
@@ -34,13 +38,18 @@ inherits(WallComponent, View);
 
 WallComponent.prototype.template = wallComponentTemplate;
 
+WallComponent.prototype.setElement = function () {
+    View.prototype.setElement.apply(this, arguments);
+    this.$el.attr('data-lf-module','streamhub-wall#3.0.0');
+};
+
 /**
  * Render the WallComponent
  */
 WallComponent.prototype.render = function () {
     View.prototype.render.apply(this, arguments);
-    var $wallContainer = this.$("*[data-lf-view='streamhub-wall/wall-view']");
-    $wallContainer.append(this._wallView.$el);
+    var $wallEl = this.$("*[data-lf-view='streamhub-wall/wall-view']");
+    this._wallView.setElement($wallEl);
     this._wallView.render();
     var $postButtonContainer = this.$('.hub-wall-post-button');
     $postButtonContainer.append(this._postButton.$el);
@@ -57,4 +66,6 @@ WallComponent.prototype.setCollection = function (collection) {
     }
     this._collection = collection;
     this._collection.pipe(this._wallView);
+    // pipe zeh button
+    this._postButton.pipe(collection);
 };

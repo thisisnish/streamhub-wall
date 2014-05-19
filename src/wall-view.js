@@ -172,9 +172,7 @@ define([
 
     MediaWallView.prototype.render = function () {
         ContentListView.prototype.render.call(this);
-
         var columnView;
-        debugger;
         if (this._columnViews.length === 0) {
             for (var i=0; i < this._numberOfColumns; i++) {
                 columnView = this._createColumnView();
@@ -194,7 +192,6 @@ define([
      * @param opts {Object}
      */
     MediaWallView.prototype.fitColumns = function (opts) {
-        debugger;
         if (this._containerInnerWidth === this.$el.innerWidth()) {
             return;
         }
