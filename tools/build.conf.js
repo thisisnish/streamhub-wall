@@ -2,7 +2,8 @@
   mainConfigFile: '../requirejs.conf.js',
   paths: {
     jquery: 'lib/jquery/jquery.min',
-    almond: 'lib/almond/almond'
+    almond: 'lib/almond/almond',
+    auth: 'lib/streamhub-sdk/tools/auth-stub'
   },
   baseUrl: '..',
   name: "streamhub-wall",

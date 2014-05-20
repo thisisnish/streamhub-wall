@@ -82,6 +82,9 @@ require.config({
     }
   },
   css: {
-    transformEach: './tools/prefix-css'
+    transformEach: {
+      requirejs: './tools/prefix-css-requirejs',
+      node: './tools/prefix-css-node'
+    }
   },
 });

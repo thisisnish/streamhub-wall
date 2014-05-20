@@ -24,7 +24,7 @@
             var LiveMediaWall = Livefyre.require('streamhub-wall');
             var auth = Livefyre.auth;
 
-            // auth.delegate(auth.createDelegate('http://livefyre.com'));
+            auth.delegate(auth.createDelegate('http://livefyre.com'));
 
             var collection = new (SDK.Collection)({
                 "network": "livefyre.com",

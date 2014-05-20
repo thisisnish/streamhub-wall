@@ -26,5 +26,11 @@
       "https://raw.github.com/Livefyre/streamhub-wall/master/images/mediawall-thumbprev-700x525_2.png",
       "https://raw.github.com/Livefyre/streamhub-wall/master/images/mediawall-thumbprev-700x525_3.png"
     ]
+  },
+  "resolutions": {
+    "livefyre-bootstrap": "~1.0",
+    "jquery": "1.10.1",
+    "view": "~1.2",
+    "streamhub-sdk": "~2.10"
   }
 }

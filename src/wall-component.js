@@ -3,9 +3,8 @@ var View = require('view');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
 var wallComponentTemplate = require('hgn!./templates/wall-component');
-var wallComponentStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:./styles/wall-component.css');
-var inputButtonStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:streamhub-input/../dist/streamhub-input.min.css');
-// var wallComponentStyles1 = require('css!./style.css');
+var wallComponentStyles = require('css!?prefix:./styles/wall-component.css');
+var inputButtonStyles = require('css!?prefix:streamhub-input/../dist/streamhub-input.min.css');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 
