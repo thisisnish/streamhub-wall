@@ -12,7 +12,10 @@ module.exports = function (packageJson, rework, css, params) {
     }
     // Unless specified with params.prefix, prefix all css rules with
     // [data-lf-module="streamhub-wall#VERSION"]
-    var prefix = params.prefix || attrSelector('data-lf-module', packageName(packageJson));
+    var prefix = params.prefix;
+    if (prefix === 'streamhubWallPackageVersion') {
+        prefix = attrSelector('data-lf-module', packageName(packageJson));
+    }
     if ( ! prefix) {
         return css;
     }
