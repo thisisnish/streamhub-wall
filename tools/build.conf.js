@@ -12,6 +12,7 @@
   ],
   stubModules: ['text', 'hgn', 'json'],
   out: "../dist/streamhub-wall.min.js",
+  separateCSS: true,
   pragmasOnSave: {
     excludeHogan: true,
     excludeRequireCss: true
