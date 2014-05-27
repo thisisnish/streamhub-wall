@@ -1,8 +1,7 @@
 var auth = require('auth');
 var inherits = require('inherits');
 var View = require('view');
-var inputButtonStyles = require('css!?prefix=[data-lf-module=%22streamhub-wall#3.0.0%22]:streamhub-input/../dist/streamhub-input.min.css');
-// var wallComponentStyles1 = require('css!./style.css');
+var inputButtonStyles = require('css!?prefix=streamhubWallPackageVersion:streamhub-input/../dist/streamhub-input.min.css');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 
