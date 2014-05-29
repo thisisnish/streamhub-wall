@@ -26,8 +26,9 @@ define([
         this._autoFitColumns = true;
         this._contentWidth = opts.minContentWidth || 300;
         this._columnViews = [];
-        this._containerInnerWidth = 0;
+        this._containerInnerWidth = null;
         this._columnHeights = {};
+        this._numberOfColumns = null;
         this._animate = opts.animate === undefined ? true : opts.animate;
 
         this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.shortestColumn;
@@ -40,8 +41,6 @@ define([
         if (opts.columns && typeof opts.columns === 'number') {
             this._autoFitColumns = false;
             this.setColumns(opts.columns);
-        } else {
-            this.setColumns(1);
         }
 
         ContentListView.call(this, opts);
@@ -180,9 +179,13 @@ define([
     MediaWallView.prototype.render = function () {
         ContentListView.prototype.render.call(this);
 
+        if (this._numberOfColumns === null && this._autoFitColumns) {
+            this.fitColumns();
+        }
+
         var columnView;
 
-        if (this._columnViews.length === 0) {
+        if (this._columnViews.length !== this._numberOfColumns) {
             for (var i=0; i < this._numberOfColumns; i++) {
                 columnView = this._createColumnView();
                 this._attachColumnView(columnView);
@@ -211,8 +214,9 @@ define([
         }
 
         this._containerInnerWidth = latestWidth;
-        var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10) || 1;
-        this.setColumns(numColumns);
+        var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10);
+        // Always set to at least one column
+        this.setColumns(numColumns || 1);
     };
 
     /**
