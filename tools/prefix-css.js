@@ -14,7 +14,7 @@ module.exports = function (packageJson, rework, css, params) {
     // [data-lf-module="streamhub-wall#VERSION"]
     var prefix = params.prefix;
     if (prefix === 'streamhubWallPackageVersion') {
-        prefix = attrSelector('data-lf-module', packageName(packageJson));
+        prefix = attrSelector('data-lf-package', packageName(packageJson));
     }
     if ( ! prefix) {
         return css;
