@@ -11,8 +11,9 @@
   "devDependencies": {
     "jasmine": "1.3.1",
     "jasmine-jquery": "1.6.0",
-    "almond": "0.2.9",
-    "livefyre-auth": "Livefyre/livefyre-auth"
+    "almond": "~0.2.9",
+    "livefyre-auth": "Livefyre/livefyre-auth",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#~v2.8"
   },
   "streamhub": {
     "icon": "https://raw.github.com/Livefyre/streamhub-wall/master/images/mediawall-thumbbigHF-302x227.png",
