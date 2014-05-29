@@ -37,6 +37,13 @@ define([
             self.relayout();
         }, opts.debounceRelayout || 200);
 
+        if (opts.columns && typeof opts.columns === 'number') {
+            this._autoFitColumns = false;
+            this.setColumns(opts.columns);
+        } else {
+            this.setColumns(1);
+        }
+
         ContentListView.call(this, opts);
 
         $(window).resize(function(e) {
@@ -48,10 +55,6 @@ define([
         opts.css = (typeof opts.css === 'undefined') ? true : opts.css;
         if (!MEDIA_WALL_STYLE_EL && opts.css) {
             MEDIA_WALL_STYLE_EL = $('<style>'+MEDIA_WALL_CSS+'</style>').prependTo('head');
-        }
-        if (opts.columns && typeof opts.columns === 'number') {
-            this._autoFitColumns = false;
-            this.setColumns(opts.columns);
         }
         if (this._autoFitColumns) {
             this.fitColumns();
@@ -141,7 +144,6 @@ define([
         var wallCss = '.streamhub-media-wall-'+this._id+' .hub-wall-column { width: ' + width + '; }';
         $wallStyleEl = $('<style id="wall-style-' + this._id + '">'+wallCss+'</style>');
         $wallStyleEl.appendTo('head');
-        return this._getColumnWidth();
     };
 
     /**
@@ -162,12 +164,17 @@ define([
      * @param element {HTMLElement} The element to render the ContentListView in
      */
     MediaWallView.prototype.setElement = function (el) {
+        var prevEl = this.el;
         ContentListView.prototype.setElement.call(this, el);
         this.$el
             .addClass(this.mediaWallClassName)
             .addClass('streamhub-media-wall-' + this._id);
 
-        this.fitColumns();
+        // If you're changing to a new element, it could have diff dimensions
+        // and thus need a diff number of columns
+        if (prevEl && this._autoFitColumns) {
+            this.fitColumns();
+        }
     };
 
     MediaWallView.prototype.render = function () {
@@ -291,6 +298,7 @@ define([
                     Math.ceil(forcedIndex / this._columnViews.length),
                     targetColumnView.views.length);
         }
+
         targetColumnView.add(contentView, forcedIndex);
 
         // IE8 will not automatically push the 'show more' button down as the
