@@ -26,8 +26,9 @@ define([
         this._autoFitColumns = true;
         this._contentWidth = opts.minContentWidth || 300;
         this._columnViews = [];
-        this._containerInnerWidth = 0;
+        this._containerInnerWidth = null;
         this._columnHeights = {};
+        this._numberOfColumns = null;
         this._animate = opts.animate === undefined ? true : opts.animate;
 
         this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.shortestColumn;
@@ -36,6 +37,11 @@ define([
             self.fitColumns();
             self.relayout();
         }, opts.debounceRelayout || 200);
+
+        if (opts.columns && typeof opts.columns === 'number') {
+            this._autoFitColumns = false;
+            this.setColumns(opts.columns);
+        }
 
         ContentListView.call(this, opts);
 
@@ -48,10 +54,6 @@ define([
         opts.css = (typeof opts.css === 'undefined') ? true : opts.css;
         if (!MEDIA_WALL_STYLE_EL && opts.css) {
             MEDIA_WALL_STYLE_EL = $('<style>'+MEDIA_WALL_CSS+'</style>').prependTo('head');
-        }
-        if (opts.columns && typeof opts.columns === 'number') {
-            this._autoFitColumns = false;
-            this.setColumns(opts.columns);
         }
         if (this._autoFitColumns) {
             this.fitColumns();
@@ -141,7 +143,6 @@ define([
         var wallCss = '.streamhub-media-wall-'+this._id+' .hub-wall-column { width: ' + width + '; }';
         $wallStyleEl = $('<style id="wall-style-' + this._id + '">'+wallCss+'</style>');
         $wallStyleEl.appendTo('head');
-        return this._getColumnWidth();
     };
 
     /**
@@ -162,20 +163,29 @@ define([
      * @param element {HTMLElement} The element to render the ContentListView in
      */
     MediaWallView.prototype.setElement = function (el) {
+        var prevEl = this.el;
         ContentListView.prototype.setElement.call(this, el);
         this.$el
             .addClass(this.mediaWallClassName)
             .addClass('streamhub-media-wall-' + this._id);
 
-        this.fitColumns();
+        // If you're changing to a new element, it could have diff dimensions
+        // and thus need a diff number of columns
+        if (prevEl && this._autoFitColumns) {
+            this.fitColumns();
+        }
     };
 
     MediaWallView.prototype.render = function () {
         ContentListView.prototype.render.call(this);
 
+        if (this._numberOfColumns === null && this._autoFitColumns) {
+            this.fitColumns();
+        }
+
         var columnView;
 
-        if (this._columnViews.length === 0) {
+        if (this._columnViews.length !== this._numberOfColumns) {
             for (var i=0; i < this._numberOfColumns; i++) {
                 columnView = this._createColumnView();
                 this._attachColumnView(columnView);
@@ -204,8 +214,9 @@ define([
         }
 
         this._containerInnerWidth = latestWidth;
-        var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10) || 1;
-        this.setColumns(numColumns);
+        var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10);
+        // Always set to at least one column
+        this.setColumns(numColumns || 1);
     };
 
     /**
@@ -291,6 +302,7 @@ define([
                     Math.ceil(forcedIndex / this._columnViews.length),
                     targetColumnView.views.length);
         }
+
         targetColumnView.add(contentView, forcedIndex);
 
         // IE8 will not automatically push the 'show more' button down as the
