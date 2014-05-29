@@ -4,6 +4,8 @@ var View = require('view');
 var inputButtonStyles = require('css!?prefix=streamhubWallPackageVersion:streamhub-input/../dist/streamhub-input.min.css');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
+var packageAttribute = require('./package-attribute');
+var ModalView = require('streamhub-sdk/modal');
 
 /**
  * Header of LiveMediaWall.
@@ -57,8 +59,11 @@ WallHeaderView.prototype.setCollection = function (collection) {
 };
 
 WallHeaderView.prototype._createPostButton = function (opts) {
+    var modal = new ModalView();
+    packageAttribute.decorateModal(modal);
     var button = new PostContentButton({
-        mediaEnabled: true
+        mediaEnabled: true,
+        modal: modal
     });
     return button;
 };

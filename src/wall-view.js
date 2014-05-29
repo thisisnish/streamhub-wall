@@ -3,8 +3,9 @@ define([
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-sdk/content/views/content-view',
     'text!./styles/wall-view.css',
-    'inherits'
-], function($, ContentListView, ContentView, MEDIA_WALL_CSS, inherits) {
+    'inherits',
+    './package-attribute'
+], function($, ContentListView, ContentView, MEDIA_WALL_CSS, inherits, packageAttribute) {
     'use strict';
 
     var MEDIA_WALL_STYLE_EL;
@@ -38,6 +39,10 @@ define([
         }, opts.debounceRelayout || 200);
 
         ContentListView.call(this, opts);
+        
+        // Patch the modal so that it has the right package selector when it
+        // is shown (like data-lf-package="streamhub-wall#3.0.0")
+        packageAttribute.decorateModal(this.modal);
 
         $(window).resize(function(e) {
             if (self._autoFitColumns) {

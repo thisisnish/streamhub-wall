@@ -7,6 +7,7 @@ var wallComponentStyles = require('css!?prefix=streamhubWallPackageVersion:./sty
 var sdkStyles = require('css!?prefix=streamhubWallPackageVersion:streamhub-sdk/css/style.css');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
+var packageAttribute = require('./package-attribute');
 
 /**
  * LiveMediaWall Component
@@ -34,8 +35,11 @@ var WallComponent = module.exports = function (opts) {
 inherits(WallComponent, View);
 
 WallComponent.prototype.setElement = function () {
+    if (this.el) {
+        packageAttribute.undecorate(this.el);
+    }
     View.prototype.setElement.apply(this, arguments);
-    this.$el.attr('data-lf-module','streamhub-wall#3.0.0');
+    packageAttribute.decorate(this.el);
 };
 
 /**
