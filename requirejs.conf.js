@@ -62,6 +62,10 @@ require.config({
     name: "css",
     location: "lib/require-css",
     main: "css"
+  },{
+    name: "less",
+    location: "lib/require-less",
+    main: "less"
   }],
   shim: {
     jquery: {
@@ -82,9 +86,15 @@ require.config({
     }
   },
   css: {
+    clearFileEachBuild: 'dist/streamhub-wall.min.css',
     transformEach: {
       requirejs: 'tools/prefix-css-requirejs',
       node: 'tools/prefix-css-node'
     }
   },
+  less: {
+    browserLoad: 'dist/streamhub-wall.min',
+    paths: ['lib'],
+    relativeUrls: true
+  }
 });

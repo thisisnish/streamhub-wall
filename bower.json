@@ -30,7 +30,6 @@
   "resolutions": {
     "livefyre-bootstrap": "~1.0",
     "jquery": "1.10.1",
-    "view": "~1.2",
-    "streamhub-sdk": "~2.10"
+    "view": "~1.2"
   }
 }
