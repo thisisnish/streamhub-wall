@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    body {
+        font-family: sans-serif;
+        font-size: 14px;
+        line-height: 18px;
+    }
+    </style>
+    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <script src="http://cdn.livefyre.com/Livefyre.js"></script>
+</head>
+    <body>
+        <button id="auth-button"></button>
+        <div id="auth-log"></div>
+        <div id="wall"></div>
+
+        <script>
+        Livefyre.require(['livefyre-auth#0.1.0', 'auth-contrib#0.0.0-pre'], function (auth, authContrib) {
+            auth.delegate(auth.createDelegate('http://livefyre.com'));
+            var authLog = authContrib.createLog(auth, document.getElementById('auth-log'));
+            authContrib.createButton(auth, document.getElementById('auth-button'), authLog);
+        });
+
+        Livefyre.require([
+            'streamhub-sdk#v2.11.1',
+            'streamhub-wall#v3.0.0'],
+        function (SDK, LiveMediaWall) {
+            var collection = new (SDK.Collection)({
+                "network": "livefyre.com",
+                "siteId": "313878",
+                "articleId": "1",
+                "environment": "livefyre.com"
+            });
+            
+            var wall = window.wall = new LiveMediaWall({
+                el: document.getElementById("wall"),
+                collection: collection
+            });
+        });
+        </script>
+    </body>
+</html>
