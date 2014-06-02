@@ -1,9 +1,8 @@
 var auth = require('auth');
 var inherits = require('inherits');
 var View = require('view');
-var inputButtonStyles = require('less!streamhub-input/styles/hub-input.less');
 var Passthrough = require('stream/passthrough');
-var PostContentButton = require('streamhub-input/javascript/content-editor/button');
+var PostContentButton = require('streamhub-input').ContentEditorButton;
 var packageAttribute = require('./package-attribute');
 var ModalView = require('streamhub-sdk/modal');
 
@@ -58,12 +57,40 @@ WallHeaderView.prototype.setCollection = function (collection) {
     postButton.pipe(collection);
 };
 
+/**
+ * Create the Button that will let the user post content into the
+ * right Collection
+ */
 WallHeaderView.prototype._createPostButton = function (opts) {
-    var modal = new ModalView();
-    packageAttribute.decorateModal(modal);
     var button = new PostContentButton({
         mediaEnabled: true,
-        modal: modal
+        modal: createModal(),
+        input: createInput()
     });
+    // Create a Modal that will add the streamhub-wall#vN attribute
+    // to its parent when it is shown, so that our css rules can be namespaced
+    // nicely
+    function createModal() {
+        var modal = new ModalView();
+        packageAttribute.decorateModal(modal);
+        return modal;
+    }
+    // Create a custom ContentEditor input whose UploadButton will launch
+    // a modal that has the right packageAttribute on its parent
+    function createInput() {
+        var input = PostContentButton.prototype.createInput.call(this, {
+            mediaEnabled: true
+        });
+        // patch .createUploadButton to create one that uses a modal
+        // with streamhub-wall packageAttribute
+        var ogCreateUploadButton = input.createUploadButton;
+        input.createUploadButton = function (opts) {
+            opts = opts || {};
+            opts.modal = createModal();
+            var uploadButton = ogCreateUploadButton.call(this, opts);
+            return uploadButton;
+        }
+        return input;
+    }
     return button;
 };

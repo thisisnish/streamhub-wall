@@ -9,9 +9,9 @@ var packageAttribute = 'data-lf-package';
 exports.decorate = function (el) {
     var currentVal = el.getAttribute(packageAttribute);
     var newVal = packageName(packageJson);
-    // If there already was this attribute, just add to the attr
-    // space-separated
-    if (currentVal) {
+    // If there already was this attribute, and it doesn't contain the
+    // new attr val, just add to the attr space-separated
+    if (currentVal && currentVal.indexOf(newVal) === -1) {
         newVal = [currentVal, ' ', newVal].join('');
     }
     el.setAttribute(packageAttribute, newVal);

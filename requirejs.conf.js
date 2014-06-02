@@ -51,7 +51,8 @@ require.config({
     location: 'lib/livefyre-auth/src'
   },{
     name: 'streamhub-input',
-    location: 'lib/streamhub-input/src'
+    location: 'lib/streamhub-input/src',
+    main: 'javascript/main'
   },{
     name: 'streamhub-editor',
     location: 'lib/streamhub-editor/src/javascript'
@@ -95,6 +96,9 @@ require.config({
   less: {
     browserLoad: 'dist/streamhub-wall.min',
     paths: ['lib'],
-    relativeUrls: true
+    relativeUrls: true,
+    modifyVars: {
+      '@icon-font-path': "\"http://cdn.livefyre.com/libs/livefyre-bootstrap/v1.1.0/fonts/\""
+    }
   }
 });

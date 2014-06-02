@@ -24,7 +24,7 @@ module.exports = function (packageJson, rework, css, params) {
 };
 
 function attrSelector(attr, value) {
-    var selector = '[{attr}="{value}"]'
+    var selector = '[{attr}~="{value}"]'
         .replace('{attr}', attr)
         .replace('{value}', value);
     return selector;
