@@ -9,7 +9,7 @@
     }
     </style>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-    <script src="http://cdn.livefyre.com/Livefyre.js"></script>
+    <script src="//cdn.livefyre.com/Livefyre.js"></script>
 </head>
     <body>
         <button id="auth-button"></button>
@@ -17,7 +17,8 @@
         <div id="wall"></div>
 
         <script>
-        Livefyre.require(['livefyre-auth#0.1.0', 'auth-contrib#0.0.0-pre'], function (auth, authContrib) {
+        Livefyre.require(['auth-contrib#0.0.0-pre'], function (authContrib) {
+            var auth = Livefyre.auth;
             auth.delegate(auth.createDelegate('http://livefyre.com'));
             var authLog = authContrib.createLog(auth, document.getElementById('auth-log'));
             authContrib.createButton(auth, document.getElementById('auth-button'), authLog);
@@ -35,9 +36,10 @@
             });
             
             var wall = window.wall = new LiveMediaWall({
-                el: document.getElementById("wall"),
-                collection: collection
+                el: document.getElementById("wall")
             });
+
+            collection.pipe(wall);
         });
         </script>
     </body>

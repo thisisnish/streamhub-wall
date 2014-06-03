@@ -25,11 +25,13 @@ $, Collection, Content, Auth, LiveMediaWall) {
         "articleId": "1",
         "environment": "livefyre.com"
     };
+    var collection = new Collection(opts);
+
     var wall = window.view = new LiveMediaWall({
         el: document.getElementById("listView"),
-        collection: new Collection(opts),
         sharer: function (content) {
             console.log('share', content);
         }
     });
+    collection.pipe(wall);
 });

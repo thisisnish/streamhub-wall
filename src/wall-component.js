@@ -16,6 +16,7 @@ var packageAttribute = require('./package-attribute');
  */
 var WallComponent = module.exports = function (opts) {
     View.apply(this, arguments);
+
     opts = opts || {};
     this._headerView = opts.headerView || new WallHeaderView();
     this._wallView = opts.wallView || new WallView({
@@ -24,6 +25,14 @@ var WallComponent = module.exports = function (opts) {
         showMore: opts.showMore,
         modal: opts.modal
     });
+
+    // Be a writable that really just proxies to the wallView
+    Passthrough.apply(this, arguments);
+    this.pipe(this._wallView);
+    // including more, so that Collection piping works right
+    this.more = new Passthrough();
+    this.more.pipe(this._wallView.more);
+
     if (opts.collection) {
         this.setCollection(opts.collection);
     }
@@ -32,7 +41,8 @@ var WallComponent = module.exports = function (opts) {
     }
 };
 
-inherits(WallComponent, View);
+inherits(WallComponent, Passthrough);
+inherits.parasitically(WallComponent, View);
 
 WallComponent.prototype.setElement = function () {
     if (this.el) {
@@ -83,3 +93,4 @@ WallComponent.prototype.setCollection = function (collection) {
     this._collection.pipe(this._wallView);
     this._headerView.setCollection(collection);
 };
+
