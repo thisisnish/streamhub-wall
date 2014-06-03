@@ -29,9 +29,9 @@ $, Collection, Content, Auth, LiveMediaWall) {
 
     var wall = window.view = new LiveMediaWall({
         el: document.getElementById("listView"),
+        collection: collection,
         sharer: function (content) {
             console.log('share', content);
         }
     });
-    collection.pipe(wall);
 });

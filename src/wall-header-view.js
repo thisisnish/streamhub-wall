@@ -29,9 +29,15 @@ WallHeaderView.prototype.render = function () {
     // FIXME: I shouldn't be reaching into private state to get cmd
     var postCommand = this._postButton._command;
     if (postCommand.canExecute()) {
-        renderPostButton.call(this, true);
+        renderPostButtonIfCollection.call(this, true);
     } else {
-        postCommand.on('change:canExecute', renderPostButton.bind(this));
+        postCommand.on('change:canExecute', renderPostButtonIfCollection.bind(this));
+    }
+    function renderPostButtonIfCollection(showPostButton) {
+        if (! this._collection) {
+            return;
+        }
+        renderPostButton.call(this, showPostButton);
     }
 };
 
