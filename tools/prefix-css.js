@@ -6,10 +6,6 @@
  */
 module.exports = function (packageJson, rework, css, params) {
     params = params || {};
-    // // You have to opt into prefixing
-    // if ( ! ('prefix' in params)) {
-    //     return css;
-    // }
     // Unless specified with params.prefix, prefix all css rules with
     // [data-lf-module="streamhub-wall#VERSION"]
     var prefix = params.prefix;
