@@ -2,6 +2,9 @@ var packageJson = require('json!streamhub-wall/../package.json');
 var packageAttribute = 'data-lf-package';
 var packageAttributeValue = packageName(packageJson);
 
+exports.attribute = packageAttribute;
+exports.value = packageAttributeValue;
+
 /**
  * Decorate an HTMLElement with the proper package attribute
  * for streamhub-wall e.g.

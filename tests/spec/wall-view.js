@@ -1,6 +1,6 @@
 define([
     'jasmine',
-    'streamhub-wall',
+    'streamhub-wall/wall-view',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-sdk',
     'streamhub-sdk/content',

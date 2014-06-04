@@ -19,7 +19,7 @@ require(['jasmine', 'jasmine-html', 'jquery'], function (jasmine, jasmineHtml, $
     ['beforeEach', 'afterEach', 'describe', 'it'].forEach(function (key) {
         window[key] = jasmineEnv[key].bind(jasmineEnv);
     });
-    require(['tests/spec/wall-view', 'tests/spec/wall-component'], function(){
+    require(['tests/spec/wall-view', 'tests/spec/wall-component', 'tests/spec/main'], function(){
         $(function(){
             jasmineEnv.execute();
         });
