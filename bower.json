@@ -1,6 +1,6 @@
 {
   "name": "streamhub-wall",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "main": [
     "./src/main.js"
   ],
@@ -26,6 +26,7 @@
     ]
   },
   "resolutions": {
-    "view": "~1.1"
+    "view": "~1.1",
+    "base64": "~0.4.0"
   }
 }

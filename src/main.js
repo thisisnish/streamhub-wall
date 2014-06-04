@@ -31,7 +31,7 @@ define([
         this._numberOfColumns = null;
         this._animate = opts.animate === undefined ? true : opts.animate;
 
-        this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.shortestColumn;
+        this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.roundRobin;
 
         this.debouncedRelayout = debounce(function () {
             self.fitColumns();
