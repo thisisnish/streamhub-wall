@@ -36,10 +36,9 @@
             });
             
             var wall = window.wall = new LiveMediaWall({
-                el: document.getElementById("wall")
+                el: document.getElementById("wall"),
+                collection: collection
             });
-
-            collection.pipe(wall);
         });
         </script>
     </body>
