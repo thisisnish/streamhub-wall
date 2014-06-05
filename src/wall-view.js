@@ -27,14 +27,22 @@ define([
         this._columnViews = [];
         this._containerInnerWidth = null;
         this._columnHeights = {};
+        this._numberOfColumns = null;
         this._animate = opts.animate === undefined ? true : opts.animate;
 
-        this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.shortestColumn;
+        this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.roundRobin;
 
         this.debouncedRelayout = debounce(function () {
-            self.fitColumns();
-            self.relayout();
+            var numColumnsChanged = self.fitColumns();
+            if (numColumnsChanged) {
+                self.relayout();
+            }
         }, opts.debounceRelayout || 200);
+
+        if (opts.columns && typeof opts.columns === 'number') {
+            this._autoFitColumns = false;
+            this.setColumns(opts.columns);
+        }
 
         ContentListView.call(this, opts);
         
@@ -50,10 +58,6 @@ define([
 
         opts.css = (typeof opts.css === 'undefined') ? true : opts.css;
 
-        if (opts.columns && typeof opts.columns === 'number') {
-            this._autoFitColumns = false;
-            this.setColumns(opts.columns);
-        }
         if (this._autoFitColumns) {
             this.fitColumns();
         }
@@ -163,19 +167,30 @@ define([
      * @param element {HTMLElement} The element to render the ContentListView in
      */
     MediaWallView.prototype.setElement = function (el) {
+        var prevEl = this.el;
         ContentListView.prototype.setElement.call(this, el);
         this.$el
             .addClass(this.mediaWallClassName)
             .addClass('streamhub-media-wall-' + this._id);
+
+        // If you're changing to a new element, it could have diff dimensions
+        // and thus need a diff number of columns
+        if (prevEl && this._autoFitColumns) {
+            this.fitColumns();
+        }
     };
 
     MediaWallView.prototype.render = function () {
         ContentListView.prototype.render.call(this);
+
+        if (this._numberOfColumns === null && this._autoFitColumns) {
+            this.fitColumns();
+        }
+
         var columnView;
-        // ensure we know the correct number of columns
-        this.fitColumns();
+
         // then render the columns
-        if (this._columnViews.length === 0) {
+        if (this._columnViews.length !== this._numberOfColumns) {
             for (var i=0; i < this._numberOfColumns; i++) {
                 columnView = this._createColumnView();
                 this._attachColumnView(columnView);
@@ -204,14 +219,16 @@ define([
         }
 
         this._containerInnerWidth = latestWidth;
-        var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10) || 1;
-        this.setColumns(numColumns);
+        var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10);
+        // Always set to at least one column
+        return this.setColumns(numColumns || 1);
     };
 
     /**
      * Creates a column view for the number of columns specified. Triggers
      * relayout.
      * @param numColumns {Number} The number of columns the MediaWallView should be composed of
+     * @return {Boolean} Whether the number of columns is different than before
      */
     MediaWallView.prototype.setColumns = function (numColumns) {
         this._numberOfColumns = numColumns;
@@ -229,6 +246,7 @@ define([
         }
 
         this._moreAmount = this._moreAmount || numColumns * 2; // Show more displays 2 new rows
+        return numColumns;
     };
 
     /**
@@ -266,10 +284,17 @@ define([
 
     /**
      * Removes column views from the MediaWallView
+     * @param [removeContentViews=false] {Boolean} Whether to destroy
+     *     the contentViews in each column, or preserve them for later
      */
-    MediaWallView.prototype._clearColumns = function () {
+    MediaWallView.prototype._clearColumns = function (removeContentViews) {
         for (var i=0; i < this._columnViews.length; i++) {
             var columnView = this._columnViews[i];
+            if ( ! removeContentViews) {
+                // this will detach all the contentViews, preserving their
+                // event listeners
+                columnView.clear();
+            }
             columnView.detach();
             columnView.destroy();
         }
@@ -303,7 +328,6 @@ define([
 
     MediaWallView.prototype.relayout = function (opts) {
         opts = opts || {};
-
         this._clearColumns();
         for (var i=0; i < this._numberOfColumns; i++) {
             var columnView = this._createColumnView();
@@ -373,7 +397,7 @@ define([
     }
 
     MediaWallView.prototype.destroy = function () {
-        this._clearColumns();
+        this._clearColumns(true);
         this._columnViews = null;
         ContentListView.prototype.destroy.call(this);
     };
