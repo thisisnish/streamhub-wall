@@ -36,9 +36,12 @@ var WallComponent = module.exports = function (opts) {
     this._headerView = opts.headerView || new WallHeaderView();
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
+        minContentWidth: opts.minContentWidth,
+        columns: opts.columns,
         initial: opts.initial,
         showMore: opts.showMore,
-        modal: opts.modal
+        modal: opts.modal,
+        pickColumn: opts.pickColumn
     });
 
     // Be a writable that really just proxies to the wallView
