@@ -12,6 +12,9 @@ node_modules: package.json
 	npm install
 	touch $@
 
+server: build
+	npm start
+
 test: build
 	npm test
 
