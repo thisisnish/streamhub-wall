@@ -4,7 +4,6 @@ var View = require('view');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
 var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
-var sdkStyles = require('css!streamhub-sdk/css/style.css');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 var packageAttribute = require('./package-attribute');

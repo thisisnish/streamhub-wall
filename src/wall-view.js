@@ -4,8 +4,9 @@ define([
     'streamhub-sdk/content/views/content-view',
     'css!./styles/wall-view.css',
     'inherits',
-    './package-attribute'
-], function($, ContentListView, ContentView, MEDIA_WALL_CSS, inherits, packageAttribute) {
+    './package-attribute',
+    'css!streamhub-sdk/css/style.css'
+], function($, ContentListView, ContentView, MEDIA_WALL_CSS, inherits, packageAttribute, sdkStyles) {
     'use strict';
 
     /**
@@ -29,7 +30,6 @@ define([
         this._columnHeights = {};
         this._numberOfColumns = null;
         this._animate = opts.animate === undefined ? true : opts.animate;
-
         this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.roundRobin;
 
         this.debouncedRelayout = debounce(function () {
@@ -183,7 +183,7 @@ define([
     MediaWallView.prototype.render = function () {
         ContentListView.prototype.render.call(this);
 
-        if (this._numberOfColumns === null && this._autoFitColumns) {
+        if (this._autoFitColumns) {
             this.fitColumns();
         }
 
