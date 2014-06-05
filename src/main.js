@@ -34,8 +34,10 @@ define([
         this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.roundRobin;
 
         this.debouncedRelayout = debounce(function () {
-            self.fitColumns();
-            self.relayout();
+            var numColumnsChanged = self.fitColumns();
+            if (numColumnsChanged) {
+                self.relayout();                
+            }
         }, opts.debounceRelayout || 200);
 
         if (opts.columns && typeof opts.columns === 'number') {
@@ -216,15 +218,19 @@ define([
         this._containerInnerWidth = latestWidth;
         var numColumns = parseInt(this._containerInnerWidth / this._contentWidth, 10);
         // Always set to at least one column
-        this.setColumns(numColumns || 1);
+        return this.setColumns(numColumns || 1);
     };
 
     /**
      * Creates a column view for the number of columns specified. Triggers
      * relayout.
      * @param numColumns {Number} The number of columns the MediaWallView should be composed of
+     * @return {Boolean} Whether the number of columns is different than before
      */
     MediaWallView.prototype.setColumns = function (numColumns) {
+        if (numColumns === this._numberOfColumns) {
+            return;
+        }
         this._numberOfColumns = numColumns;
         var $wallStyleEl = this._getWallStyleEl();
         if ($wallStyleEl) {
@@ -240,6 +246,7 @@ define([
         }
 
         this._moreAmount = this._moreAmount || numColumns * 2; // Show more displays 2 new rows
+        return numColumns;
     };
 
     /**
