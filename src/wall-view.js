@@ -231,6 +231,9 @@ define([
      * @return {Boolean} Whether the number of columns is different than before
      */
     MediaWallView.prototype.setColumns = function (numColumns) {
+        if (numColumns === this._numberOfColumns) {
+            return;
+        }
         this._numberOfColumns = numColumns;
         var $wallStyleEl = this._getWallStyleEl();
         if ($wallStyleEl) {
