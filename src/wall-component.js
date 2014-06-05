@@ -1,8 +1,8 @@
+var $ = require('streamhub-sdk/jquery');
 var inherits = require('inherits');
 var View = require('view');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
-var wallComponentTemplate = require('hgn!./templates/wall-component');
 var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
 var sdkStyles = require('css!streamhub-sdk/css/style.css');
 var Passthrough = require('stream/passthrough');
@@ -56,21 +56,26 @@ WallComponent.prototype.setElement = function () {
  * Render the WallComponent
  */
 WallComponent.prototype.render = function () {
+    View.prototype.render.apply(this, arguments);
+    
     var el = this.el;
     var subviews = [this._headerView, this._wallView];
-
-    View.prototype.render.apply(this, arguments);
 
     // Clear children
     while (el.firstChild) {
         el.removeChild(el.firstChild);
     }
 
-    // append subviews
+    // append container and subviews
+    var container = document.createElement('div');
+    $(container).addClass('streamhub-wall-component');
     var frag = document.createDocumentFragment();
+
     subviews.forEach(function (view) {
-        frag.appendChild(view.el);
+        container.appendChild(view.el);
     });
+
+    frag.appendChild(container);
     el.appendChild(frag);
 
     // then render them
