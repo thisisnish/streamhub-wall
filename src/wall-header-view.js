@@ -14,6 +14,7 @@ var ModalView = require('streamhub-sdk/modal');
 var WallHeaderView = module.exports = function (opts) {
     View.apply(this, arguments);
     opts = opts || {};
+    this._rendered = false;
     this._postButton = opts.postButton || this._createPostButton(opts);
     if (opts.collection) {
         this.setCollection(opts.collection);
@@ -33,6 +34,7 @@ WallHeaderView.prototype.render = function () {
     } else {
         postCommand.on('change:canExecute', renderPostButtonIfCollection.bind(this));
     }
+    this._rendered = true;
     function renderPostButtonIfCollection(showPostButton) {
         if (! this._collection) {
             return;
@@ -61,6 +63,9 @@ WallHeaderView.prototype.setCollection = function (collection) {
     }
     this._collection = collection;
     postButton.pipe(collection);
+    if (this._rendered) {
+        this.render();
+    }
 };
 
 /**
