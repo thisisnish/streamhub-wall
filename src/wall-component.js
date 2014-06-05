@@ -36,7 +36,7 @@ var WallComponent = module.exports = function (opts) {
     if (opts.collection) {
         this.setCollection(opts.collection);
     }
-    if ( ! opts.autoRender) {
+    if (( ! ('autoRender' in opts)) || opts.autoRender) {
         this.render();
     }
 };
