@@ -2,13 +2,11 @@ define([
     'streamhub-sdk/jquery',
     'streamhub-sdk/content/views/content-list-view',
     'streamhub-sdk/content/views/content-view',
-    'text!./styles/wall-view.css',
+    'css!./styles/wall-view.css',
     'inherits',
     './package-attribute'
 ], function($, ContentListView, ContentView, MEDIA_WALL_CSS, inherits, packageAttribute) {
     'use strict';
-
-    var MEDIA_WALL_STYLE_EL;
 
     /**
      * A view that displays Content in a media wall.
@@ -51,9 +49,7 @@ define([
         });
 
         opts.css = (typeof opts.css === 'undefined') ? true : opts.css;
-        if (!MEDIA_WALL_STYLE_EL && opts.css) {
-            MEDIA_WALL_STYLE_EL = $('<style>'+MEDIA_WALL_CSS+'</style>').prependTo('head');
-        }
+
         if (opts.columns && typeof opts.columns === 'number') {
             this._autoFitColumns = false;
             this.setColumns(opts.columns);
