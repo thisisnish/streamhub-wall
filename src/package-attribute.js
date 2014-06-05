@@ -22,12 +22,20 @@ exports.decorate = function (el) {
     }
 };
 
+/**
+ * Remove the package attribute from an HTMLElement
+ */
 exports.undecorate = function (el) {
     var currentVal = el.getAttribute(packageAttribute) || '';
     var newVal = currentVal.replace(packageAttributeValue, '');
     el.setAttribute(packageAttribute, newVal);
 };
 
+/**
+ * Decorate a streamhub-sdk/modal instance so that whenever it is shown,
+ * the package attribute is added to its parentNode, and when it is hidden,
+ * the attribute is removed
+ */
 exports.decorateModal = function modalWithPackageSelector(modal) {
     modal.$el.on('showing', setHasPackageAttribute.bind({}, modal, true));
     modal.$el.on('hiding', setHasPackageAttribute.bind({}, modal, false));

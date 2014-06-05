@@ -25,6 +25,9 @@ inherits(WallHeaderView, View);
 
 WallHeaderView.prototype.elTag = 'menu';
 
+/**
+ * Render the WallHeaderView
+ */
 WallHeaderView.prototype.render = function () {
     View.prototype.render.apply(this, arguments);
     // FIXME: I shouldn't be reaching into private state to get cmd

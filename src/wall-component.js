@@ -13,6 +13,21 @@ var packageAttribute = require('./package-attribute');
  * LiveMediaWall Component
  * It has a wall-view and a streamhub-input
  * @constructor
+ * @param [opts] options
+ * @param [opts.el] {HTMLElement} The element to render in
+ * @param [opts.collection] {streamhub-sdk/collection} The StreamHub Collection
+ *     to show off in this wall and support uploads to (if auth integration)
+ * @param [opts.headerView] {View} A view to use as the header above the wall,
+ *     else a wall-header-view will be created for you
+ * @param [opts.wallView] {View} A view to use as the main feature, else a
+ *     wall-view will be created for you
+ * @param [opts.initial] The initial number of items to show in the wall,
+ *     if you don't provide your own opts.wallView
+ * @param [opts.showMore] The number of items to add to the wall when 'show
+ *     more' is clicked, if you don't provide your own opts.wallView
+ * @param [opts.modal] A modal instance to use when items in the wall are clicked,
+ *     or false if you want it disabled. Used if you don't provide opts.wallView
+ * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
     View.apply(this, arguments);
@@ -44,7 +59,12 @@ var WallComponent = module.exports = function (opts) {
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
 
-WallComponent.prototype.setElement = function () {
+/**
+ * Set the HTMLElement that this View renders in
+ * @override
+ * @param el {HTMLElement}
+ */
+WallComponent.prototype.setElement = function (el) {
     if (this.el) {
         packageAttribute.undecorate(this.el);
     }
