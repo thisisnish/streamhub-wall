@@ -277,10 +277,17 @@ define([
 
     /**
      * Removes column views from the MediaWallView
+     * @param [removeContentViews=false] {Boolean} Whether to destroy
+     *     the contentViews in each column, or preserve them for later
      */
-    MediaWallView.prototype._clearColumns = function () {
+    MediaWallView.prototype._clearColumns = function (removeContentViews) {
         for (var i=0; i < this._columnViews.length; i++) {
             var columnView = this._columnViews[i];
+            if ( ! removeContentViews) {
+                // this will detach all the contentViews, preserving their
+                // event listeners
+                columnView.clear();
+            }
             columnView.detach();
             columnView.destroy();
         }
@@ -385,7 +392,7 @@ define([
     }
 
     MediaWallView.prototype.destroy = function () {
-        this._clearColumns();
+        this._clearColumns(true);
         this._columnViews = null;
         ContentListView.prototype.destroy.call(this);
     };
