@@ -43,12 +43,28 @@ Note: Any styling customization of Tweets rendered by streamhub-sdk must be done
 
 ### Options
 
+####```postButton```
+
+What sort of "Post Content" button should appear on the LiveMediaWall, assuming opts.collection is passed and there is an auth integration on the page. Valid values are:
+
+* `false` (default) - Do not show a "Post Content" button. The LiveMediaWall is effectively read-only
+* `true` or `LiveMediaWall.postButtons.contentWithPhotos` - Include a button that lets users type textual Content with attached photos
+* `LiveMediaWall.postButtons.content` - Include a button that lets users type textual Content, but not attach photos
+* `LiveMediaWall.postButtons.photo` - Include a button that lets users add a photo, but no text
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            collection: collection,
+            postButton: true,
+            minContentWidth: 300
+        });
+
 ####```minContentWidth```
 The Media Wall will choose an appropriate number of columns depending on the width of its
 container element, ensuring that each column is at least this many pixels wide. Don't use
 with the `columns` option.
 
-        var wallView = new LiveMediWall({
+        var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
             minContentWidth: 300
         });
@@ -56,7 +72,7 @@ with the `columns` option.
 ####```columns```
 The number of columns of content can be specified by the ```columns``` option at construction. This means the content width will adapt to the Media Wall's container size while respecting the specified number of columns. By default, the Media Wall's width divided by the minimum content width (300px) determines the number of columns.
 
-        var wallView = new LiveMediWall({
+        var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
             columns: 5
         });
@@ -64,7 +80,7 @@ The number of columns of content can be specified by the ```columns``` option at
 ####```modal```
 By default, when there are attachments for a piece of content the thumbnail can be clicked, revealing a modal that displays the photo/video attachment in its entirety. To disable the modal set the ```modal``` option to ```false```.
 
-        var wallView = new LiveMediWall({
+        var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
             columns: 5,
             modal: false
@@ -74,7 +90,7 @@ By default, when there are attachments for a piece of content the thumbnail can 
 By default, when content is inserted into the wall it will be populated into the column of the shortest height. To configure the strategy in which the column is chosen, specify the ```pickColumn``` option in the constructor. This option expects a function with args: ```(columnView, forcedIndex)```, and returns the zero-based index of the column to insert into.
 
 ```
-var wall = new LiveMediWall({
+var wall = new LiveMediaWall({
     el: el,
     pickColumn: function (columnView, forcedIndex) {
         var targetIndex;

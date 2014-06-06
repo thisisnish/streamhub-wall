@@ -38,7 +38,7 @@ describe('A MediaWallComponent', function () {
             wall.render();
             expect(wall.$('menu').children().length).toBe(0);
         });
-        it('is present if there is an auth login delegate and collection', function () {
+        it('is present if there is an auth login delegate and collection and opts.postButton is truthy', function () {
             auth.delegate({
                 login: function () {}
             });
@@ -46,7 +46,8 @@ describe('A MediaWallComponent', function () {
                 pipe: function () {}
             };
             var wall = new WallComponent({
-                collection: fakeCollection // may not always work
+                collection: fakeCollection, // may not always work
+                postButton: true
             });
             wall.render();
             expect(wall.$('menu').children().length).toBe(1);

@@ -13,6 +13,8 @@ var packageAttribute = require('./package-attribute');
  * It has a wall-view and a streamhub-input
  * @constructor
  * @param [opts] options
+ * @param [opts.postButton=false] Whether to show a postButton or not, or what
+ *     kind of postButton (see ./post-buttons)
  * @param [opts.el] {HTMLElement} The element to render in
  * @param [opts.collection] {streamhub-sdk/collection} The StreamHub Collection
  *     to show off in this wall and support uploads to (if auth integration)
@@ -32,7 +34,9 @@ var WallComponent = module.exports = function (opts) {
     View.apply(this, arguments);
 
     opts = opts || {};
-    this._headerView = opts.headerView || new WallHeaderView();
+    this._headerView = opts.headerView || new WallHeaderView({
+        postButton: opts.postButton
+    });
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
         minContentWidth: opts.minContentWidth,

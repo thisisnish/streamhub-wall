@@ -3,3 +3,6 @@ exports = module.exports = require('./wall-component');
 
 // Just a view that makes a wall, no upload button or wall-header-view
 exports.WallView = require('./wall-view');
+
+// Some constants used for configuring the postButton
+exports.postButtons = require('./post-buttons');

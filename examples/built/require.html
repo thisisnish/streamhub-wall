@@ -26,7 +26,7 @@
 
         Livefyre.require([
             'streamhub-sdk#2',
-            'streamhub-wall#3.0.1-pre.1'],
+            'streamhub-wall#3'],
         function (SDK, LiveMediaWall) {
             var collection = new (SDK.Collection)({
                 "network": "livefyre.com",
@@ -37,7 +37,8 @@
             
             var wall = window.wall = new LiveMediaWall({
                 el: document.getElementById("wall"),
-                collection: collection
+                collection: collection,
+                postButton: true
             });
         });
         </script>
