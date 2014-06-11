@@ -8,9 +8,10 @@ require([
     'streamhub-sdk/collection',
     'streamhub-sdk/content',
     'streamhub-sdk/auth',
-    'streamhub-wall'
+    'streamhub-wall/wall-view',
+    'streamhub-wall/package-attribute'
 ],function (auth, authLivefyre, createAuthButton, livefyreAuthDelegate, debug,
-$, Collection, Content, Auth, LiveMediaWall) {
+$, Collection, Content, Auth, WallView, packageAttribute) {
     window.auth = auth;
     var log = debug('streamhub-sdk/auth-demo');
     var authButton = createAuthButton(auth, document.getElementById('auth-button'));
@@ -18,6 +19,8 @@ $, Collection, Content, Auth, LiveMediaWall) {
     authLivefyre.plugin(auth);
     var delegate = window.delegate = livefyreAuthDelegate('http://www.livefyre.com');
     auth.delegate(delegate);
+
+    packageAttribute.decorate(document.getElementById('container'));
 
     var opts = {
         "network": "livefyre.com",
@@ -27,12 +30,12 @@ $, Collection, Content, Auth, LiveMediaWall) {
     };
     var collection = new Collection(opts);
 
-    var wall = window.view = new LiveMediaWall({
+    var wallView = window.view = new WallView({
         el: document.getElementById("listView"),
-        collection: collection,
-        postButton: true,
         sharer: function (content) {
             console.log('share', content);
         }
     });
+
+    collection.pipe(wallView);
 });

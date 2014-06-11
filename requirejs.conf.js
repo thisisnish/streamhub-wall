@@ -11,7 +11,9 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    debug: 'lib/debug/debug'
+    debug: 'lib/debug/debug',
+    rework: 'lib/rework/rework',
+    observer: 'lib/observer/src/observer'
   },
   packages: [{
     name: "streamhub-wall",
@@ -47,6 +49,24 @@ require.config({
   },{
     name: 'livefyre-auth',
     location: 'lib/livefyre-auth/src'
+  },{
+    name: 'streamhub-input',
+    location: 'lib/streamhub-input/src',
+    main: 'javascript/main'
+  },{
+    name: 'streamhub-editor',
+    location: 'lib/streamhub-editor/src/javascript'
+  },{
+    name: 'streamhub-editor/templates',
+    location: 'lib/streamhub-editor/src/templates'
+  },{
+    name: "css",
+    location: "lib/require-css",
+    main: "css"
+  },{
+    name: "less",
+    location: "lib/require-less",
+    main: "less"
   }],
   shim: {
     jquery: {
@@ -61,6 +81,24 @@ require.config({
     },
     'jasmine-jquery': {
         deps: ['jquery', 'jasmine']
+    },
+    rework: {
+        exports: 'rework'
+    }
+  },
+  css: {
+    clearFileEachBuild: 'dist/streamhub-wall.min.css',
+    transformEach: {
+      requirejs: 'tools/prefix-css-requirejs',
+      node: 'tools/prefix-css-node'
+    }
+  },
+  less: {
+    browserLoad: 'dist/streamhub-wall.min',
+    paths: ['lib'],
+    relativeUrls: true,
+    modifyVars: {
+      '@icon-font-path': "\"http://cdn.livefyre.com/libs/livefyre-bootstrap/v1.1.0/fonts/\""
     }
   }
 });

@@ -9,22 +9,25 @@
     }
     </style>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-    <script src="http://cdn.livefyre.com/libs/livefyre-auth/0.1.0/livefyre-auth.min.js"></script>
-    <script src="http://cdn.livefyre.com/libs/sdk/v2.11.2/streamhub-sdk.min.js"></script>
-    <script src="../../dist/streamhub-wall.min.js"></script>
+    <script src="//cdn.livefyre.com/Livefyre.js"></script>
 </head>
     <body>
-        
+        <button id="auth-button"></button>
+        <div id="auth-log"></div>
         <div id="wall"></div>
 
         <script>
-        (function () {
-            var SDK = Livefyre.require('streamhub-sdk');
-            var LiveMediaWall = Livefyre.require('streamhub-wall');
+        Livefyre.require(['auth-contrib#0.0.0-pre'], function (authContrib) {
             var auth = Livefyre.auth;
-
             auth.delegate(auth.createDelegate('http://livefyre.com'));
+            var authLog = authContrib.createLog(auth, document.getElementById('auth-log'));
+            authContrib.createButton(auth, document.getElementById('auth-button'), authLog);
+        });
 
+        Livefyre.require([
+            'streamhub-sdk#2',
+            'streamhub-wall#3'],
+        function (SDK, LiveMediaWall) {
             var collection = new (SDK.Collection)({
                 "network": "livefyre.com",
                 "siteId": "313878",
@@ -37,7 +40,7 @@
                 collection: collection,
                 postButton: true
             });
-        }());
+        });
         </script>
     </body>
 </html>
