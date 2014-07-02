@@ -39,12 +39,12 @@ define([
             }
         }, opts.debounceRelayout || 200);
 
+        ContentListView.call(this, opts);
+
         if (opts.columns && typeof opts.columns === 'number') {
             this._autoFitColumns = false;
             this.setColumns(opts.columns);
         }
-
-        ContentListView.call(this, opts);
         
         // Patch the modal so that it has the right package selector when it
         // is shown (like data-lf-package="streamhub-wall#3.0.0")

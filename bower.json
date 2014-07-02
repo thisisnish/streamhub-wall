@@ -1,6 +1,6 @@
 {
   "name": "streamhub-wall",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "main": [
     "./src/main.js"
   ],
@@ -29,6 +29,7 @@
   "resolutions": {
     "livefyre-bootstrap": "1.1.0",
     "view": "~1.2",
-    "base64": "~0.4.0"
+    "base64": "~0.4.0",
+    "auth": "~0.1.0"
   }
 }
