@@ -31,7 +31,7 @@ Livefyre.require([
             "siteId": "313878",
             "articleId": "1",
             "environment": "livefyre.com"
-        });
+        })
     });
 });
 </script>
