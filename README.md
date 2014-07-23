@@ -43,6 +43,15 @@ Note: Any styling customization of Tweets rendered by streamhub-sdk must be done
 
 ### Options
 
+####```initial```
+
+The number of Content items to render on page load. Defaults to 50.
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            initial: 10
+        });
+
 ####```postButton```
 
 What sort of "Post Content" button should appear on the LiveMediaWall, assuming opts.collection is passed and there is an auth integration on the page. Valid values are:
