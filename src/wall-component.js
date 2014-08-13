@@ -6,7 +6,9 @@ var WallHeaderView = require('./wall-header-view');
 var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
-var packageAttribute = require('./package-attribute');
+var packageJson = require('json!streamhub-wall/../package.json');
+var livefyrePackageAttribute = require('livefyre-package-attribute');
+var ThemeStyler = require('livefyre-theme-styler');
 
 /**
  * LiveMediaWall Component
@@ -31,6 +33,8 @@ var packageAttribute = require('./package-attribute');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
+    this._packageAttribute = livefyrePackageAttribute(packageJson);
+
     View.apply(this, arguments);
 
     opts = opts || {};
@@ -46,6 +50,7 @@ var WallComponent = module.exports = function (opts) {
         modal: opts.modal,
         pickColumn: opts.pickColumn
     });
+    this._theme = opts.theme || {};
 
     // Be a writable that really just proxies to the wallView
     Passthrough.apply(this, arguments);
@@ -72,10 +77,35 @@ inherits.parasitically(WallComponent, View);
  */
 WallComponent.prototype.setElement = function (el) {
     if (this.el) {
-        packageAttribute.undecorate(this.el);
+        this._packageAttribute.undecorate(this.el);
     }
     View.prototype.setElement.apply(this, arguments);
-    packageAttribute.decorate(this.el);
+    this._packageAttribute.decorate(this.el);
+};
+
+WallComponent.prototype._configure = function (configOpts) {
+    var themeOpts = {};
+
+    for (var opt in configOpts) {
+        if (configOpts.hasOwnProperty(opt)) {
+           if (Object.keys(ThemeStyler.TEMPLATE_MAP).indexOf(opt) >= 0) {
+                themeOpts[opt] = configOpts[opt];
+                delete configOpts[opt];
+            }
+        }
+    }
+
+    if (Object.keys(themeOpts).length) {
+        this._applyTheme(themeOpts);
+    }
+};
+
+WallComponent.prototype._applyTheme = function (theme) {
+    this._theme = $.extend(this._theme, theme);
+    this._themeStyler = this._themeStyler || new ThemeStyler({
+        packageAttribute: this._packageAttribute
+    });
+    this._themeStyler.applyTheme(this._theme);
 };
 
 /**
@@ -83,6 +113,10 @@ WallComponent.prototype.setElement = function (el) {
  */
 WallComponent.prototype.render = function () {
     View.prototype.render.apply(this, arguments);
+
+    if (this._theme) {
+        this._applyTheme(this._theme);
+    }
     
     var el = this.el;
     var subviews = [this._headerView, this._wallView];
@@ -118,7 +152,7 @@ WallComponent.prototype.render = function () {
  */
 WallComponent.prototype.setCollection = function (collection) {
     if (this._collection) {
-        this._collection.unpipe(this._wallView)
+        this._collection.unpipe(this._wallView);
     }
     this._collection = collection;
     this._collection.pipe(this._wallView);

@@ -14,7 +14,9 @@ require.config({
     mout: 'lib/mout/src',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
-    observer: 'lib/observer/src/observer'
+    observer: 'lib/observer/src/observer',
+    mout: 'lib/mout/src',
+    'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main'
   },
   packages: [{
     name: "streamhub-wall",
@@ -60,6 +62,9 @@ require.config({
   },{
     name: 'streamhub-editor/templates',
     location: 'lib/streamhub-editor/src/templates'
+  },{
+    name: 'livefyre-theme-styler',
+    location: 'lib/livefyre-theme-styler/src'
   },{
     name: "css",
     location: "lib/require-css",
