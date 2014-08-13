@@ -103,10 +103,7 @@ WallComponent.prototype._configure = function (configOpts) {
 WallComponent.prototype._applyTheme = function (theme) {
     this._theme = $.extend(this._theme, theme);
     this._themeStyler = this._themeStyler || new ThemeStyler({
-        prefix: [
-            '[',packageAttribute.attribute,'~="',packageAttribute.value,'"]',
-            '[lf-wall-uuid="',this._uuid,'"] '
-        ].join('')
+        prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
     this._themeStyler.applyTheme(this._theme);
 };
