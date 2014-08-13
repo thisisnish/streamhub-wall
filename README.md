@@ -115,6 +115,10 @@ With npm installed, install streamhub-wall's dependencies. This will also downlo
     cd streamhub-wall
     make build
 
+To generate build artifacts:
+
+    make dist
+
 This repository's package.json includes a helpful script to launch a web server for development
 
     make server

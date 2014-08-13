@@ -16,7 +16,7 @@
     "rework": "git://github.com/gobengo/rework"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install",
+    "postinstall": "./node_modules/bower/bin/bower install && make dist",
     "start": "./node_modules/http-server/bin/http-server .",
     "hint": "./node_modules/jshint/bin/jshint src/*.js; echo",
     "hint-jenkins": "./node_modules/jshint/bin/jshint --reporter=jslint src/*.js > lint.log; echo",
