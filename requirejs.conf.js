@@ -11,7 +11,6 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    mout: 'lib/mout/src',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
