@@ -16,7 +16,8 @@ require.config({
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
     mout: 'lib/mout/src',
-    'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main'
+    'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main',
+    'node-uuid': 'lib/node-uuid/uuid'
   },
   packages: [{
     name: "streamhub-wall",

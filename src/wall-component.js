@@ -6,9 +6,9 @@ var WallHeaderView = require('./wall-header-view');
 var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
-var packageJson = require('json!streamhub-wall/../package.json');
-var livefyrePackageAttribute = require('livefyre-package-attribute');
+var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
+var uuid = require('node-uuid');
 
 /**
  * LiveMediaWall Component
@@ -33,8 +33,7 @@ var ThemeStyler = require('livefyre-theme-styler');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
-    this._packageAttribute = livefyrePackageAttribute(packageJson);
-
+    this._uuid = uuid.v4();
     View.apply(this, arguments);
 
     opts = opts || {};
@@ -77,10 +76,11 @@ inherits.parasitically(WallComponent, View);
  */
 WallComponent.prototype.setElement = function (el) {
     if (this.el) {
-        this._packageAttribute.undecorate(this.el);
+        packageAttribute.undecorate(this.el);
     }
     View.prototype.setElement.apply(this, arguments);
-    this._packageAttribute.decorate(this.el);
+    packageAttribute.decorate(this.el);
+    this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
 
 WallComponent.prototype._configure = function (configOpts) {
@@ -103,7 +103,10 @@ WallComponent.prototype._configure = function (configOpts) {
 WallComponent.prototype._applyTheme = function (theme) {
     this._theme = $.extend(this._theme, theme);
     this._themeStyler = this._themeStyler || new ThemeStyler({
-        packageAttribute: this._packageAttribute
+        prefix: [
+            '[',packageAttribute.attribute,'~="',packageAttribute.value,'"]',
+            '[lf-wall-uuid="',this._uuid,'"] '
+        ].join('')
     });
     this._themeStyler.applyTheme(this._theme);
 };

@@ -9,7 +9,8 @@
     "cajon": "git://github.com/requirejs/cajon.git#~0.1.11",
     "streamhub-input": "Livefyre/streamhub-input#~0.3.11",
     "rework": "gobengo/rework#~0.21.0",
-    "livefyre-theme-styler": "git://github.com/cheung31/livefyre-theme-styler.git"
+    "livefyre-theme-styler": "git://github.com/cheung31/livefyre-theme-styler.git",
+    "node-uuid": "1.4.1"
   },
   "devDependencies": {
     "jasmine": "1.3.1",
