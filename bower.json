@@ -10,6 +10,7 @@
     "streamhub-input": "Livefyre/streamhub-input#~0.3.11",
     "rework": "gobengo/rework#~0.21.0",
     "livefyre-theme-styler": "git://github.com/cheung31/livefyre-theme-styler.git",
+    "livefyre-package-attribute": "git://github.com/Livefyre/livefyre-package-attribute.git",
     "node-uuid": "1.4.1"
   },
   "devDependencies": {
