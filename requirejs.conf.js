@@ -11,6 +11,7 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
+    mout: 'lib/mout/src',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer'
@@ -67,6 +68,16 @@ require.config({
     name: "less",
     location: "lib/require-less",
     main: "less"
+  },{
+    name: 'streamhub-share',
+    location: 'lib/streamhub-share/src',
+    main: 'share-button.js'
+  },{
+    name: 'streamhub-ui',
+    location: 'lib/streamhub-ui/src'
+  },{
+    name: "livefyre-bootstrap",
+    location: "lib/livefyre-bootstrap/src"
   }],
   shim: {
     jquery: {
