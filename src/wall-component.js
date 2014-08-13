@@ -49,7 +49,7 @@ var WallComponent = module.exports = function (opts) {
         modal: opts.modal,
         pickColumn: opts.pickColumn
     });
-    this._theme = opts.theme || {};
+    this._themeOpts = ThemeStyler.getThemeOpts(opts);
 
     // Be a writable that really just proxies to the wallView
     Passthrough.apply(this, arguments);
@@ -84,24 +84,11 @@ WallComponent.prototype.setElement = function (el) {
 };
 
 WallComponent.prototype._configure = function (configOpts) {
-    var themeOpts = {};
-
-    for (var opt in configOpts) {
-        if (configOpts.hasOwnProperty(opt)) {
-           if (Object.keys(ThemeStyler.TEMPLATE_MAP).indexOf(opt) >= 0) {
-                themeOpts[opt] = configOpts[opt];
-                delete configOpts[opt];
-            }
-        }
-    }
-
-    if (Object.keys(themeOpts).length) {
-        this._applyTheme(themeOpts);
-    }
+    this._applyTheme(configOpts);
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
-    this._theme = $.extend(this._theme, theme);
+    this._theme = theme;
     this._themeStyler = this._themeStyler || new ThemeStyler({
         prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
@@ -114,8 +101,8 @@ WallComponent.prototype._applyTheme = function (theme) {
 WallComponent.prototype.render = function () {
     View.prototype.render.apply(this, arguments);
 
-    if (this._theme) {
-        this._applyTheme(this._theme);
+    if (this._themeOpts) {
+        this._applyTheme(this._themeOpts);
     }
     
     var el = this.el;
