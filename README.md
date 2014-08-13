@@ -109,6 +109,64 @@ var wall = new LiveMediaWall({
 });
 ```
 
+####`cardBackgroundColor`
+The value to change the background color of a content card in the media wall.
+
+```
+var wall = new LiveMediaWall({
+    el: el,
+    cardBackgroundColor: 'blue'
+```
+
+####`linkColor`
+The value to change the color of hyperlinks (e.g. Links in body, display name link).
+
+```
+var wall = new LiveMediaWall({
+    el: el,
+    linkColor: 'red'
+});
+```
+
+####`textColor`
+The value to change the color of text.
+
+```
+var wall = new LiveMediaWall({
+    el: el,
+    textColor: '#333`
+```
+
+####`footerTextColor`
+The value to change the color of secondary text (e.g. Footer text, username in byline).
+
+```
+var wall = new LiveMediWall({
+    el: el,
+    footerTextColor: '#CCC'
+});
+```
+
+####`displayNameColor`
+The value to change the color of the display name in the byline.
+
+```
+var wall = new LiveMediaWall({
+    el: el,
+    displayNameColor: 'orange'
+});
+```
+
+####`usernameColor`
+The value to change the color of the username in the byline
+
+```
+var wall = new LiveMediaWall({
+    el: el,
+    usernameColor: 'green'
+});
+```
+
 ## Local Development
 
 Instead of using a built version of streamhub-wall from Livefyre's CDN, you may wish to fork, develop on the repo locally, or include it in your existing JavaScript application.
