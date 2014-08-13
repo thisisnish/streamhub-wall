@@ -369,6 +369,21 @@ define([
     };
 
     /**
+     * Remove a content model or its view from the MediaWall.
+     * It removes the view from this.views[] and also calls remove() on the view,
+     * which fires an event so that the columnView also removes a reference.
+     * @param content {Content|ContentView} the item to remove
+     * @override
+     */
+    MediaWallView.prototype.remove = function (content) {
+        var contentView = content && content.el ? content : this.getContentView(content);
+        // Should fire an event to containing views and also detach the
+        // .el from the dom
+        contentView.remove();
+        return ContentListView.prototype.remove.apply(this, arguments);
+    }
+
+    /**
      * Returns a function, that, as long as it continues to be invoked, will not be triggered.
      * The function will be called after it stops being called for N milliseconds.
      * Copied from Underscore.js (MIT License) http://underscorejs.org/docs/underscore.html#section-65

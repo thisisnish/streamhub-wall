@@ -110,10 +110,16 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
                 });
 
                 it('should remove the contentView from the appropriate column view', function () {
+                    var contentView3 = view.getContentView(content3);
                     expect(view._columnViews[0].views.length).toEqual(1);
                     expect(view._columnViews[0].views[0].content.body).toEqual('what3');
                     view.remove(content3);
+                    // not in media wall child views array
+                    expect(view.views.indexOf(contentView3)).toEqual(-1);
+                    // not in specific columnviews child views list
                     expect(view._columnViews[0].views.length).toEqual(0);
+                    // not in dom
+                    expect(view.$el.has(contentView3.el).length).toEqual(0);
                 });
             });
         });
