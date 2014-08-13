@@ -39,12 +39,12 @@ define([
             }
         }, opts.debounceRelayout || 200);
 
-        ContentListView.call(this, opts);
-
         if (opts.columns && typeof opts.columns === 'number') {
             this._autoFitColumns = false;
             this.setColumns(opts.columns);
         }
+
+        ContentListView.call(this, opts);
         
         // Patch the modal so that it has the right package selector when it
         // is shown (like data-lf-package="streamhub-wall#3.0.0")
@@ -154,8 +154,8 @@ define([
      * @returns {Number} The width of the column in pixels
      */
     MediaWallView.prototype._getColumnWidth = function () {
-        var $contentContainerEl = this.$el.find('.'+this.columnClassName);
-        if ($contentContainerEl.length) {
+        var $contentContainerEl = this.$el && this.$el.find('.'+this.columnClassName);
+        if ($contentContainerEl && $contentContainerEl.length) {
             this._columnWidth = $contentContainerEl[0].getBoundingClientRect().width;
             return this._columnWidth;
         }
@@ -188,7 +188,6 @@ define([
         }
 
         var columnView;
-
         // then render the columns
         if (this._columnViews.length !== this._numberOfColumns) {
             for (var i=0; i < this._numberOfColumns; i++) {
@@ -368,6 +367,21 @@ define([
         }
         ContentListView.prototype.showMore.call(this, numToShow);
     };
+
+    /**
+     * Remove a content model or its view from the MediaWall.
+     * It removes the view from this.views[] and also calls remove() on the view,
+     * which fires an event so that the columnView also removes a reference.
+     * @param content {Content|ContentView} the item to remove
+     * @override
+     */
+    MediaWallView.prototype.remove = function (content) {
+        var contentView = content && content.el ? content : this.getContentView(content);
+        // Should fire an event to containing views and also detach the
+        // .el from the dom
+        contentView.remove();
+        return ContentListView.prototype.remove.apply(this, arguments);
+    }
 
     /**
      * Returns a function, that, as long as it continues to be invoked, will not be triggered.
