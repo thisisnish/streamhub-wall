@@ -181,16 +181,16 @@ define([
     };
 
     MediaWallView.prototype.render = function () {
-        ContentListView.prototype.render.call(this);
-
         if (this._autoFitColumns) {
             this.fitColumns();
         }
 
+        ContentListView.prototype.render.call(this);
+
         var columnView;
         // then render the columns
         if (this._columnViews.length !== this._numberOfColumns) {
-            for (var i=0; i < this._numberOfColumns; i++) {
+            while (this._columnViews.length < this._numberOfColumns) {
                 columnView = this._createColumnView();
                 this._attachColumnView(columnView);
                 columnView.render();
@@ -204,7 +204,6 @@ define([
 
     /**
      * Determines the number columns based on the configured #_contentWidth.
-     * Initiates relayout logic for the determined number of columns.
      * @param opts {Object}
      */
     MediaWallView.prototype.fitColumns = function (opts) {
