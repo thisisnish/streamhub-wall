@@ -33,7 +33,7 @@ var uuid = require('node-uuid');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
-    this._uuid = uuid.v4();
+    this._uuid = uuid();
     View.apply(this, arguments);
 
     opts = opts || {};
