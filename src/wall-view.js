@@ -327,11 +327,23 @@ define([
         this._columnHeights[targetColumnIndex] = targetColumnView.$el.height();
     };
 
+    /**
+     * Relayout the items in the Wall.
+     * If called with no arguments, and the wall was not constructed with a
+     * specific number of columns, it will redetect an appropriate number given
+     * this.el's width
+     * @param [opts] Options
+     * @param [opts.columns] Force a specific new number of columns. Once you do
+     *   this, the wall will no longer automatically detect an appropriate number
+     *   of columns on window resize
+     */
     MediaWallView.prototype.relayout = function (opts) {
         opts = opts || {};
         if (opts.columns) {
             this._autoFitColumns = false;
             this.setColumns(opts.columns);
+        } else if (this._autoFitColumns) {
+            this.fitColumns();
         }
 
         this._clearColumns();
