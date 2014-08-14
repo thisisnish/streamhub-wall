@@ -167,6 +167,16 @@ var wall = new LiveMediaWall({
 });
 ```
 
+####`fontFamily`
+The value to change the font family of the body text
+
+```
+var wall = new LiveMediaWall({
+    el: el,
+    fontFamily: 'Helvetica, Arial, sans-serif'
+});
+```
+
 ## Local Development
 
 Instead of using a built version of streamhub-wall from Livefyre's CDN, you may wish to fork, develop on the repo locally, or include it in your existing JavaScript application.

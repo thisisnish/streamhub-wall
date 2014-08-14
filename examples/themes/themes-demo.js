@@ -26,7 +26,8 @@ $, Collection, Content, Auth, LiveMediaWall) {
         linkColor: 'orange',
         footerTextColor: 'lime',
         displayNameColor: 'cyan',
-        usernameColor: 'red'
+        usernameColor: 'red',
+        fontFamily: 'Helvetica, Arial'
     });
 
     var wall2 = window.view = new LiveMediaWall({
