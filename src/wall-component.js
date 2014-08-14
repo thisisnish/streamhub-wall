@@ -86,9 +86,9 @@ WallComponent.prototype.setElement = function (el) {
 WallComponent.prototype._configure = function (configOpts) {
     this._applyTheme(configOpts);
     if (configOpts.columns) {
-        this._wallView._autoFitColumns = false;
-        this._wallView.setColumns(configOpts.columns);
-        this._wallView.relayout();
+        this._wallView.relayout({
+            columns: configOpts.columns
+        });
     }
 };
 

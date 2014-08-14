@@ -329,6 +329,11 @@ define([
 
     MediaWallView.prototype.relayout = function (opts) {
         opts = opts || {};
+        if (opts.columns) {
+            this._autoFitColumns = false;
+            this.setColumns(opts.columns);
+        }
+
         this._clearColumns();
         for (var i=0; i < this._numberOfColumns; i++) {
             var columnView = this._createColumnView();
