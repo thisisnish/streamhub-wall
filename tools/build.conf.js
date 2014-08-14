@@ -20,7 +20,7 @@
     excludeRequireCss: true
   },
   cjsTranslate: true,
-  optimize: "none",
+  optimize: "uglify2",
   preserveLicenseComments: false,
   uglify2: {
     compress: {
