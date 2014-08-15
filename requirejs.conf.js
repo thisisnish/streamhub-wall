@@ -15,7 +15,7 @@ require.config({
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
     mout: 'lib/mout/src',
-    'livefyre-package-attribute': 'lib/livefyre-package-attribute/src/main',
+    'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index'
   },
   packages: [{
@@ -105,8 +105,8 @@ require.config({
   css: {
     clearFileEachBuild: 'dist/streamhub-wall.min.css',
     transformEach: {
-      requirejs: 'tools/prefix-css-requirejs',
-      node: 'tools/prefix-css-node'
+      requirejs: 'node_modules/livefyre-package-attribute/tools/prefix-css-requirejs',
+      node: 'node_modules/livefyre-package-attribute/tools/prefix-css-node'
     }
   },
   less: {

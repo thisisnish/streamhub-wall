@@ -2,7 +2,7 @@
   "name": "streamhub-wall",
   "description": "Livefyre LiveMediaWall",
   "author": "Livefyre <support@livefyre.com>",
-  "version": "3.2.0-beta.1",
+  "version": "3.2.0-beta.2",
   "devDependencies": {
     "bower": "1.3.8",
     "http-server": "*",
@@ -12,8 +12,7 @@
     "lfcdn": "git://github.com/Livefyre/lfcdn",
     "phantom": "*",
     "phantomjs": "~1.9.2-2",
-    "requirejs": "2.1.9",
-    "rework": "git://github.com/gobengo/rework"
+    "requirejs": "2.1.9"
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install && make dist",
@@ -24,5 +23,8 @@
     "test-jenkins": "node tests/runner.js > tests.log",
     "build-version": "node tools/build_version.js",
     "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json"
+  },
+  "dependencies": {
+    "livefyre-package-attribute": "git://github.com/Livefyre/livefyre-package-attribute.git#v0.1.1"
   }
 }
