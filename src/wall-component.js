@@ -9,6 +9,7 @@ var PostContentButton = require('streamhub-input/javascript/content-editor/butto
 var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
 var uuid = require('node-uuid');
+var Collection = require('streamhub-sdk/collection');
 
 /**
  * LiveMediaWall Component
@@ -145,6 +146,11 @@ WallComponent.prototype.render = function () {
 WallComponent.prototype.setCollection = function (collection) {
     if (this._collection) {
         this._collection.unpipe(this._wallView);
+    }
+    // If this is not a full streamhub-sdk collection object, then make
+    // it one
+    if (typeof collection.pipe !== 'function') {
+        collection = new Collection(collection);
     }
     this._collection = collection;
     this._collection.pipe(this._wallView);
