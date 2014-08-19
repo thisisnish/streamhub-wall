@@ -161,5 +161,5 @@ WallComponent.prototype.setCollection = function (collection) {
  * The entered view callback
  */
 WallComponent.prototype.enteredView = function () {
-    this.wallView.relayout();
+    this._wallView.relayout();
 };
