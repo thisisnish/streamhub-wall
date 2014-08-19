@@ -110,7 +110,7 @@ WallComponent.prototype.render = function () {
     if (this._themeOpts) {
         this._applyTheme(this._themeOpts);
     }
-    
+
     var el = this.el;
     var subviews = [this._headerView, this._wallView];
 
@@ -157,3 +157,9 @@ WallComponent.prototype.setCollection = function (collection) {
     this._headerView.setCollection(collection);
 };
 
+/**
+ * The entered view callback
+ */
+WallComponent.prototype.enteredView = function () {
+    this.wallView.relayout();
+};

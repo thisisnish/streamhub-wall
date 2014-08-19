@@ -68,4 +68,10 @@ describe('A MediaWallComponent', function () {
             expect(wall.$('menu').children().length).toBe(1);
         });
     });
+    describe('.enteredView', function () {
+        it('is a function', function () {
+            var wall = new WallComponent();
+            expect(typeof wall.enteredView).toBe('function');
+        });
+    });
 });
