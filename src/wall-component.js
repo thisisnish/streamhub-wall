@@ -48,7 +48,7 @@ var WallComponent = module.exports = function (opts) {
         initial: opts.initial,
         showMore: opts.showMore,
         modal: opts.modal,
-        pickColumn: opts.pickColumn
+        pickColumn: opts.pickCol.umn
     });
     this._themeOpts = ThemeStyler.getThemeOpts(opts);
 
@@ -84,7 +84,7 @@ WallComponent.prototype.setElement = function (el) {
     this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
 
-WallComponent.prototype._configure = function (configOpts) {
+WallComponent.prototype.configure = function (configOpts) {
     this._applyTheme(configOpts);
     if (configOpts.columns) {
         this._wallView.relayout({
