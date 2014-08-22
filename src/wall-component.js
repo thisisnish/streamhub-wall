@@ -48,7 +48,7 @@ var WallComponent = module.exports = function (opts) {
         initial: opts.initial,
         showMore: opts.showMore,
         modal: opts.modal,
-        pickColumn: opts.pickCol.umn
+        pickColumn: opts.pickColumn
     });
     this._themeOpts = ThemeStyler.getThemeOpts(opts);
 
