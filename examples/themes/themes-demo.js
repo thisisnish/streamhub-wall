@@ -32,6 +32,7 @@ $, Collection, Content, Auth, LiveMediaWall) {
 
     var wall2 = window.view = new LiveMediaWall({
         el: document.getElementById("listView2"),
-        collection: collection
+        collection: collection,
+        theme: 'light'
     });
 });

@@ -63,6 +63,9 @@ require.config({
     name: 'streamhub-editor/templates',
     location: 'lib/streamhub-editor/src/templates'
   },{
+    name: 'streamhub-editor/styles',
+    location: 'lib/streamhub-editor/src/styles'
+  },{
     name: 'livefyre-theme-styler',
     location: 'lib/livefyre-theme-styler/src'
   },{
@@ -114,7 +117,7 @@ require.config({
     paths: ['lib'],
     relativeUrls: true,
     modifyVars: {
-      '@icon-font-path': "\"http://cdn.livefyre.com/libs/livefyre-bootstrap/v1.1.0/fonts/\""
+      '@icon-font-path': "\"http://cdn.livefyre.com/libs/livefyre-bootstrap/v1.3.4/fonts/\""
     }
   }
 });
