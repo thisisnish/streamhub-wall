@@ -72,9 +72,10 @@ inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
 
 WallComponent.prototype._getThemeOpts = function (opts) {
-    if (opts.theme === 'light') {
+    var theme = opts.theme ? opts.theme.toLowerCase() : '';
+    if (theme === 'light') {
         return lightTheme;
-    } else if (opts.theme === 'dark') {
+    } else if (theme === 'dark') {
         return darkTheme;
     }
 
