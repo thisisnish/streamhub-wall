@@ -73,13 +73,14 @@ inherits.parasitically(WallComponent, View);
 
 WallComponent.prototype._getThemeOpts = function (opts) {
     var theme = opts.theme ? opts.theme.toLowerCase() : '';
+    var themeOpts;
     if (theme === 'light') {
-        return lightTheme;
+        themeOpts = lightTheme;
     } else if (theme === 'dark') {
-        return darkTheme;
+        themeOpts = darkTheme;
     }
 
-    return ThemeStyler.getThemeOpts(opts);
+    return $.extend(themeOpts, ThemeStyler.getThemeOpts(opts));
 };
 
 /**
