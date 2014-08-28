@@ -1,9 +1,9 @@
 var darkTheme = {
     cardBackgroundColor: '#343139',
     linkColor: '#2c8ee0',
-    textColor: '#A2A0AA',
+    textColor:  'rgba(255, 255, 255, 0.7)',
     fontFamily: 'Georgia,Times,"Times New Roman",serif',
-    footerTextColor: '#686571'
+    footerTextColor: 'rgba(255, 255, 255, 0.3)'
 };
 
 module.exports = darkTheme;
