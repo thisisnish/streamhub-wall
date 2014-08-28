@@ -8,6 +8,8 @@ var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
+var lightTheme = require('streamhub-wall/themes/light');
+var darkTheme = require('streamhub-wall/themes/dark');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
 
@@ -50,7 +52,7 @@ var WallComponent = module.exports = function (opts) {
         modal: opts.modal,
         pickColumn: opts.pickColumn
     });
-    this._themeOpts = ThemeStyler.getThemeOpts(opts);
+    this._themeOpts = this._getThemeOpts(opts);
 
     // Be a writable that really just proxies to the wallView
     Passthrough.apply(this, arguments);
@@ -69,6 +71,18 @@ var WallComponent = module.exports = function (opts) {
 
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
+
+WallComponent.prototype._getThemeOpts = function (opts) {
+    var theme = opts.theme ? opts.theme.toLowerCase() : '';
+    var themeOpts;
+    if (theme === 'light') {
+        themeOpts = lightTheme;
+    } else if (theme === 'dark') {
+        themeOpts = darkTheme;
+    }
+
+    return $.extend(themeOpts, ThemeStyler.getThemeOpts(opts));
+};
 
 /**
  * Set the HTMLElement that this View renders in
