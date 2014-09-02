@@ -10,6 +10,9 @@ var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
 var lightTheme = require('streamhub-wall/themes/light');
 var darkTheme = require('streamhub-wall/themes/dark');
+var smallTheme = require('streamhub-wall/themes/small');
+var mediumTheme = require('streamhub-wall/themes/medium');
+var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 
 /**
@@ -80,7 +83,20 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         themeOpts = darkTheme;
     }
 
-    return $.extend(themeOpts, ThemeStyler.getThemeOpts(opts));
+    var fontSize = opts.fontSize ? opts.fontSize.toLowerCase() : '';
+    var fontSizeOpts;
+    if (fontSize === 'small') {
+        fontSizeOpts = smallTheme;
+    } else if (fontSize === 'medium') {
+        fontSizeOpts = mediumTheme;
+    } else if (fontSize === 'large') {
+        fontSizeOpts = largeTheme;
+    }
+
+    return $.extend(themeOpts,
+        fontSizeOpts,
+        ThemeStyler.getThemeOpts(opts)
+    );
 };
 
 /**
