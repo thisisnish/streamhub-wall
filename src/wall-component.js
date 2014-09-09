@@ -1,6 +1,6 @@
 var $ = require('streamhub-sdk/jquery');
 var inherits = require('inherits');
-var View = require('view');
+var View = require('view/view');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
 var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
@@ -38,13 +38,36 @@ var uuid = require('node-uuid');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
-    this._uuid = uuid();
-    View.apply(this, arguments);
+    opts = this._opts = opts || {};
 
-    opts = opts || {};
+    this._uuid = uuid();
+
+    View.apply(this, arguments);
+    // Be a writable that really just proxies to the wallView
+    Passthrough.apply(this, arguments);
+
+    this._initializeChildViews(opts);
+
+    this._themeOpts = this._getThemeOpts(opts);
+
+    if (( ! ('autoRender' in opts)) || opts.autoRender) {
+        this.render();
+    }
+    if (opts.collection) {
+        this.setCollection(opts.collection);
+    }
+};
+
+inherits(WallComponent, Passthrough);
+inherits.parasitically(WallComponent, View);
+
+WallComponent.prototype._initializeChildViews = function (opts) {
+    this._opts = opts;
+
     this._headerView = opts.headerView || new WallHeaderView({
         postButton: opts.postButton
     });
+
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
         minContentWidth: opts.minContentWidth,
@@ -53,26 +76,13 @@ var WallComponent = module.exports = function (opts) {
         showMore: opts.showMore,
         modal: opts.modal,
         pickColumn: opts.pickColumn
-    });
-    this._themeOpts = this._getThemeOpts(opts);
+    })
 
-    // Be a writable that really just proxies to the wallView
-    Passthrough.apply(this, arguments);
     this.pipe(this._wallView);
     // including more, so that Collection piping works right
     this.more = new Passthrough();
     this.more.pipe(this._wallView.more);
-
-    if (opts.collection) {
-        this.setCollection(opts.collection);
-    }
-    if (( ! ('autoRender' in opts)) || opts.autoRender) {
-        this.render();
-    }
 };
-
-inherits(WallComponent, Passthrough);
-inherits.parasitically(WallComponent, View);
 
 WallComponent.prototype._getThemeOpts = function (opts) {
     var theme = opts.theme ? opts.theme.toLowerCase() : '';
@@ -173,11 +183,28 @@ WallComponent.prototype.render = function () {
  * @param {collection}
  */
 WallComponent.prototype.setCollection = function (collection) {
+    if (this._isSameCollection(collection)) {
+        return;
+    }
+
     if (this._collection) {
         this._collection.unpipe(this._wallView);
     }
+    this._wallView.destroy();
+
+    this._opts.collection = collection;
+    this._initializeChildViews(this._opts);
+
     this._collection = collection;
     this._collection.pipe(this._wallView);
     this._headerView.setCollection(collection);
+    this.render();
+};
+
+WallComponent.prototype._isSameCollection = function (collection) {
+    return this._collection && this._collection.network === collection.network
+        && this._collection.environment === collection.environment
+        && this._collection.siteId === collection.siteId
+        && this._collection.articleId === collection.articleId;
 };
 

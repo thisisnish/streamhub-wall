@@ -23,6 +23,7 @@ $, Collection, Content, Auth, LiveMediaWall) {
         "articleId": "1",
         "environment": "livefyre.com"
     };
+    window.Collection = Collection;
     var collection = new Collection(opts);
 
     var wall = window.view = new LiveMediaWall({
