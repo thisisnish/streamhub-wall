@@ -32,6 +32,21 @@ describe('A MediaWallComponent', function () {
         wall.render();
         expect(wall.$('.streamhub-wall-component').length).toBe(1);
     });
+    describe('opts.collection', function () {
+        it('can be just a POJO', function () {
+            var collectionOpts = {
+                "network": "labs-t402.fyre.co",
+                "siteId": "303827",
+                "articleId": "xbox-0",
+                "environment": "t402.livefyre.com"
+            };
+            var wall = new WallComponent({
+                collection: collectionOpts
+            });
+            expect(wall._collection.network).toBe(collectionOpts.network);
+            expect(typeof wall._collection.pipe).toBe('function');
+        })
+    });
     describe('upload button', function () {
         it('does not render if there is no auth login delegate', function () {
             var wall = new WallComponent();
@@ -51,6 +66,12 @@ describe('A MediaWallComponent', function () {
             });
             wall.render();
             expect(wall.$('menu').children().length).toBe(1);
+        });
+    });
+    describe('.enteredView', function () {
+        it('is a function', function () {
+            var wall = new WallComponent();
+            expect(typeof wall.enteredView).toBe('function');
         });
     });
 });

@@ -14,6 +14,7 @@ var smallTheme = require('streamhub-wall/themes/small');
 var mediumTheme = require('streamhub-wall/themes/medium');
 var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
+var Collection = require('streamhub-sdk/collection');
 
 /**
  * LiveMediaWall Component
@@ -76,7 +77,7 @@ WallComponent.prototype._initializeChildViews = function (opts) {
         showMore: opts.showMore,
         modal: opts.modal,
         pickColumn: opts.pickColumn
-    })
+    });
 
     this.pipe(this._wallView);
     // including more, so that Collection piping works right
@@ -123,7 +124,7 @@ WallComponent.prototype.setElement = function (el) {
     this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
 
-WallComponent.prototype._configure = function (configOpts) {
+WallComponent.prototype.configure = function (configOpts) {
     this._applyTheme(configOpts);
     if (configOpts.columns) {
         this._wallView.relayout({
@@ -149,7 +150,7 @@ WallComponent.prototype.render = function () {
     if (this._themeOpts) {
         this._applyTheme(this._themeOpts);
     }
-    
+
     var el = this.el;
     var subviews = [this._headerView, this._wallView];
 
@@ -183,6 +184,12 @@ WallComponent.prototype.render = function () {
  * @param {collection}
  */
 WallComponent.prototype.setCollection = function (collection) {
+    // If this is not a full streamhub-sdk collection object, then make
+    // it one
+    if (typeof collection.pipe !== 'function') {
+        collection = new Collection(collection);
+    }
+
     if (this._isSameCollection(collection)) {
         return;
     }
@@ -208,3 +215,9 @@ WallComponent.prototype._isSameCollection = function (collection) {
         && this._collection.articleId === collection.articleId;
 };
 
+/**
+ * The entered view callback
+ */
+WallComponent.prototype.enteredView = function () {
+    this._wallView.relayout();
+};
