@@ -1,6 +1,6 @@
 var $ = require('streamhub-sdk/jquery');
 var inherits = require('inherits');
-var View = require('view/view');
+var View = require('view');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
 var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
