@@ -112,11 +112,10 @@ WallComponent.prototype._configure = function (configOpts) {
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
-    this._theme = theme;
     this._themeStyler = this._themeStyler || new ThemeStyler({
         prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
-    this._themeStyler.applyTheme(this._theme);
+    this._themeStyler.applyTheme(theme);
 };
 
 /**
