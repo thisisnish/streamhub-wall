@@ -47,7 +47,10 @@ var WallComponent = module.exports = function (opts) {
     // Be a writable that really just proxies to the wallView
     Passthrough.apply(this, arguments);
 
-    this._initializeChildViews(opts);
+    this._headerView = opts.headerView || new WallHeaderView({
+        postButton: opts.postButton
+    });
+    this._initializeWallView(opts);
 
     this._themeOpts = this._getThemeOpts(opts);
 
@@ -62,12 +65,8 @@ var WallComponent = module.exports = function (opts) {
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
 
-WallComponent.prototype._initializeChildViews = function (opts) {
+WallComponent.prototype._initializeWallView = function (opts) {
     this._opts = opts;
-
-    this._headerView = opts.headerView || new WallHeaderView({
-        postButton: opts.postButton
-    });
 
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
@@ -200,7 +199,7 @@ WallComponent.prototype.setCollection = function (collection) {
     this._wallView.destroy();
 
     this._opts.collection = collection;
-    this._initializeChildViews(this._opts);
+    this._initializeWallView(this._opts);
 
     this._collection = collection;
     this._collection.pipe(this._wallView);
