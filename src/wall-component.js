@@ -119,6 +119,9 @@ WallComponent.prototype.configure = function (configOpts) {
             columns: configOpts.columns
         });
     }
+    if (configOpts.collection) {
+        this.setCollection(configOpts.collection);
+    }
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
