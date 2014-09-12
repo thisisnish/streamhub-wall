@@ -4,6 +4,7 @@ var jasmine = require('jasmine');
 var jasmineJquery = require('jasmine-jquery');
 var streamhubWall = require('streamhub-wall');
 var WallComponent = require('streamhub-wall/wall-component');
+var MockCollection = require('streamhub-sdk-tests/mocks/collection/mock-collection');
 var packageAttribute = require('streamhub-wall/package-attribute');
 var auth = require('auth');
 
@@ -72,6 +73,31 @@ describe('A MediaWallComponent', function () {
         it('is a function', function () {
             var wall = new WallComponent();
             expect(typeof wall.enteredView).toBe('function');
+        });
+    });
+    describe('.setCollection', function () {
+        var wall;
+        var collection = new MockCollection();
+
+        beforeEach(function () {
+            wall = new WallComponent();
+        });
+        it('updates #_wallView.collection property', function () {
+            wall.setCollection(collection);
+            expect(wall._collection).toBe(collection);
+        });
+        it('destroys current wallView', function () {
+            spyOn(wall._wallView, 'destroy');
+            var oldWallView = wall._wallView;
+            wall.setCollection(collection);
+            expect(oldWallView.destroy).toHaveBeenCalled();
+        });
+        it('initializes a new wallView replacing the existing one', function () {
+            spyOn(wall, '_initializeWallView').andCallThrough();
+            var oldWallView = wall._wallView;
+            wall.setCollection(collection);
+            expect(wall._initializeWallView).toHaveBeenCalled();
+            expect(wall._wallView).not.toBe(oldWallView);
         });
     });
 });
