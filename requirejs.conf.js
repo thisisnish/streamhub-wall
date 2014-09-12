@@ -15,7 +15,6 @@ require.config({
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
     mout: 'lib/mout/src',
-    tinycolor: 'lib/tinycolor2/tinycolor',
     'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index'
   },

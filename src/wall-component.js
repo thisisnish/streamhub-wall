@@ -8,8 +8,6 @@ var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
-var lightTheme = require('streamhub-wall/themes/light');
-var darkTheme = require('streamhub-wall/themes/dark');
 var smallTheme = require('streamhub-wall/themes/small');
 var mediumTheme = require('streamhub-wall/themes/medium');
 var largeTheme = require('streamhub-wall/themes/large');
@@ -85,16 +83,10 @@ WallComponent.prototype._initializeWallView = function (opts) {
 };
 
 WallComponent.prototype._getThemeOpts = function (opts) {
-    var theme = opts.theme ? opts.theme.toLowerCase() : '';
-    var themeOpts;
-    if (theme === 'light') {
-        themeOpts = lightTheme;
-    } else if (theme === 'dark') {
-        themeOpts = darkTheme;
-    }
+    opts = opts || {};
 
     var fontSize = opts.fontSize ? opts.fontSize.toLowerCase() : '';
-    var fontSizeOpts;
+    var fontSizeOpts = {};
     if (fontSize === 'small') {
         fontSizeOpts = smallTheme;
     } else if (fontSize === 'medium') {
@@ -103,10 +95,7 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         fontSizeOpts = largeTheme;
     }
 
-    return $.extend(themeOpts,
-        fontSizeOpts,
-        ThemeStyler.getThemeOpts(opts)
-    );
+    return $.extend(fontSizeOpts, ThemeStyler.getThemeOpts(opts));
 };
 
 /**
@@ -133,11 +122,10 @@ WallComponent.prototype.configure = function (configOpts) {
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
-    this._theme = theme;
     this._themeStyler = this._themeStyler || new ThemeStyler({
         prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
-    this._themeStyler.applyTheme(this._theme);
+    this._themeStyler.applyTheme(theme);
 };
 
 /**

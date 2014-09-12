@@ -27,13 +27,14 @@ $, Collection, Content, Auth, LiveMediaWall) {
         footerTextColor: 'lime',
         displayNameColor: 'cyan',
         usernameColor: 'red',
-        fontFamily: 'Helvetica, Arial'
+        fontFamily: 'Helvetica, Arial',
+        linkAttachmentBackgroundColor: '#555',
+        linkAttachmentBorderColor: '#888'
     });
 
     var wall2 = window.view = new LiveMediaWall({
         el: document.getElementById("listView2"),
         collection: collection,
-        theme: 'dark',
         fontSize: 'small'
     });
 });
