@@ -12,6 +12,7 @@ var smallTheme = require('streamhub-wall/themes/small');
 var mediumTheme = require('streamhub-wall/themes/medium');
 var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
+var Collection = require('streamhub-sdk/collection');
 
 /**
  * LiveMediaWall Component
@@ -36,13 +37,35 @@ var uuid = require('node-uuid');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
-    this._uuid = uuid();
-    View.apply(this, arguments);
+    opts = this._opts = opts || {};
 
-    opts = opts || {};
+    this._uuid = uuid();
+
+    View.apply(this, arguments);
+    // Be a writable that really just proxies to the wallView
+    Passthrough.apply(this, arguments);
+
     this._headerView = opts.headerView || new WallHeaderView({
         postButton: opts.postButton
     });
+    this._initializeWallView(opts);
+
+    this._themeOpts = this._getThemeOpts(opts);
+
+    if (( ! ('autoRender' in opts)) || opts.autoRender) {
+        this.render();
+    }
+    if (opts.collection) {
+        this.setCollection(opts.collection);
+    }
+};
+
+inherits(WallComponent, Passthrough);
+inherits.parasitically(WallComponent, View);
+
+WallComponent.prototype._initializeWallView = function (opts) {
+    this._opts = opts;
+
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
         minContentWidth: opts.minContentWidth,
@@ -52,25 +75,12 @@ var WallComponent = module.exports = function (opts) {
         modal: opts.modal,
         pickColumn: opts.pickColumn
     });
-    this._themeOpts = this._getThemeOpts(opts);
 
-    // Be a writable that really just proxies to the wallView
-    Passthrough.apply(this, arguments);
     this.pipe(this._wallView);
     // including more, so that Collection piping works right
     this.more = new Passthrough();
     this.more.pipe(this._wallView.more);
-
-    if (opts.collection) {
-        this.setCollection(opts.collection);
-    }
-    if (( ! ('autoRender' in opts)) || opts.autoRender) {
-        this.render();
-    }
 };
-
-inherits(WallComponent, Passthrough);
-inherits.parasitically(WallComponent, View);
 
 WallComponent.prototype._getThemeOpts = function (opts) {
     opts = opts || {};
@@ -102,12 +112,15 @@ WallComponent.prototype.setElement = function (el) {
     this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
 
-WallComponent.prototype._configure = function (configOpts) {
+WallComponent.prototype.configure = function (configOpts) {
     this._applyTheme(configOpts);
     if (configOpts.columns) {
         this._wallView.relayout({
             columns: configOpts.columns
         });
+    }
+    if (configOpts.collection) {
+        this.setCollection(configOpts.collection);
     }
 };
 
@@ -127,7 +140,7 @@ WallComponent.prototype.render = function () {
     if (this._themeOpts) {
         this._applyTheme(this._themeOpts);
     }
-    
+
     var el = this.el;
     var subviews = [this._headerView, this._wallView];
 
@@ -161,11 +174,40 @@ WallComponent.prototype.render = function () {
  * @param {collection}
  */
 WallComponent.prototype.setCollection = function (collection) {
+    // If this is not a full streamhub-sdk collection object, then make
+    // it one
+    if (typeof collection.pipe !== 'function') {
+        collection = new Collection(collection);
+    }
+
+    if (this._isSameCollection(collection)) {
+        return;
+    }
+
     if (this._collection) {
         this._collection.unpipe(this._wallView);
     }
+    this._wallView.destroy();
+
+    this._opts.collection = collection;
+    this._initializeWallView(this._opts);
+
     this._collection = collection;
     this._collection.pipe(this._wallView);
     this._headerView.setCollection(collection);
+    this.render();
 };
 
+WallComponent.prototype._isSameCollection = function (collection) {
+    return this._collection && this._collection.network === collection.network
+        && this._collection.environment === collection.environment
+        && this._collection.siteId === collection.siteId
+        && this._collection.articleId === collection.articleId;
+};
+
+/**
+ * The entered view callback
+ */
+WallComponent.prototype.enteredView = function () {
+    this._wallView.relayout();
+};

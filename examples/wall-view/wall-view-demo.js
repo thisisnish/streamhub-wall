@@ -25,6 +25,7 @@ $, Collection, Content, Auth, WallView, packageAttribute) {
         "articleId": "1",
         "environment": "livefyre.com"
     };
+    window.Collection = Collection;
     var collection = new Collection(opts);
 
     var wallView = window.view = new WallView({

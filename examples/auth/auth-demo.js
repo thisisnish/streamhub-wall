@@ -23,11 +23,12 @@ $, Collection, Content, Auth, LiveMediaWall) {
         "articleId": "1",
         "environment": "livefyre.com"
     };
+    window.Collection = Collection;
     var collection = new Collection(opts);
 
     var wall = window.view = new LiveMediaWall({
         el: document.getElementById("listView"),
-        collection: collection,
+        collection: opts,
         postButton: true,
         sharer: function (content) {
             console.log('share', content);
