@@ -177,6 +177,42 @@ var wall = new LiveMediaWall({
 });
 ```
 
+####`sourceLogoColor`
+The color of the source logo
+
+####`buttonTextColor`
+The color for the button labels
+
+####`buttonHoverBackgroundColor`
+The color of the button background on hover
+
+####`buttonActiveBackgroundColor`
+The color of the button background on active
+
+####`buttonBorderColor`
+The color of button border
+
+####`bodyFontSize`
+The font size of content body text
+
+####`bodyLineHeight`
+The line height of content body text
+
+####`titleFontSize`
+The font size of content title
+
+####`titleLineHeight`
+The line height of content title
+
+####`linkAttachmentTextColor`
+The color of link attachment text
+
+####`linkAttachmentBackgroundColor`
+The background color of link attachments (stacked attachments)
+
+####`linkAttachmentBorderColor`
+The border color of link attachments (stacked attachments)
+
 ## Local Development
 
 Instead of using a built version of streamhub-wall from Livefyre's CDN, you may wish to fork, develop on the repo locally, or include it in your existing JavaScript application.
