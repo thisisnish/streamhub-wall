@@ -119,6 +119,10 @@ WallComponent.prototype.configure = function (configOpts) {
             columns: configOpts.columns
         });
     }
+    if (configOpts.initial) {
+        this._opts.initial = configOpts.initial;
+        this.setCollection(this._collection, { force: true });
+    }
     if (configOpts.collection) {
         this.setCollection(configOpts.collection);
     }
@@ -173,14 +177,15 @@ WallComponent.prototype.render = function () {
  * Set the Collection shown in this WallComponent
  * @param {collection}
  */
-WallComponent.prototype.setCollection = function (collection) {
+WallComponent.prototype.setCollection = function (collection, opts) {
+    opts = opts || {};
     // If this is not a full streamhub-sdk collection object, then make
     // it one
     if (typeof collection.pipe !== 'function') {
         collection = new Collection(collection);
     }
 
-    if (this._isSameCollection(collection)) {
+    if (!opts.force && this._isSameCollection(collection)) {
         return;
     }
 
