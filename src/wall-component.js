@@ -113,18 +113,35 @@ WallComponent.prototype.setElement = function (el) {
 };
 
 WallComponent.prototype.configure = function (configOpts) {
+    var reconstructWallView = false;
+    var newCollection;
+
     this._applyTheme(configOpts);
+
+    if (configOpts.initial) {
+        this._opts.initial = configOpts.initial;
+        newCollection = this._collection;
+        reconstructWallView = true;
+    }
+    if (configOpts.modal ? false : true) {
+        this._opts.modal = configOpts.modal;
+        newCollection = this._collection;
+        reconstructWallView = true;
+    }
+    if (configOpts.collection) {
+        newCollection = configOpts.collection;
+        reconstructWallView = true;
+    }
+
+    if (reconstructWallView) {
+        this.setCollection(newCollection, { force: true });
+        return;
+    }
+
     if (configOpts.columns) {
         this._wallView.relayout({
             columns: configOpts.columns
         });
-    }
-    if (configOpts.initial) {
-        this._opts.initial = configOpts.initial;
-        this.setCollection(this._collection, { force: true });
-    }
-    if (configOpts.collection) {
-        this.setCollection(configOpts.collection);
     }
 };
 
