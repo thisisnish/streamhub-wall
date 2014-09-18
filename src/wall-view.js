@@ -280,6 +280,7 @@ define([
             maxVisibleItems: this._getMaxVisibleItemsForColumn(),
             stash: this.more,
             animate: this._animate,
+            modal: this.modal,
             autoRender: false
         });
         columnView.$el.addClass(this.columnClassName);
