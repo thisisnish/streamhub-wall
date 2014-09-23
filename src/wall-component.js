@@ -50,8 +50,6 @@ var WallComponent = module.exports = function (opts) {
     });
     this._initializeWallView(opts);
 
-    this._themeOpts = this._getThemeOpts(opts);
-
     if (( ! ('autoRender' in opts)) || opts.autoRender) {
         this.render();
     }
@@ -75,6 +73,8 @@ WallComponent.prototype._initializeWallView = function (opts) {
         modal: opts.modal,
         pickColumn: opts.pickColumn
     });
+
+    this._themeOpts = this._getThemeOpts(opts);
 
     this.pipe(this._wallView);
     // including more, so that Collection piping works right
@@ -146,6 +146,8 @@ WallComponent.prototype.configure = function (configOpts) {
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
+    $.extend(this._opts, theme);
+
     this._themeStyler = this._themeStyler || new ThemeStyler({
         prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
