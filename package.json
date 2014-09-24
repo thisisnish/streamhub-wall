@@ -15,6 +15,7 @@
     "requirejs": "2.1.9",
     "rework": "git://github.com/gobengo/rework"
   },
+  "license": "MIT",
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install && make dist",
     "start": "./node_modules/http-server/bin/http-server .",
