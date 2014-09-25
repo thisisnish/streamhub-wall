@@ -95,7 +95,7 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         fontSizeOpts = largeTheme;
     }
 
-    return $.extend(fontSizeOpts, ThemeStyler.getThemeOpts(opts));
+    return $.extend(ThemeStyler.getThemeOpts(opts), fontSizeOpts);
 };
 
 /**
