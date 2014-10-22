@@ -123,7 +123,7 @@ WallComponent.prototype.configure = function (configOpts) {
         newCollection = this._collection;
         reconstructWallView = true;
     }
-    if (configOpts.modal ? false : true) {
+    if (configOpts.modal === void(0) ? false : configOpts.modal) {
         this._opts.modal = configOpts.modal;
         newCollection = this._collection;
         reconstructWallView = true;
