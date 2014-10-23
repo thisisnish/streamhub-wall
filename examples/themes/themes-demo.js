@@ -18,7 +18,7 @@ $, Collection, Content, Auth, LiveMediaWall) {
     };
     var collection = new Collection(opts);
 
-    var wall1 = window.view = new LiveMediaWall({
+    var wall1 = window.wall1 = new LiveMediaWall({
         el: document.getElementById("listView1"),
         collection: collection,
         cardBackgroundColor: '#333',
@@ -32,7 +32,7 @@ $, Collection, Content, Auth, LiveMediaWall) {
         linkAttachmentBorderColor: '#888'
     });
 
-    var wall2 = window.view = new LiveMediaWall({
+    var wall2 = window.wall2 = new LiveMediaWall({
         el: document.getElementById("listView2"),
         collection: collection,
         fontSize: 'small'
