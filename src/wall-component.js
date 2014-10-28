@@ -118,13 +118,13 @@ WallComponent.prototype.configure = function (configOpts) {
 
     this._applyTheme(configOpts);
 
+    if (configOpts.columns) {
+        this._wallView.relayout({
+            columns: configOpts.columns
+        });
+    }
     if (configOpts.initial) {
         this._opts.initial = configOpts.initial;
-        newCollection = this._collection;
-        reconstructWallView = true;
-    }
-    if (configOpts.modal === void(0) ? false : configOpts.modal) {
-        this._opts.modal = configOpts.modal;
         newCollection = this._collection;
         reconstructWallView = true;
     }
@@ -132,16 +132,13 @@ WallComponent.prototype.configure = function (configOpts) {
         newCollection = configOpts.collection;
         reconstructWallView = true;
     }
-
+    if (configOpts.hasOwnProperty('modal')) {
+        this._opts.modal = configOpts.modal;
+        newCollection = this._collection;
+        reconstructWallView = true;
+    }
     if (reconstructWallView) {
         this.setCollection(newCollection, { force: true });
-        return;
-    }
-
-    if (configOpts.columns) {
-        this._wallView.relayout({
-            columns: configOpts.columns
-        });
     }
 };
 
