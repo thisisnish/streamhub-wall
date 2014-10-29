@@ -290,6 +290,9 @@ define([
      *     the contentViews in each column, or preserve them for later
      */
     MediaWallView.prototype._clearColumns = function (removeContentViews) {
+        if (!this._columnViews || !this._columnViews.length) {
+            return;
+        }
         for (var i=0; i < this._columnViews.length; i++) {
             var columnView = this._columnViews[i];
             if ( ! removeContentViews) {

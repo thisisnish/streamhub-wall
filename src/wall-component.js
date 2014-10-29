@@ -116,6 +116,11 @@ WallComponent.prototype.configure = function (configOpts) {
     var reconstructWallView = false;
     var newCollection;
 
+    if (!configOpts) {
+        this._unconfigure();
+        return;
+    }
+
     this._applyTheme(configOpts);
 
     if (configOpts.columns) {
@@ -140,6 +145,11 @@ WallComponent.prototype.configure = function (configOpts) {
     if (reconstructWallView) {
         this.setCollection(newCollection, { force: true });
     }
+};
+
+WallComponent.prototype._unconfigure = function () {
+    this._themeStyler.destroy();
+    this.setCollection(null, { force: true });
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
@@ -195,9 +205,17 @@ WallComponent.prototype.render = function () {
  */
 WallComponent.prototype.setCollection = function (collection, opts) {
     opts = opts || {};
+
+    if (collection === null) {
+        this._collection.unpipe(this._wallView);
+        this._wallView.destroy();
+        this._headerView.destroy();
+        return;
+    }
+
     // If this is not a full streamhub-sdk collection object, then make
     // it one
-    if (typeof collection.pipe !== 'function') {
+    if (collection && typeof collection.pipe !== 'function') {
         collection = new Collection(collection);
     }
 
