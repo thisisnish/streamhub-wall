@@ -1,6 +1,6 @@
 {
   "name": "streamhub-wall",
-  "version": "3.3.0-component.15",
+  "version": "3.3.0-component.20",
   "main": [
     "./src/main.js"
   ],

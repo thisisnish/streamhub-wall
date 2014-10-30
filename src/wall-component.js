@@ -207,7 +207,9 @@ WallComponent.prototype.setCollection = function (collection, opts) {
     opts = opts || {};
 
     if (collection === null) {
-        this._collection.unpipe(this._wallView);
+        if (this._collection) {
+            this._collection.unpipe(this._wallView);
+        }
         this._wallView.destroy();
         this._headerView.destroy();
         return;
@@ -232,8 +234,10 @@ WallComponent.prototype.setCollection = function (collection, opts) {
     this._initializeWallView(this._opts);
 
     this._collection = collection;
-    this._collection.pipe(this._wallView);
-    this._headerView.setCollection(collection);
+    if (this._collection) {
+      this._collection.pipe(this._wallView);
+      this._headerView.setCollection(this._collection);
+    }
     this.render();
 };
 
