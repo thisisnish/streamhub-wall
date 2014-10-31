@@ -121,7 +121,8 @@ WallComponent.prototype.configure = function (configOpts) {
         return;
     }
 
-    this._applyTheme(configOpts);
+    this._themeOpts = this._getThemeOpts(configOpts);
+    this._applyTheme(this._themeOpts);
 
     if (configOpts.columns) {
         this._wallView.relayout({
@@ -133,13 +134,13 @@ WallComponent.prototype.configure = function (configOpts) {
         newCollection = this._collection;
         reconstructWallView = true;
     }
-    if (configOpts.collection) {
-        newCollection = configOpts.collection;
-        reconstructWallView = true;
-    }
     if (configOpts.hasOwnProperty('modal')) {
         this._opts.modal = configOpts.modal;
         newCollection = this._collection;
+        reconstructWallView = true;
+    }
+    if (configOpts.collection) {
+        newCollection = configOpts.collection;
         reconstructWallView = true;
     }
     if (reconstructWallView) {
@@ -148,7 +149,7 @@ WallComponent.prototype.configure = function (configOpts) {
 };
 
 WallComponent.prototype._unconfigure = function () {
-    this._themeStyler.destroy();
+    this._removeTheme();
     this.setCollection(null, { force: true });
 };
 
@@ -159,6 +160,10 @@ WallComponent.prototype._applyTheme = function (theme) {
         prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
     this._themeStyler.applyTheme(theme);
+};
+
+WallComponent.prototype._removeTheme = function () {
+    this._themeStyler.destroy();
 };
 
 /**
