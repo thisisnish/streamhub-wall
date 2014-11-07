@@ -108,8 +108,6 @@ require.config({
     browserLoad: 'dist/streamhub-wall.min',
     paths: ['lib'],
     relativeUrls: true,
-    modifyVars: {
-      '@icon-font-path': "\"http://cdn.livefyre.com/libs/livefyre-bootstrap/v1.1.0/fonts/\""
-    }
+    modifyVars: {}
   }
 });
