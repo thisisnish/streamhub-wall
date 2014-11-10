@@ -1,6 +1,8 @@
 # streamhub-wall
 
-streamhub-wall displays StreamHub social feeds as a visually engaging, full-screen tiled Content experience that's great for covering live events, hosting photo contests, and powering social sections of your website.
+LiveMediaWalls allow you to create a real-time social wall for your site. Use the Livefyre StreamHub SDK's streamhub-wall package to display Livefyre social feeds as a visually engaging, full-screen, tiled content experience that's great for covering live events, hosting photo contests, and powering social sections of your website.
+
+Stream live images and other content aggregated from Instagram, Twitter, Vine and more into a real-time media wall, visualizing all activity surrounding an event so that even those following remotely feel like they are there. Display LiveMediaWalls on big screens at live events, or add it to your website to ensure that your site is the go-to destination for live event coverage.
 
 ## Features
 
@@ -10,13 +12,6 @@ streamhub-wall displays StreamHub social feeds as a visually engaging, full-scre
 * Customize the template of any type of Content streaming into the MediaWall
 * Scales to any width or height. MediaWall will relayout Content for the best experience, even on mobile devices.
 
-## See it in Action
-
-MediaWall has been used on many StreamHub-powered sites, including:
-
-* [SX.livefyre.com](http://sx.livefyre.com/wall/) - Showcasing curated photos tagged with #sxsw during SXSW 2013
-* [superbowl.livefyre.com](http://superbowl.livefyre.com/#/media) - Displaying curated photos from Super Bowl parties around the globe
-* [CES.livefyre.com](http://ces.livefyre.com/) - Photos from on-location at CES 2013 in Las Vegas
 
 ## Usage
 
