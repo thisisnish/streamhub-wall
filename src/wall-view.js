@@ -272,7 +272,7 @@ define([
      * @returns {View} The view representing a column in the MediaWall. Often a type of ListView.
      */
     MediaWallView.prototype._createColumnView = function () {
-        if (this._columnViews.length >= this._numberOfColumns) {
+        if (this._columnViews && this._columnViews.length >= this._numberOfColumns) {
             return;
         }
         var columnView = new ContentListView({
