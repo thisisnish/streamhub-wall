@@ -11,10 +11,12 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    mout: 'lib/mout/src',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
-    observer: 'lib/observer/src/observer'
+    observer: 'lib/observer/src/observer',
+    mout: 'lib/mout/src',
+    'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
+    'node-uuid': 'lib/node-tiny-uuid/index'
   },
   packages: [{
     name: "streamhub-wall",
@@ -61,6 +63,12 @@ require.config({
     name: 'streamhub-editor/templates',
     location: 'lib/streamhub-editor/src/templates'
   },{
+    name: 'streamhub-editor/styles',
+    location: 'lib/streamhub-editor/src/styles'
+  },{
+    name: 'livefyre-theme-styler',
+    location: 'lib/livefyre-theme-styler/src'
+  },{
     name: "css",
     location: "lib/require-css",
     main: "css"
@@ -100,14 +108,16 @@ require.config({
   css: {
     clearFileEachBuild: 'dist/streamhub-wall.min.css',
     transformEach: {
-      requirejs: 'tools/prefix-css-requirejs',
-      node: 'tools/prefix-css-node'
+      requirejs: 'node_modules/livefyre-package-attribute/tools/prefix-css-requirejs',
+      node: 'node_modules/livefyre-package-attribute/tools/prefix-css-node'
     }
   },
   less: {
     browserLoad: 'dist/streamhub-wall.min',
     paths: ['lib'],
     relativeUrls: true,
-    modifyVars: {}
+    modifyVars: {
+      '@icon-font-path': "\"http://cdn.livefyre.com/libs/livefyre-bootstrap/v1.3.4/fonts/\""
+    }
   }
 });

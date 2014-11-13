@@ -4,6 +4,7 @@ var jasmine = require('jasmine');
 var jasmineJquery = require('jasmine-jquery');
 var streamhubWall = require('streamhub-wall');
 var WallComponent = require('streamhub-wall/wall-component');
+var MockCollection = require('streamhub-sdk-tests/mocks/collection/mock-collection');
 var packageAttribute = require('streamhub-wall/package-attribute');
 var auth = require('auth');
 
@@ -32,6 +33,21 @@ describe('A MediaWallComponent', function () {
         wall.render();
         expect(wall.$('.streamhub-wall-component').length).toBe(1);
     });
+    describe('opts.collection', function () {
+        it('can be just a POJO', function () {
+            var collectionOpts = {
+                "network": "labs-t402.fyre.co",
+                "siteId": "303827",
+                "articleId": "xbox-0",
+                "environment": "t402.livefyre.com"
+            };
+            var wall = new WallComponent({
+                collection: collectionOpts
+            });
+            expect(wall._collection.network).toBe(collectionOpts.network);
+            expect(typeof wall._collection.pipe).toBe('function');
+        })
+    });
     describe('upload button', function () {
         it('does not render if there is no auth login delegate', function () {
             var wall = new WallComponent();
@@ -51,6 +67,37 @@ describe('A MediaWallComponent', function () {
             });
             wall.render();
             expect(wall.$('menu').children().length).toBe(1);
+        });
+    });
+    describe('.enteredView', function () {
+        it('is a function', function () {
+            var wall = new WallComponent();
+            expect(typeof wall.enteredView).toBe('function');
+        });
+    });
+    describe('.setCollection', function () {
+        var wall;
+        var collection = new MockCollection();
+
+        beforeEach(function () {
+            wall = new WallComponent();
+        });
+        it('updates #_wallView.collection property', function () {
+            wall.setCollection(collection);
+            expect(wall._collection).toBe(collection);
+        });
+        it('destroys current wallView', function () {
+            spyOn(wall._wallView, 'destroy');
+            var oldWallView = wall._wallView;
+            wall.setCollection(collection);
+            expect(oldWallView.destroy).toHaveBeenCalled();
+        });
+        it('initializes a new wallView replacing the existing one', function () {
+            spyOn(wall, '_initializeWallView').andCallThrough();
+            var oldWallView = wall._wallView;
+            wall.setCollection(collection);
+            expect(wall._initializeWallView).toHaveBeenCalled();
+            expect(wall._wallView).not.toBe(oldWallView);
         });
     });
 });
