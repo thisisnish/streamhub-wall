@@ -45,25 +45,31 @@ var WallComponent = module.exports = function (opts) {
     // Be a writable that really just proxies to the wallView
     Passthrough.apply(this, arguments);
 
-    this._headerView = opts.headerView || new WallHeaderView({
-        postButton: opts.postButton
-    });
+    if (opts.collection) {
+        this._setCollection(opts.collection);
+    }
+
+    this._initializeHeaderView(opts);
     this._initializeWallView(opts);
 
     if (( ! ('autoRender' in opts)) || opts.autoRender) {
         this.render();
     }
-    if (opts.collection) {
-        this.setCollection(opts.collection);
+
+    if (this._collection) {
+        this._collection.pipe(this._wallView);
     }
 };
 
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
 
+/**
+ * Create a WallView and assign to this._wallView.
+ * Also pipe this WallComponent's writable side and .more to the WallView's
+ * @param opts {object} WallComponent configuration options.
+ */
 WallComponent.prototype._initializeWallView = function (opts) {
-    this._opts = opts;
-
     this._wallView = opts.wallView || new WallView({
         autoRender: false,
         minContentWidth: opts.minContentWidth,
@@ -80,6 +86,17 @@ WallComponent.prototype._initializeWallView = function (opts) {
     // including more, so that Collection piping works right
     this.more = new Passthrough();
     this.more.pipe(this._wallView.more);
+};
+
+/**
+ * Create a WallHeaderView and assign to this._headerView.
+ * @param opts {object} WallComponent configuration options.
+ */
+WallComponent.prototype._initializeHeaderView = function (opts) {
+    this._headerView = opts.headerView || new WallHeaderView({
+        collection: opts.collection,
+        postButton: opts.postButton
+    });
 };
 
 WallComponent.prototype._getThemeOpts = function (opts) {
@@ -112,9 +129,16 @@ WallComponent.prototype.setElement = function (el) {
     this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
 
+/**
+ * Change configuration after construction
+ * @param configOpts {collection} WallComponent configuration object
+ */
 WallComponent.prototype.configure = function (configOpts) {
     var reconstructWallView = false;
+    var reconstructHeaderView = false;
     var newCollection;
+    var needRender = false;
+    var needCollectionPipeToWallView = false;
 
     if (!configOpts) {
         this._unconfigure();
@@ -124,33 +148,61 @@ WallComponent.prototype.configure = function (configOpts) {
     this._themeOpts = this._getThemeOpts(configOpts);
     this._applyTheme(this._themeOpts);
 
-    if (configOpts.columns) {
+    if ('columns' in configOpts) {
+        this._opts.columns = configOpts.columns;
         this._wallView.relayout({
             columns: configOpts.columns
         });
     }
-    if (configOpts.initial) {
+    if ('initial' in configOpts) {
         this._opts.initial = configOpts.initial;
         newCollection = this._collection;
         reconstructWallView = true;
     }
-    if (configOpts.hasOwnProperty('modal')) {
+    if ('modal' in configOpts) {
         this._opts.modal = configOpts.modal;
         newCollection = this._collection;
         reconstructWallView = true;
     }
-    if (configOpts.collection) {
+    if ('collection' in configOpts) {
         newCollection = configOpts.collection;
-        reconstructWallView = true;
+        if ( ! this._isSameCollection(newCollection)) {
+            this._setCollection(newCollection);
+            reconstructWallView = true;
+            reconstructHeaderView = true;
+        }
+    }
+    if ('postButton' in configOpts) {
+        this._opts.postButton = configOpts.postButton;
+        reconstructHeaderView = true;
     }
     if (reconstructWallView) {
-        this.setCollection(newCollection, { force: true });
+        this._wallView.destroy();
+        this._initializeWallView(this._opts);
+        needRender = true;
+        needCollectionPipeToWallView = true;
+    }
+    if (reconstructHeaderView) {
+        this._headerView.destroy();
+        this._initializeHeaderView(this._opts);
+        needRender = true;
+    }
+    if (needRender) {
+        this.render();
+    }
+    if (needCollectionPipeToWallView && this._collection) {
+        this._collection.pipe(this._wallView);
     }
 };
 
+/**
+ * Restore configuration values back to defaults
+ */
 WallComponent.prototype._unconfigure = function () {
     this._removeTheme();
-    this.setCollection(null, { force: true });
+    this.configure({
+        collection: null
+    });
 };
 
 WallComponent.prototype._applyTheme = function (theme) {
@@ -162,6 +214,10 @@ WallComponent.prototype._applyTheme = function (theme) {
     this._themeStyler.applyTheme(theme);
 };
 
+/**
+ * Remove any current theme configuration for this Component, returning
+ * it to default styles.
+ */
 WallComponent.prototype._removeTheme = function () {
     this._themeStyler.destroy();
 };
@@ -205,52 +261,49 @@ WallComponent.prototype.render = function () {
 };
 
 /**
- * Set the Collection shown in this WallComponent
- * @param {collection}
+ * Public interface to change the Collection currently being rendered by this
+ * WallComponent
+ * @param collection {object|Collection} Collection to compare to.
  */
-WallComponent.prototype.setCollection = function (collection, opts) {
-    opts = opts || {};
-
-    if (collection === null) {
-        if (this._collection) {
-            this._collection.unpipe(this._wallView);
-        }
-        this._wallView.destroy();
-        this._headerView.destroy();
-        return;
-    }
-
-    // If this is not a full streamhub-sdk collection object, then make
-    // it one
-    if (collection && typeof collection.pipe !== 'function') {
-        collection = new Collection(collection);
-    }
-
-    if (!opts.force && this._isSameCollection(collection)) {
-        return;
-    }
-
-    if (this._collection) {
-        this._collection.unpipe(this._wallView);
-    }
-    this._wallView.destroy();
-
-    this._opts.collection = collection;
-    this._initializeWallView(this._opts);
-
-    this._collection = collection;
-    if (this._collection) {
-      this._collection.pipe(this._wallView);
-      this._headerView.setCollection(this._collection);
-    }
-    this.render();
+WallComponent.prototype.setCollection = function (newCollection) {
+    this.configure({ collection: newCollection });
 };
 
+/**
+ * Set internal state as to which collection should be shown in this wall.
+ * This will not re-render or recreate subviews. That should be done separately.
+ * @param {collection}
+ */
+WallComponent.prototype._setCollection = function (newCollection) {
+    var oldCollection = this._collection;
+
+    if (oldCollection && typeof oldCollection.unpipe === 'function') {
+        oldCollection.unpipe(this._wallView);
+    };
+
+    // If this is not a full streamhub-sdk newCollection object, then make
+    // it one
+    if (newCollection && typeof newCollection.pipe !== 'function') {
+        newCollection = new Collection(newCollection);
+    }
+
+    // Actually set internal state
+    this._collection = newCollection;
+    this._opts.collection = newCollection;
+};
+
+/**
+ * Given a Collection, return whether it is the same Collection as this
+ * WallComponent is currently using
+ * @param collection {object|Collection} Collection to compare to.
+ */
 WallComponent.prototype._isSameCollection = function (collection) {
-    return this._collection && this._collection.network === collection.network
-        && this._collection.environment === collection.environment
-        && this._collection.siteId === collection.siteId
-        && this._collection.articleId === collection.articleId;
+    var oldCollection = this._collection;
+    return oldCollection && collection
+        && oldCollection.network === collection.network
+        && oldCollection.environment === collection.environment
+        && oldCollection.siteId === collection.siteId
+        && oldCollection.articleId === collection.articleId;
 };
 
 /**

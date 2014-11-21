@@ -28,6 +28,8 @@ inherits(WallHeaderView, View);
 
 WallHeaderView.prototype.elTag = 'menu';
 
+WallHeaderView.prototype.template = function () { return ''; };
+
 /**
  * Render the WallHeaderView
  */
@@ -71,7 +73,7 @@ WallHeaderView.prototype.setCollection = function (collection) {
         postButton.unpipe(this._collection);
     }
     this._collection = collection;
-    if (this._postButton) {
+    if (this._postButton && collection) {
         postButton.pipe(collection);
     }
     if (this._rendered) {
