@@ -45,7 +45,7 @@ Note: Any styling customization of Tweets rendered by streamhub-sdk must be done
 
 ####```initial```
 
-The number of Content items to render on page load. Defaults to 50.
+Number. The number of Content items to render on page load. Defaults to 50.
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
@@ -54,7 +54,7 @@ The number of Content items to render on page load. Defaults to 50.
 
 ####```postButton```
 
-What sort of "Post Content" button should appear on the LiveMediaWall, assuming opts.collection is passed and there is an auth integration on the page. Valid values are:
+Boolean or String. What sort of "Post Content" button should appear on the LiveMediaWall, assuming opts.collection is passed and there is an auth integration on the page. Valid values are:
 
 * `false` (default) - Do not show a "Post Content" button. The LiveMediaWall is effectively read-only
 * `true` or `LiveMediaWall.postButtons.contentWithPhotos` - Include a button that lets users type textual Content with attached photos
@@ -69,7 +69,8 @@ What sort of "Post Content" button should appear on the LiveMediaWall, assuming 
         });
 
 ####```minContentWidth```
-The Media Wall will choose an appropriate number of columns depending on the width of its
+
+Number. The Media Wall will choose an appropriate number of columns depending on the width of its
 container element, ensuring that each column is at least this many pixels wide. Don't use
 with the `columns` option.
 
@@ -79,7 +80,8 @@ with the `columns` option.
         });
 
 ####```columns```
-The number of columns of content can be specified by the ```columns``` option at construction. This means the content width will adapt to the Media Wall's container size while respecting the specified number of columns. By default, the Media Wall's width divided by the minimum content width (300px) determines the number of columns.
+
+Number. The number of columns of content can be specified by the ```columns``` option at construction. This means the content width will adapt to the Media Wall's container size while respecting the specified number of columns. By default, the Media Wall's width divided by the minimum content width (300px) determines the number of columns.
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
@@ -87,7 +89,8 @@ The number of columns of content can be specified by the ```columns``` option at
         });
 
 ####```modal```
-By default, when there are attachments for a piece of content the thumbnail can be clicked, revealing a modal that displays the photo/video attachment in its entirety. To disable the modal set the ```modal``` option to ```false```.
+
+Boolean. By default, when there are attachments for a piece of content the thumbnail can be clicked, revealing a modal that displays the photo/video attachment in its entirety. To disable the modal set the ```modal``` option to ```false```.
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
@@ -96,7 +99,8 @@ By default, when there are attachments for a piece of content the thumbnail can 
         });
 
 ####```pickColumn```
-By default, when content is inserted into the wall it will be populated into the column of the shortest height. To configure the strategy in which the column is chosen, specify the ```pickColumn``` option in the constructor. This option expects a function with args: ```(columnView, forcedIndex)```, and returns the zero-based index of the column to insert into.
+
+Function. By default, when content is inserted into the wall it will be populated into the column of the shortest height. To configure the strategy in which the column is chosen, specify the ```pickColumn``` option in the constructor. This option expects a function with args: ```(columnView, forcedIndex)```, and returns the zero-based index of the column to insert into.
 
 ```
 var wall = new LiveMediaWall({
@@ -109,8 +113,15 @@ var wall = new LiveMediaWall({
 });
 ```
 
+### Styling Options
+
+The constructor supports the following explicit styling options. If you plan to frequently upgrade streamhub-wall versions (e.g. by embedding with a Livefyre.require version range), you should use these options for visual customization and *not* use external CSS with your own selectors.
+
+The actual DOM structure of rendered instances may change from version to version, but these configuration values abstract the specific CSS Selectors being used to style things, which will change over time.
+
 ####`cardBackgroundColor`
-The value to change the background color of a content card in the media wall.
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The value to change the background color of a content card in the media wall.
 
 ```
 var wall = new LiveMediaWall({
@@ -119,7 +130,8 @@ var wall = new LiveMediaWall({
 ```
 
 ####`linkColor`
-The value to change the color of hyperlinks (e.g. Links in body, display name link).
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The value to change the color of hyperlinks (e.g. Links in body, display name link).
 
 ```
 var wall = new LiveMediaWall({
@@ -129,7 +141,8 @@ var wall = new LiveMediaWall({
 ```
 
 ####`textColor`
-The value to change the color of text.
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The value to change the color of text.
 
 ```
 var wall = new LiveMediaWall({
@@ -138,7 +151,8 @@ var wall = new LiveMediaWall({
 ```
 
 ####`footerTextColor`
-The value to change the color of secondary text (e.g. Footer text, username in byline).
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The value to change the color of secondary text (e.g. Footer text, username in byline).
 
 ```
 var wall = new LiveMediWall({
@@ -148,7 +162,8 @@ var wall = new LiveMediWall({
 ```
 
 ####`displayNameColor`
-The value to change the color of the display name in the byline.
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The value to change the color of the display name in the byline.
 
 ```
 var wall = new LiveMediaWall({
@@ -158,7 +173,8 @@ var wall = new LiveMediaWall({
 ```
 
 ####`usernameColor`
-The value to change the color of the username in the byline
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The value to change the color of the username in the byline
 
 ```
 var wall = new LiveMediaWall({
@@ -168,7 +184,8 @@ var wall = new LiveMediaWall({
 ```
 
 ####`fontFamily`
-The value to change the font family of the body text
+
+[CSS Font Family](http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family) String. The value to change the font family of the body text
 
 ```
 var wall = new LiveMediaWall({
@@ -178,40 +195,45 @@ var wall = new LiveMediaWall({
 ```
 
 ####`sourceLogoColor`
-The color of the source logo
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The color of the source logo.
 
 ####`buttonTextColor`
-The color for the button labels
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The color for the button labels
 
 ####`buttonHoverBackgroundColor`
-The color of the button background on hover
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The color of the button background on hover
 
 ####`buttonActiveBackgroundColor`
-The color of the button background on active
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The color of the button background when `:active`.
 
 ####`buttonBorderColor`
-The color of button border
+
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The color of button borders.
 
 ####`bodyFontSize`
-The font size of content body text
+[CSS Font Size](http://www.w3.org/TR/CSS2/fonts.html#font-size-props) String. The font size of content body text
 
 ####`bodyLineHeight`
-The line height of content body text
+[CSS Line Height](http://www.w3.org/TR/CSS2/visudet.html#propdef-line-height) String. The line height of content body text
 
 ####`titleFontSize`
-The font size of content title
+[CSS Font Size](http://www.w3.org/TR/CSS2/fonts.html#font-size-props) String. The font size of content title
 
 ####`titleLineHeight`
-The line height of content title
+[CSS Line Height](http://www.w3.org/TR/CSS2/visudet.html#propdef-line-height) String. The line height of content title
 
 ####`linkAttachmentTextColor`
-The color of link attachment text
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The color of link attachment text
 
 ####`linkAttachmentBackgroundColor`
-The background color of link attachments (stacked attachments)
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The background color of link attachments (stacked attachments)
 
 ####`linkAttachmentBorderColor`
-The border color of link attachments (stacked attachments)
+[CSS Color](http://www.w3.org/TR/css3-color/#colorunits) String. The border color of link attachments (stacked attachments)
 
 ## Local Development
 
