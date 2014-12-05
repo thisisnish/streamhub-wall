@@ -52,11 +52,12 @@ define([
             packageAttribute.decorateModal(this.modal);
         }
 
-        $(window).resize(function(e) {
+        this._onWindowResize = function(e) {
             if (self._autoFitColumns) {
                 self.debouncedRelayout();
             }
-        });
+        }
+        $(window).on('resize', this._onWindowResize);
 
         opts.css = (typeof opts.css === 'undefined') ? true : opts.css;
 
@@ -182,6 +183,9 @@ define([
         }
     };
 
+    /**
+     * Render the MediaWallView
+     */
     MediaWallView.prototype.render = function () {
         if (this._autoFitColumns) {
             this.fitColumns();
@@ -435,7 +439,12 @@ define([
         };
     }
 
+    /**
+     * Call this when the MediaWallView is no longer needed to clean up
+     * event listeners and memory.
+     */
     MediaWallView.prototype.destroy = function () {
+        $(window).off('resize', this._onWindowResize);
         this._clearColumns(true);
         this._columnViews = [];
         ContentListView.prototype.destroy.call(this);
