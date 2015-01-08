@@ -68,6 +68,78 @@ describe('A MediaWallComponent', function () {
             wall.render();
             expect(wall.$('menu').children().length).toBe(1);
         });
+        it('can be set as one of content, photo, or contentWithPhoto', function () {
+            auth.delegate({
+                login: function () {}
+            });
+            var trials = [{
+                postButton: 'content',
+                buttonHasClass: 'lf-comment-btn'  
+            },{
+                postButton: 'photo',
+                buttonHasClass: 'lf-hub-upload-btn'  
+            },{
+                postButton: 'contentWithPhoto',
+                buttonHasClass: 'lf-comment-btn'  
+            }]
+            // try on construction
+            trials.forEach(function (trial) {
+                var fakeCollection = {
+                    pipe: function () {}
+                };
+                var wall = new WallComponent({
+                    collection: fakeCollection, // may not always work
+                    postButton: trial.postButton
+                });
+                wall.render();
+                expect(wall.$('menu').children().length).toBe(1);
+                expect(wall.$('menu').children().hasClass(trial.buttonHasClass)).toBe(true);
+            });
+            // try changing at runtime
+            trials.forEach(function (trial) {
+                var fakeCollection = {
+                    pipe: function () {}
+                };
+                var wall = new WallComponent({
+                    collection: fakeCollection
+                });
+                wall.render();
+                wall.configure({
+                    postButton: trial.postButton
+                })
+                expect(wall.$('menu').children().length).toBe(1);
+                expect(wall.$('menu').children().hasClass(trial.buttonHasClass)).toBe(true);
+            });          
+        });
+        it('can be unset at runtime', function () {
+            auth.delegate({
+                login: function () {}
+            });
+            var fakeCollection = {
+                pipe: function () {}
+            };
+            var wall = new WallComponent({
+                collection: fakeCollection, // may not always work
+                postButton: true
+            });
+            wall.render();
+            expect(wall.$('menu').children().length).toBe(1);
+            // ok now to remove it by specifying false
+            wall.configure({
+                postButton: false
+            });
+            expect(wall.$('menu').children().length).toBe(0);
+            // restore
+            wall.configure({
+                postButton: true
+            });
+            expect(wall.$('menu').children().length).toBe(1);
+            // ok now to remove it by specifying undefined
+            wall.configure({
+                postButton: undefined
+            });
+            expect(wall.$('menu').children().length).toBe(0);
+        });
     });
     describe('.enteredView', function () {
         it('is a function', function () {
