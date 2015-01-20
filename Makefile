@@ -20,7 +20,7 @@ test: build
 	npm test
 
 clean:
-	rm -rf node_modules
+	rm -rf node_modules lib dist
 
 package: build
 
