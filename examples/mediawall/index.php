@@ -8,7 +8,7 @@
 </head>
     <body>
         <?php
-        // include the library include(dirname(__FILE__) . “/livefyre-api/libs/php/Livefyre.php”); // set up some values
+            // include the library include(dirname(__FILE__) . “/livefyre-api/libs/php/Livefyre.php”); // set up some values
             include(dirname(__FILE__) . "/JWT.php");
 
             $cms_content_id = "xbox-0";
@@ -36,7 +36,7 @@
             $collectionMeta = JWT::encode($metadata, $SITE_KEY);
 
         ?>
-        
+
         <div id="view"></div>
 
         <script src="../../lib/requirejs/require.js" type="text/javascript"></script>
@@ -67,8 +67,6 @@
             var view = window.view = new MediaWallView({
                 el: document.getElementById("view"),
                 minContentWidth: 300,
-                //,columns: 6
-                //,modal: false
                 initial: 5,
                 showMore: 2
             });
@@ -76,10 +74,6 @@
             var collection = new Collection(opts);
             collection.createArchive().pipe(view.more);
             collection.createUpdater().pipe(view);
-            
-/*             setInterval(function () {
-                view.write(new Content({ body: 'poop' }));
-            }, 5000); */
         });
         </script>
     </body>
