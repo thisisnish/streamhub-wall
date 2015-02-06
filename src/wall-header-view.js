@@ -1,4 +1,6 @@
 var auth = require('auth');
+var camelCase = require('mout/string/camelCase');
+var forEach = require('mout/array/forEach');
 var inherits = require('inherits');
 var View = require('view');
 var Passthrough = require('stream/passthrough');
@@ -35,11 +37,15 @@ WallHeaderView.prototype.template = function () { return ''; };
  */
 WallHeaderView.prototype.render = function () {
     View.prototype.render.apply(this, arguments);
-    if ( ! this._postButton || ! this._collection) {
+    if ( ! this._postButton) {
+        return;
+    }
+    this._rendered = true;
+
+    if (! this._collection) {
         return;
     }
     renderPostButton.call(this, true);
-    this._rendered = true;
 };
 
 function renderPostButton(show) {
@@ -70,22 +76,41 @@ WallHeaderView.prototype.setCollection = function (collection) {
 };
 
 /**
+ * Button style attribute names that are sent through to the button.
+ * @type {Array.<string>}
+ */
+var BUTTON_STYLES = [
+    'activeBackgroundColor',
+    'activeBorderColor',
+    'activeTextColor',
+    'backgroundColor',
+    'borderColor',
+    'hoverBackgroundColor',
+    'hoverBorderColor',
+    'hoverTextColor',
+    'textColor'
+];
+
+/**
  * Get the editor button styles into a format that the button expects.
  * @param {Object} opts The object that contains the button styles.
  * @return {Object} The adapted button styles.
  */
 function getEditorButtonStyles(opts) {
-    return {
-        activeBackgroundColor: opts.postActiveBackgroundColor,
-        activeBorderColor: opts.postActiveBorderColor,
-        activeTextColor: opts.postActiveTextColor,
-        backgroundColor: opts.postBackgroundColor,
-        borderColor: opts.postBorderColor,
-        hoverBackgroundColor: opts.postHoverBackgroundColor,
-        hoverBorderColor: opts.postHoverBorderColor,
-        hoverTextColor: opts.postHoverTextColor,
-        textColor: opts.postTextColor
-    };
+    var prefixedName;
+    var styles = {};
+
+    if (!opts) {
+        return {};
+    }
+    forEach(BUTTON_STYLES, function(name) {
+        prefixedName = camelCase('post-' + name);
+        if (!opts[prefixedName]) {
+            return;
+        }
+        styles[name] = opts[prefixedName];
+    })
+    return styles;
 }
 
 /**
