@@ -1,26 +1,45 @@
 var auth = require('auth');
 var camelCase = require('mout/string/camelCase');
+var ContentEditorButton = require('streamhub-input').ContentEditorButton;
 var forEach = require('mout/array/forEach');
 var inherits = require('inherits');
-var View = require('view');
-var Passthrough = require('stream/passthrough');
-var ContentEditorButton = require('streamhub-input').ContentEditorButton;
-var UploadButton = require('streamhub-input').UploadButton;
-var packageAttribute = require('./package-attribute');
 var ModalView = require('streamhub-sdk/modal');
+var packageAttribute = require('./package-attribute');
+var Passthrough = require('stream/passthrough');
 var postButtons = require('streamhub-wall/post-buttons');
+var UploadButton = require('streamhub-input').UploadButton;
+var View = require('view');
 
 /**
  * Header of LiveMediaWall.
  * It has a streamhub-input button iff auth.hasDelegate();
  * @constructor
+ * @param {Object} opts
  */
 var WallHeaderView = module.exports = function (opts) {
     View.apply(this, arguments);
     opts = opts || {};
+
+    /**
+     * Whether the button should be forced to render or not.
+     * @type {boolean}
+     * @private
+     */
+    this._forceButtonRender = !!opts.forceButtonRender;
+
+    /**
+     * The post button.
+     * @type {?InputButton}
+     * @private
+     */
+    this._postButton = opts.postButton ? this._createPostButton(opts.postButton) : null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
     this._rendered = false;
-    this._postButton = opts.postButton ?
-        this._createPostButton(opts.postButton) : null;
+
     if (opts.collection) {
         this.setCollection(opts.collection);
     }
@@ -40,12 +59,20 @@ WallHeaderView.prototype.render = function () {
     if ( ! this._postButton) {
         return;
     }
-    this._rendered = true;
-
-    if (! this._collection) {
-        return;
+    // FIXME: I shouldn't be reaching into private state to get cmd
+    var postCommand = this._postButton._command;
+    if (this._forceButtonRender || postCommand.canExecute()) {
+        renderPostButtonIfCollection.call(this, true);
+    } else {
+        postCommand.on('change:canExecute', renderPostButtonIfCollection.bind(this));
     }
-    renderPostButton.call(this, true);
+    this._rendered = true;
+    function renderPostButtonIfCollection(showPostButton) {
+        if (! this._collection) {
+            return;
+        }
+        renderPostButton.call(this, showPostButton);
+    }
 };
 
 function renderPostButton(show) {

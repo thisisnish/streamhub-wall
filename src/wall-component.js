@@ -177,6 +177,7 @@ WallComponent.prototype._getThemeOpts = function (opts) {
 WallComponent.prototype._initializeHeaderView = function (opts) {
     this._headerView = opts.headerView || new WallHeaderView({
         collection: opts.collection,
+        forceButtonRender: opts.forceButtonRender,
         postButton: opts.postButton,
         stylePrefix: this._stylePrefix,
         themeOpts: this._themeOpts
