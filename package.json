@@ -9,10 +9,10 @@
     "http-server": "*",
     "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
     "jshint": "~1.1.0",
-    "less": "1.7.0",
+    "less": "^1.7.4",
     "lfcdn": "git://github.com/Livefyre/lfcdn",
     "phantom": "*",
-    "phantomjs": "~1.9.2-2",
+    "phantomjs": "1.9.10",
     "requirejs": "2.1.9",
     "rework": "git://github.com/gobengo/rework"
   },
