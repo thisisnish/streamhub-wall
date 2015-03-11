@@ -52,6 +52,8 @@ var WallComponent = module.exports = function (opts) {
         this._setCollection(opts.collection);
     }
 
+    // List of apps to render.
+    this._toRender = [];
     this._themeOpts = this._getThemeOpts(opts);
     this._initializeHeaderView(opts);
     this._initializeWallView(opts);
@@ -322,11 +324,13 @@ WallComponent.prototype.configure = function (configOpts) {
         this._initializeWallView(this._opts);
         needRender = true;
         needCollectionPipeToWallView = true;
+        this._toRender.push(this._wallView);
     }
     if (reconstructHeaderView) {
         this._headerView.destroy();
         this._initializeHeaderView(this._opts);
         needRender = true;
+        this._toRender.push(this._headerView);
     }
     if (needRender) {
         this.render();
@@ -373,11 +377,16 @@ WallComponent.prototype.render = function () {
     frag.appendChild(container);
     el.appendChild(frag);
 
+    // Only render the subviews that we want to render. `_toRender` has the
+    // views that the `configure` function has determined should be rendered.
+    subviews = this._toRender.length ? this._toRender : subviews;
+
     // then render them
     subviews.forEach(function (view) {
         view.render();
     });
 
+    this._toRender = [];
     return el;
 };
 
