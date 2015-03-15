@@ -45,7 +45,7 @@ Note: Any styling customization of Tweets rendered by streamhub-sdk must be done
 
 ####```initial```
 
-Number. The number of content items to render on page load. Defaults to 50.
+Number. The number of Content items to render on page load. Defaults to 50.
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
@@ -54,7 +54,7 @@ Number. The number of content items to render on page load. Defaults to 50.
 
 ####```showMore```
 
-Number. The number of content items to add to the wall when 'show more' is clicked.
+Number. The number of Content items to add to the wall when 'show more' is clicked.
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
