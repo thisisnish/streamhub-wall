@@ -23,7 +23,7 @@ Use `Livefyre.require` to construct the component
 Livefyre.require([
     'streamhub-wall#3',
     'streamhub-sdk#2'
-], function(LiveMediaWall, SDK) {    
+], function(LiveMediaWall, SDK) {
     var wall = window.wall = new LiveMediaWall({
         el: document.getElementById("wall"),
         collection: new (SDK.Collection)({
@@ -50,6 +50,15 @@ Number. The number of Content items to render on page load. Defaults to 50.
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
             initial: 10
+        });
+
+####```showMore```
+
+Number. The number of Content items to add to the wall when 'show more' is clicked.
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            showMore: 10
         });
 
 ####```postButton```
