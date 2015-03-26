@@ -1,24 +1,45 @@
 var auth = require('auth');
-var inherits = require('inherits');
-var View = require('view');
-var Passthrough = require('stream/passthrough');
+var camelCase = require('mout/string/camelCase');
 var ContentEditorButton = require('streamhub-input').ContentEditorButton;
-var UploadButton = require('streamhub-input').UploadButton;
-var packageAttribute = require('./package-attribute');
+var forEach = require('mout/array/forEach');
+var inherits = require('inherits');
 var ModalView = require('streamhub-sdk/modal');
+var packageAttribute = require('./package-attribute');
+var Passthrough = require('stream/passthrough');
 var postButtons = require('streamhub-wall/post-buttons');
+var UploadButton = require('streamhub-input').UploadButton;
+var View = require('view');
 
 /**
  * Header of LiveMediaWall.
  * It has a streamhub-input button iff auth.hasDelegate();
  * @constructor
+ * @param {Object} opts
  */
 var WallHeaderView = module.exports = function (opts) {
     View.apply(this, arguments);
     opts = opts || {};
+
+    /**
+     * Whether the button should be forced to render or not.
+     * @type {boolean}
+     * @private
+     */
+    this._forceButtonRender = !!opts.forceButtonRender;
+
+    /**
+     * The post button.
+     * @type {?InputButton}
+     * @private
+     */
+    this._postButton = opts.postButton ? this._createPostButton(opts.postButton) : null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
     this._rendered = false;
-    this._postButton = opts.postButton ?
-        this._createPostButton(opts.postButton) : null;
+
     if (opts.collection) {
         this.setCollection(opts.collection);
     }
@@ -40,7 +61,7 @@ WallHeaderView.prototype.render = function () {
     }
     // FIXME: I shouldn't be reaching into private state to get cmd
     var postCommand = this._postButton._command;
-    if (postCommand.canExecute()) {
+    if (this._forceButtonRender || postCommand.canExecute()) {
         renderPostButtonIfCollection.call(this, true);
     } else {
         postCommand.on('change:canExecute', renderPostButtonIfCollection.bind(this));
@@ -82,6 +103,44 @@ WallHeaderView.prototype.setCollection = function (collection) {
 };
 
 /**
+ * Button style attribute names that are sent through to the button.
+ * @type {Array.<string>}
+ */
+var BUTTON_STYLES = [
+    'activeBackgroundColor',
+    'activeBorderColor',
+    'activeTextColor',
+    'backgroundColor',
+    'borderColor',
+    'hoverBackgroundColor',
+    'hoverBorderColor',
+    'hoverTextColor',
+    'textColor'
+];
+
+/**
+ * Get the editor button styles into a format that the button expects.
+ * @param {Object} opts The object that contains the button styles.
+ * @return {Object} The adapted button styles.
+ */
+function getEditorButtonStyles(opts) {
+    var prefixedName;
+    var styles = {};
+
+    if (!opts) {
+        return {};
+    }
+    forEach(BUTTON_STYLES, function(name) {
+        prefixedName = camelCase('post-' + name);
+        if (!opts[prefixedName]) {
+            return;
+        }
+        styles[name] = opts[prefixedName];
+    })
+    return styles;
+}
+
+/**
  * Create the Button that will let the user post content into the
  * right Collection
  * @param kind - 'content', 'contentWithPhotos', 'photo', true, or falsy
@@ -89,30 +148,25 @@ WallHeaderView.prototype.setCollection = function (collection) {
 WallHeaderView.prototype._createPostButton = function (kind) {
     var mediaEnabled;
     var button;
+    var self = this;
+
     switch (kind) {
         case postButtons.photo:
             button = new UploadButton({
-                modal: createModal()
+                modal: createModal(),
+                stylePrefix: this.opts.stylePrefix,
+                styles: getEditorButtonStyles(this.opts.themeOpts)
             });
             break;
         case postButtons.content:
-            mediaEnabled = false;
-            button = new ContentEditorButton({
-                mediaEnabled: mediaEnabled,
-                modal: createModal(),
-                input: createInput(mediaEnabled)
-            });
+            button = createEditorButton(false);
             break;
         case postButtons.contentWithPhotos:
         case true:
-            mediaEnabled = true;
-            button = new ContentEditorButton({
-                mediaEnabled: mediaEnabled,
-                modal: createModal(),
-                input: createInput(mediaEnabled)
-            });
+            button = createEditorButton(true);
             break;
     }
+
     // Create a Modal that will add the streamhub-wall#vN attribute
     // to its parent when it is shown, so that our css rules can be namespaced
     // nicely
@@ -121,6 +175,20 @@ WallHeaderView.prototype._createPostButton = function (kind) {
         packageAttribute.decorateModal(modal);
         return modal;
     }
+
+    // Create an editor button with or without media enabled. This also grabs
+    // theme options from the opts object provided to this class so the button
+    // can be styled appropriately.
+    function createEditorButton(mediaEnabled) {
+        return new ContentEditorButton({
+            mediaEnabled: mediaEnabled,
+            modal: createModal(),
+            input: createInput(mediaEnabled),
+            stylePrefix: self.opts.stylePrefix,
+            styles: getEditorButtonStyles(self.opts.themeOpts)
+        });
+    }
+
     // Create a custom ContentEditor input whose UploadButton will launch
     // a modal that has the right packageAttribute on its parent
     function createInput(mediaEnabled) {
