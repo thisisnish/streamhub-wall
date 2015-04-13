@@ -7,6 +7,7 @@ var WallComponent = require('streamhub-wall/wall-component');
 var MockCollection = require('streamhub-sdk-tests/mocks/collection/mock-collection');
 var packageAttribute = require('streamhub-wall/package-attribute');
 var auth = require('auth');
+var Content = require('streamhub-sdk/content');
 
 describe('A MediaWallComponent', function () {
     beforeEach(function () {
@@ -33,6 +34,28 @@ describe('A MediaWallComponent', function () {
         wall.render();
         expect(wall.$('.streamhub-wall-component').length).toBe(1);
     });
+    it('can be constructed with opts.initial: 10', function () {
+        var INITIAL = 10;
+        var wall = new WallComponent({
+            initial: INITIAL,
+            columns: 4
+        });
+        var totalToAdd = 20;
+        var toAdd = totalToAdd;
+        var written = 0;
+        while (toAdd--) {
+            wall.more.write(new Content({ body: 'what'+toAdd }), function (err) {
+                written++;
+            });
+        }
+        waitsFor(function () {
+            return written >= INITIAL;
+        });
+        runs(function () {
+            var numRendered = wall._wallView.$('.content').length;
+            expect(numRendered).toBe(INITIAL);
+        })
+    })
     describe('opts.collection', function () {
         it('can be just a POJO', function () {
             var collectionOpts = {

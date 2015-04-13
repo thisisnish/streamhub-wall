@@ -261,7 +261,9 @@ define([
      * @returns {Number} The number of maximum visible items for a given column view
      */
     MediaWallView.prototype._getMaxVisibleItemsForColumn = function () {
-        return this._maxVisibleItems/this._numberOfColumns;
+        // The maxVisibleItems feature isn't really relevant for the
+        // columnViews. All that is managed by the MediaWallView itself
+        return Infinity;
     };
 
     MediaWallView.prototype._attachColumnView = function (columnView) {
