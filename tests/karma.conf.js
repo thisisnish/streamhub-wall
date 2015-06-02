@@ -33,7 +33,7 @@ module.exports = function(config) {
       {pattern: 'tests/**/*.json', included: false},
       {pattern: 'node_modules/livefyre-package-attribute/**/*.js', included: false},
       {pattern: 'node_modules/jasmine-jquery/**/*.js', included: false},
-      'tests/tests-main.js',
+      'tests/test-in-karma.js',
     ],
 
 
