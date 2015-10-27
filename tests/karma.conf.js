@@ -31,15 +31,15 @@ module.exports = function(config) {
       {pattern: 'lib/**/*.mustache', included: false},
       {pattern: 'dist/*', included: false},
       {pattern: 'tests/**/*.json', included: false},
-      {pattern: 'node_modules/livefyre-package-attribute/**/*.js', included: false},
+      {pattern: 'node_modules/livefyre-package-attribute/src/*.js', included: false},
+      {pattern: 'node_modules/livefyre-package-attribute/tools/*.js', included: false},
       {pattern: 'node_modules/jasmine-jquery/**/*.js', included: false},
       'tests/test-in-karma.js',
     ],
 
 
     // list of files to exclude
-    exclude: [
-    ],
+    exclude: [],
 
 
     // test results reporter to use
