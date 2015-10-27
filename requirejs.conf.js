@@ -5,9 +5,10 @@ require.config({
     base64: 'lib/base64/base64',
     hogan: 'lib/hogan/web/builds/2.0.0/hogan-2.0.0.amd',
     hgn: 'lib/requirejs-hogan-plugin/hgn',
-    jasmine: 'lib/jasmine/lib/jasmine-core/jasmine',
-    'jasmine-html': 'lib/jasmine/lib/jasmine-core/jasmine-html',
-    'jasmine-jquery': 'lib/jasmine-jquery/lib/jasmine-jquery',
+    jasmineRequire: 'node_modules/jasmine-core/lib/jasmine-core/jasmine',
+    jasmine: 'tests/jasmine',
+    'jasmine-html': 'node_modules/jasmine-core/lib/jasmine-core/jasmine-html',
+    'jasmine-jquery': 'node_modules/jasmine-jquery/lib/jasmine-jquery',
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
@@ -25,7 +26,7 @@ require.config({
     location: "./src"
   },{
     name: "streamhub-sdk",
-    location: "lib/streamhub-sdk/src/"
+    location: "lib/streamhub-sdk/src"
   },{
     name: "streamhub-sdk/modal",
     location: "lib/streamhub-sdk/src/modal"
@@ -40,7 +41,7 @@ require.config({
     location: 'lib/streamhub-sdk/src/content'
   },{
     name: 'streamhub-sdk-tests',
-    location: 'lib/streamhub-sdk/tests/'
+    location: 'lib/streamhub-sdk/tests'
   },{
     name: "stream",
     location: "lib/stream/src"
@@ -93,12 +94,11 @@ require.config({
     jquery: {
         exports: '$'
     },
-    jasmine: {
-        exports: 'jasmine'
+    jasmineRequire: {
+        exports: ['jasmineRequire']
     },
     'jasmine-html': {
-        deps: ['jasmine'],
-        exports: 'jasmine'
+        deps: ['jasmine']
     },
     'jasmine-jquery': {
         deps: ['jquery', 'jasmine']
