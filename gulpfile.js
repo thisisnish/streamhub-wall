@@ -4,10 +4,11 @@ var nodemon = require('gulp-nodemon');
 var packageJson = require('./package.json');
 var rework = require('gulp-rework');
 var prefixSelectors = require('rework/lib/plugins/prefix-selectors');
+var util = require('gulp-util');
 
 function lessify(path) {
   gulp.src(path)
-    .pipe(less())
+    .pipe(less({ paths: [ __dirname ] }).on('error', util.log))
     .pipe(gulp.dest('dev'));
 }
 
