@@ -165,7 +165,7 @@ describe('A MediaWallComponent', function () {
             expect(oldWallView.destroy).toHaveBeenCalled();
         });
         it('initializes a new wallView replacing the existing one', function () {
-            spyOn(wall, '_initializeWallView').andCallThrough();
+            var spy = spyOn(wall, '_initializeWallView').and.callThrough();
             var oldWallView = wall._wallView;
             wall.setCollection(collection);
             expect(wall._initializeWallView).toHaveBeenCalled();

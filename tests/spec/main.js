@@ -1,5 +1,4 @@
 var jasmine = require('jasmine');
-var jasmineJquery = require('jasmine-jquery');
 var streamhubWall = require('streamhub-wall');
 
 describe('streamhub-wall', function () {
