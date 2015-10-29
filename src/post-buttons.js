@@ -6,5 +6,9 @@
 module.exports = {
     content: 'content',
     contentWithPhotos: 'contentWithPhoto',
-    photo: 'photo'
+    photo: 'photo',
+    contentWithVideos: 'contentWithVideo',
+    video: 'video',
+    contentWithPhotosAndVideos: 'contentWithPhotoAndVideo',
+    photosAndVideos: 'photoAndVideo'
 };
