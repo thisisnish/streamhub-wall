@@ -162,6 +162,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     var self = this;
     var videoMimeTypes = WallHeaderView.mimetypes.video;
     var photoMimeTypes = WallHeaderView.mimetypes.photo;
+    var postConfig = this.opts.postConfig || {};
 
     function makeUploadButton(opts, mimetypes) {
         return new UploadButton({
@@ -210,6 +211,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     // theme options from the opts object provided to this class so the button
     // can be styled appropriately.
     // @param {boolean} mediaEnabled
+    // @param {Object} uploadOpts
     // @param {Array<string>=} mimetypes Optional array of mimetypes
     function createEditorButton(mediaEnabled, mimetypes) {
         return new ContentEditorButton({
@@ -218,7 +220,9 @@ WallHeaderView.prototype._createPostButton = function (kind) {
             input: createInput(mediaEnabled, mimetypes),
             stylePrefix: self.opts.stylePrefix,
             styles: getEditorButtonStyles(self.opts.themeOpts),
-            mimetypes: mimetypes
+            mimetypes: mimetypes,
+            maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
+            showTitle: postConfig.showTitle
         });
     }
 
@@ -229,14 +233,18 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     function createInput(mediaEnabled, mimetypes) {
         var input = ContentEditorButton.prototype.createInput.call(this, {
             mediaEnabled: mediaEnabled,
-            mimetypes: mimetypes
+            mimetypes: mimetypes,
+            showTitle: postConfig.showTitle,
+            maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost
         });
         // patch .createUploadButton to create one that uses a modal
         // with streamhub-wall packageAttribute
         var ogCreateUploadButton = input.createUploadButton;
         input.createUploadButton = function (opts) {
             opts = opts || {
-                mimetypes: mimetypes
+                mimetypes: mimetypes,
+                showTitle: postConfig.showTitle,
+                maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost
             };
             opts.modal = createModal();
             var uploadButton = ogCreateUploadButton.call(this, opts);
