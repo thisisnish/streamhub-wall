@@ -181,6 +181,7 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
         collection: opts.collection,
         forceButtonRender: opts.forceButtonRender,
         postButton: opts.postButton,
+        postConfig: opts.postConfig || {},
         stylePrefix: this._stylePrefix,
         themeOpts: this._themeOpts
     });

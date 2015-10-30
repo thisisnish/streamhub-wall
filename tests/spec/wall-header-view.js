@@ -126,6 +126,43 @@ describe('A MediaWallHeaderView', function () {
             expect(wallHeaderView._postButton._input.opts.mimetypes).toEqual(mimetypes);
         });
     });
+    describe('opts.postConfig', function () {
+        it('passes through the showTitle attribute but not when postButton is an UploadButton', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {showTitle: true},
+                collection: fakeCollection
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView._postButton._input.opts.showTitle).toBe(true);
+
+            wallHeaderView = new WallHeaderView({
+                postButton: postButtons.photosAndVideos,
+                collection: fakeCollection,
+                postConfig: {showTitle: true}
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView._postButton._input.opts.showTitle).toBeUndefined();
+        });
+
+        it('passes through the maxAttachmentsPerPost attribute but not when postButton is an UploadButton', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {maxAttachmentsPerPost: 1},
+                collection: fakeCollection
+            });
+            expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBe(1);
+
+            wallHeaderView = new WallHeaderView({
+                postButton: postButtons.photosAndVideos,
+                collection: fakeCollection,
+                postConfig: {maxAttachmentsPerPost: 1}
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBeUndefined();
+        });
+    });
+
     describe('upload button', function () {
         it('does not render if there is no auth login delegate', function () {
             var wallHeaderView = new WallHeaderView({
