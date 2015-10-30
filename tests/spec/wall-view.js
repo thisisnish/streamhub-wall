@@ -39,15 +39,17 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
                 stream = new MockStream();
                 view = new MediaWallView({ el: $('#hub-MediaWallView').get(0) });
             });
-            it ("should contain 9 mock items & childViews (from MockAttatchmentsStream) after stream start", function () {
+            it ("should contain 9 mock items & childViews (from MockAttatchmentsStream) after stream start", function (done) {
                 var onEnd = jasmine.createSpy('onEnd');
                 stream.pipe(view);
-                stream.on('end', onEnd);
-                waitsFor(function () {
-                    return onEnd.callCount;
-                });
-                runs(function () {
-                    expect(view.views.length).toBe(9);
+                stream.on('error', done);
+                stream.on('end', function () {
+                    try {
+                        expect(view.views.length).toBe(9);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
                 });
             });
         });
@@ -288,7 +290,7 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
 	        setFixtures('<div id="hub-MediaWallView"></div>');
             $('#hub-MediaWallView').width(300*4); //220px is the default width of content
 
-            spyOn(MediaWallView.prototype, 'fitColumns').andCallThrough();
+            spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
             view = new MediaWallView({
                 el : $('#hub-MediaWallView').get(0),
                 autoRender: false
@@ -313,8 +315,7 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
 	    beforeEach(function() {
 	        setFixtures('<div id="hub-MediaWallView"></div>');
             $('#hub-MediaWallView').width(300*4); //220px is the default width of content
-
-            spyOn(MediaWallView.prototype, 'fitColumns').andCallThrough();
+            spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
             view = new MediaWallView({
                 el : $('#hub-MediaWallView').get(0)
             });
@@ -322,11 +323,11 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
 
         it('expects child views to retain their event handlers (e.g. TiledAttachmentListView.el)', function () {
             expect(view._numberOfColumns).toBe(4);
-            spyOn(MediaWallView.prototype, '_clearColumns').andCallThrough();
-            spyOn(MediaWallView.prototype, '_createColumnView').andCallThrough();
+            spyOn(MediaWallView.prototype, '_clearColumns').and.callThrough();
+            spyOn(MediaWallView.prototype, '_createColumnView').and.callThrough();
             view.relayout();
             expect(MediaWallView.prototype._clearColumns).toHaveBeenCalled();
-            expect(MediaWallView.prototype._createColumnView.callCount).toBe(view._numberOfColumns);
+            expect(MediaWallView.prototype._createColumnView.calls.count()).toBe(view._numberOfColumns);
         });
     });
 

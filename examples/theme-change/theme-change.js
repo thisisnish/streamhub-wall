@@ -67,13 +67,31 @@ $, Collection, Content, Auth, LiveMediaWall) {
                   , sourceLogoColor: 'rgba(255, 255, 255, 0.3)'
                   };
                 break;
-
-
-
-
-
-
-
+              case 'uploadvideo':
+                config = {
+                  postButton: 'video'
+                };
+                break;
+              case 'uploadphoto':
+                config = {
+                  postButton: 'photo'
+                };
+                break;
+              case 'uploadphotovideo':
+                config = {
+                  postButton: 'photosAndVideos'
+                };
+                break;
+              case 'uploadtextphotovideo':
+                config = {
+                  postButton: 'contentWithPhotoAndVideo'
+                };
+                break;
+              case 'uploadtextvideo':
+                config = {
+                  postButton: 'contentWithVideo'
+                };
+                break;
             default:
         }
 
