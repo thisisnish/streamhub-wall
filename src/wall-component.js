@@ -51,6 +51,9 @@ var WallComponent = module.exports = function (opts) {
     if (opts.collection) {
         this._setCollection(opts.collection);
     }
+    
+    //set up translations
+    this._configure_i18n(opts);
 
     // List of apps to render.
     this._toRender = [];
@@ -178,6 +181,7 @@ WallComponent.prototype._getThemeOpts = function (opts) {
  */
 WallComponent.prototype._initializeHeaderView = function (opts) {
     this._headerView = opts.headerView || new WallHeaderView({
+        _i18n: opts._i18n,
         collection: opts.collection,
         forceButtonRender: opts.forceButtonRender,
         postButton: opts.postButton,
@@ -259,6 +263,56 @@ WallComponent.prototype._setCollection = function (newCollection) {
 };
 
 /**
+ * configure i18n translations
+ * @param configOpts {collection} WallComponent configuration object
+ * @private
+ */
+WallComponent.prototype._configure_i18n = function (configOpts) {
+    var changed = false;
+    this._opts._i18n = this._opts._i18n || {};
+    if ('postButtonText' in configOpts) {
+        if (!configOpts.postButtonText || configOpts.postButtonText.length === 0) {
+            delete this._opts._i18n['POST_PHOTO'];
+            delete this._opts._i18n['POST'];
+        }
+        else {
+            this._opts._i18n.POST_PHOTO = configOpts.postButtonText;
+            this._opts._i18n.POST = configOpts.postButtonText;
+        }
+        changed = true;
+    }
+    if ('postModalTitle' in configOpts) {
+        if (!configOpts.postModalTitle || configOpts.postModalTitle.length === 0) {
+            delete this._opts._i18n['POST_MODAL_TITLE'];
+        }
+        else {
+            this._opts._i18n.POST_MODAL_TITLE = configOpts.postModalTitle;
+        }
+        changed = true;
+    }
+    if ('postModalButton' in configOpts) {
+        if (!configOpts.postModalButton || configOpts.postModalButton.length === 0) {
+            delete this._opts._i18n['POST_MODAL_BUTTON'];
+        }
+        else {
+            this._opts._i18n.POST_MODAL_BUTTON = configOpts.postModalButton;
+        }
+        changed = true;
+    }
+    if ('postModalPlaceholder' in configOpts) {
+        if (!configOpts.postModalPlaceholder || configOpts.postModalPlaceholder.length === 0) {
+            delete this._opts._i18n['PLACEHOLDERTEXT'];
+        }
+        else {
+            this._opts._i18n.PLACEHOLDERTEXT = configOpts.postModalPlaceholder;
+        }
+        changed = true;
+    }
+
+    return changed;
+};
+
+/**
  * Restore configuration values back to defaults
  * @private
  */
@@ -320,6 +374,12 @@ WallComponent.prototype.configure = function (configOpts) {
         this._opts.postButton = configOpts.postButton;
         reconstructHeaderView = true;
     }
+    
+    //translations
+    if (this._configure_i18n(configOpts)) {
+        reconstructHeaderView = true;
+    }
+
     if (reconstructWallView) {
         this._wallView.destroy();
         this._initializeWallView(this._opts);
