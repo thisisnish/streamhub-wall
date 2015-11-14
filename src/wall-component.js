@@ -73,6 +73,13 @@ var WallComponent = module.exports = function (opts) {
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
 
+var I18N_MAP = {
+  postButtonText: ['POST', 'POST_PHOTO'],
+  postModalTitle: ['POST_MODAL_TITLE'],
+  postModalButton: ['POST_MODAL_BUTTON'],
+  postModalPlaceholder: ['PLACEHOLDERTEXT']
+};
+
 /**
  * Element prefixes that we want to theme.
  * @type {Array.<string>}
@@ -269,45 +276,22 @@ WallComponent.prototype._setCollection = function (newCollection) {
  */
 WallComponent.prototype._configure_i18n = function (configOpts) {
     var changed = false;
+    var self = this;
     this._opts._i18n = this._opts._i18n || {};
-    if ('postButtonText' in configOpts) {
-        if (!configOpts.postButtonText || configOpts.postButtonText.length === 0) {
-            delete this._opts._i18n['POST_PHOTO'];
-            delete this._opts._i18n['POST'];
+
+    $.each(I18N_MAP, function(key, value) {
+        if (key in configOpts) {
+            for (var i = 0; i < value.length; i++) {
+                if (!configOpts[key] || configOpts[key].length === 0) {
+                    delete self._opts._i18n[value[i]];
+                } 
+                else {
+                    self._opts._i18n[value[i]] = configOpts[key];
+                }
+            }
+            changed = true;
         }
-        else {
-            this._opts._i18n.POST_PHOTO = configOpts.postButtonText;
-            this._opts._i18n.POST = configOpts.postButtonText;
-        }
-        changed = true;
-    }
-    if ('postModalTitle' in configOpts) {
-        if (!configOpts.postModalTitle || configOpts.postModalTitle.length === 0) {
-            delete this._opts._i18n['POST_MODAL_TITLE'];
-        }
-        else {
-            this._opts._i18n.POST_MODAL_TITLE = configOpts.postModalTitle;
-        }
-        changed = true;
-    }
-    if ('postModalButton' in configOpts) {
-        if (!configOpts.postModalButton || configOpts.postModalButton.length === 0) {
-            delete this._opts._i18n['POST_MODAL_BUTTON'];
-        }
-        else {
-            this._opts._i18n.POST_MODAL_BUTTON = configOpts.postModalButton;
-        }
-        changed = true;
-    }
-    if ('postModalPlaceholder' in configOpts) {
-        if (!configOpts.postModalPlaceholder || configOpts.postModalPlaceholder.length === 0) {
-            delete this._opts._i18n['PLACEHOLDERTEXT'];
-        }
-        else {
-            this._opts._i18n.PLACEHOLDERTEXT = configOpts.postModalPlaceholder;
-        }
-        changed = true;
-    }
+    });
 
     return changed;
 };
