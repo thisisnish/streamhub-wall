@@ -163,6 +163,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     var videoMimeTypes = WallHeaderView.mimetypes.video;
     var photoMimeTypes = WallHeaderView.mimetypes.photo;
     var postConfig = this.opts.postConfig || {};
+    postConfig.maxAttachmentsPerPost = postConfig.maxAttachmentsPerPost || 1;
 
     function makeUploadButton(opts, mimetypes) {
         return new UploadButton({
