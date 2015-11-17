@@ -225,7 +225,8 @@ WallHeaderView.prototype._createPostButton = function (kind) {
             styles: getEditorButtonStyles(self.opts.themeOpts),
             mimetypes: mimetypes,
             maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
-            showTitle: postConfig.showTitle
+            showTitle: postConfig.showTitle,
+            mediaRequired: postConfig.mediaRequired
         });
     }
 
@@ -239,7 +240,8 @@ WallHeaderView.prototype._createPostButton = function (kind) {
             mediaEnabled: mediaEnabled,
             mimetypes: mimetypes,
             showTitle: postConfig.showTitle,
-            maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost
+            maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
+            mediaRequired: postConfig.mediaRequired
         });
         // patch .createUploadButton to create one that uses a modal
         // with streamhub-wall packageAttribute
@@ -248,7 +250,8 @@ WallHeaderView.prototype._createPostButton = function (kind) {
             opts = opts || {
                 mimetypes: mimetypes,
                 showTitle: postConfig.showTitle,
-                maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost
+                maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
+                mediaRequired: postConfig.mediaRequired
             };
             opts.modal = createModal();
             var uploadButton = ogCreateUploadButton.call(this, opts);
