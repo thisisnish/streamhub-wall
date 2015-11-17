@@ -18,7 +18,7 @@ var View = require('view');
  */
 var WallHeaderView = module.exports = function (opts) {
     View.apply(this, arguments);
-    opts = opts || {};
+    opts = this.opts = opts || {};
 
     /**
      * Whether the button should be forced to render or not.
@@ -167,6 +167,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
 
     function makeUploadButton(opts, mimetypes) {
         return new UploadButton({
+            _i18n: self.opts._i18n,
             modal: createModal(),
             stylePrefix: opts.stylePrefix,
             styles: getEditorButtonStyles(opts.themeOpts),
@@ -216,9 +217,10 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     // @param {Array<string>=} mimetypes Optional array of mimetypes
     function createEditorButton(mediaEnabled, mimetypes) {
         return new ContentEditorButton({
+            _i18n: self.opts._i18n,
             mediaEnabled: mediaEnabled,
             modal: createModal(),
-            input: createInput(mediaEnabled, mimetypes),
+            input: createInput(mediaEnabled, mimetypes, self.opts._i18n),
             stylePrefix: self.opts.stylePrefix,
             styles: getEditorButtonStyles(self.opts.themeOpts),
             mimetypes: mimetypes,
@@ -231,8 +233,9 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     // a modal that has the right packageAttribute on its parent
     // @param {boolean} mediaEnabled
     // @param {Array<string>=} mimetypes Optional array of mimetypes
-    function createInput(mediaEnabled, mimetypes) {
+    function createInput(mediaEnabled, mimetypes, _i18n) {
         var input = ContentEditorButton.prototype.createInput.call(this, {
+            _i18n: _i18n,
             mediaEnabled: mediaEnabled,
             mimetypes: mimetypes,
             showTitle: postConfig.showTitle,
