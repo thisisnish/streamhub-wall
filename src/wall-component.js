@@ -51,6 +51,9 @@ var WallComponent = module.exports = function (opts) {
     if (opts.collection) {
         this._setCollection(opts.collection);
     }
+    
+    //set up translations
+    this._configure_i18n(opts);
 
     // List of apps to render.
     this._toRender = [];
@@ -69,6 +72,13 @@ var WallComponent = module.exports = function (opts) {
 
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
+
+var I18N_MAP = {
+  postButtonText: ['POST', 'POST_PHOTO'],
+  postModalTitle: ['POST_MODAL_TITLE'],
+  postModalButton: ['POST_MODAL_BUTTON'],
+  postModalPlaceholder: ['PLACEHOLDERTEXT']
+};
 
 /**
  * Element prefixes that we want to theme.
@@ -178,6 +188,7 @@ WallComponent.prototype._getThemeOpts = function (opts) {
  */
 WallComponent.prototype._initializeHeaderView = function (opts) {
     this._headerView = opts.headerView || new WallHeaderView({
+        _i18n: opts._i18n,
         collection: opts.collection,
         forceButtonRender: opts.forceButtonRender,
         postButton: opts.postButton,
@@ -259,6 +270,33 @@ WallComponent.prototype._setCollection = function (newCollection) {
 };
 
 /**
+ * configure i18n translations
+ * @param configOpts {collection} WallComponent configuration object
+ * @private
+ */
+WallComponent.prototype._configure_i18n = function (configOpts) {
+    var changed = false;
+    var self = this;
+    this._opts._i18n = this._opts._i18n || {};
+
+    $.each(I18N_MAP, function(key, value) {
+        if (key in configOpts) {
+            for (var i = 0; i < value.length; i++) {
+                if (!configOpts[key] || configOpts[key].length === 0) {
+                    delete self._opts._i18n[value[i]];
+                } 
+                else {
+                    self._opts._i18n[value[i]] = configOpts[key];
+                }
+            }
+            changed = true;
+        }
+    });
+
+    return changed;
+};
+
+/**
  * Restore configuration values back to defaults
  * @private
  */
@@ -320,6 +358,12 @@ WallComponent.prototype.configure = function (configOpts) {
         this._opts.postButton = configOpts.postButton;
         reconstructHeaderView = true;
     }
+    
+    //translations
+    if (this._configure_i18n(configOpts)) {
+        reconstructHeaderView = true;
+    }
+
     if (reconstructWallView) {
         this._wallView.destroy();
         this._initializeWallView(this._opts);

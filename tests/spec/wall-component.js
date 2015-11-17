@@ -140,6 +140,35 @@ describe('A MediaWallComponent', function () {
             });
             expect(wall.$('menu').children().length).toBe(0);
         });
+        it('is can be translated', function () {
+            auth.delegate({
+                login: function () {}
+            });
+            var fakeCollection = {
+                pipe: function () {}
+            };
+            var translation = 'What up!';
+            var wall = new WallComponent({
+                collection: fakeCollection, // may not always work
+                postButton: 'content',
+                postButtonText: translation
+            });
+            wall.render();
+            expect(wall.$('.lf-comment-btn').html()).toBe(translation);
+
+            //should be able to configure as well, including unset
+            wall.configure({
+                postButtonText: undefined
+            });
+
+            expect(wall.$('.lf-comment-btn').html()).toBe('What\'s on your mind?');
+
+            wall.configure({
+                postButtonText: translation
+            });
+
+            expect(wall.$('.lf-comment-btn').html()).toBe(translation);
+        });
     });
     describe('.enteredView', function () {
         it('is a function', function () {
