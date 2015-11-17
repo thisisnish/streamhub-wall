@@ -104,7 +104,8 @@ $, Collection, Content, Auth, LiveMediaWall) {
                 config = {
                   postButton: 'contentWithVideo',
                   postConfig: {
-                    maxAttachmentsPerPost: 1
+                    maxAttachmentsPerPost: 1,
+                    mediaRequired: true
                   }
                 };
                 break;
