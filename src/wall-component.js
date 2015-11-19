@@ -358,6 +358,16 @@ WallComponent.prototype.configure = function (configOpts) {
         this._opts.postButton = configOpts.postButton;
         reconstructHeaderView = true;
     }
+    if ('showTitle' in configOpts || 'mediaRequired' in configOpts) {
+        this._opts.postConfig = this._opts.postConfig || {};
+        if ('showTitle' in configOpts) {
+            this._opts.postConfig.showTitle = configOpts.showTitle;
+        }
+        if ('mediaRequired' in configOpts) {
+            this._opts.postConfig.mediaRequired = configOpts.mediaRequired;
+        }
+        reconstructHeaderView = true;
+    }
     
     //translations
     if (this._configure_i18n(configOpts)) {
