@@ -5,7 +5,7 @@
     "./src/main.js"
   ],
   "dependencies": {
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.18.0",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.18.1",
     "cajon": "git://github.com/requirejs/cajon.git#~0.1.11",
     "streamhub-input": "Livefyre/streamhub-input#0.7.3",
     "rework": "gobengo/rework#~0.21.0",
@@ -32,7 +32,7 @@
     "view": "1.4.1",
     "livefyre-bootstrap": "~1.3.4",
     "event-emitter": "0.1",
-    "streamhub-sdk": "2.18.0",
+    "streamhub-sdk": "2.18.1",
     "streamhub-ui": "0.2.0",
     "mout": "0.11.0",
     "cajon": "~0.1.11",
