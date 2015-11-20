@@ -14,14 +14,14 @@ $, Collection, Content, Auth, LiveMediaWall) {
     var log = debug('streamhub-sdk/auth-demo');
     var authButton = createAuthButton(auth, document.getElementById('auth-button'));
 
-    var delegate = window.delegate = livefyreAuthDelegate('http://www.livefyre.com');
+    var delegate = window.delegate = livefyreAuthDelegate('http://www.qa-ext.livefyre.com');
     auth.delegate(delegate);
 
     var opts = {
-        "network": "livefyre.com",
-        "siteId": "313878",
-        "articleId": "1",
-        "environment": "livefyre.com"
+      "network": "livefyre.com",
+      "siteId": "290596",
+      "articleId": "303",
+      "environment": "qa-ext.livefyre.com"
     };
     window.Collection = Collection;
     var collection = new Collection(opts);
@@ -67,13 +67,48 @@ $, Collection, Content, Auth, LiveMediaWall) {
                   , sourceLogoColor: 'rgba(255, 255, 255, 0.3)'
                   };
                 break;
-
-
-
-
-
-
-
+              case 'uploadvideo':
+                config = {
+                  postButton: 'video'
+                };
+                break;
+              case 'uploadphoto':
+                config = {
+                  postButton: 'photo'
+                };
+                break;
+              case 'uploadphotovideo':
+                config = {
+                  postButton: 'photosAndVideos'
+                };
+                break;
+              case 'uploadtextphotovideo':
+                config = {
+                  postButton: 'contentWithPhotoAndVideo'
+                };
+                break;
+              case 'uploadtextvideo':
+                config = {
+                  postButton: 'contentWithVideo'
+                };
+                break;
+              case 'uploadtextvideotitle':
+                config = {
+                  postButton: 'contentWithVideo',
+                  postConfig: {
+                    showTitle: true
+                  }
+                };
+                break;
+              case 'uploadtextvideosingle':
+                config = {
+                  postButton: 'contentWithVideo',
+                  postConfig: {
+                    maxAttachmentsPerPost: 1,
+                    mediaRequired: true
+                  }
+                };
+                break;
             default:
         }
 

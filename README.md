@@ -67,8 +67,12 @@ Boolean or String. What sort of "Post Content" button should appear on the LiveM
 
 * `false` (default) - Do not show a "Post Content" button. The LiveMediaWall is effectively read-only
 * `true` or `LiveMediaWall.postButtons.contentWithPhotos` - Include a button that lets users type textual Content with attached photos
+* `LiveMediaWall.postButtons.contentWithVideos` - Include a button that lets users type textual Content with attached videos
+* `LiveMediaWall.postButtons.contentWithPhotosAndVideos` - Include a button that lets users type textual Content with attached videos or photos
 * `LiveMediaWall.postButtons.content` - Include a button that lets users type textual Content, but not attach photos
 * `LiveMediaWall.postButtons.photo` - Include a button that lets users add a photo, but no text
+* `LiveMediaWall.postButtons.video` - Include a button that lets users add a video, but no text
+* `LiveMediaWall.postButtons.photosAndVideos` - Include a button that lets users add a photo or video, but no text
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),

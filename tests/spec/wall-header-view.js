@@ -67,8 +67,9 @@ describe('A MediaWallHeaderView', function () {
             expect(wallHeaderView.$el.children().length).toBe(1);
             expect(wallHeaderView._postButton instanceof ContentEditorButton).toBe(true);
             expect(wallHeaderView._postButton._input.opts.mediaEnabled).toBe(true);
+            expect(wallHeaderView._postButton._input.opts.mimetypes).toEqual(WallHeaderView.mimetypes.photo);
         });
-        it('when .photo, uses UploadButton', function () {
+        it('when .photo, uses UploadButton with photo mimetypes', function () {
             var wallHeaderView = new WallHeaderView({
                 postButton: postButtons.photo,
                 collection: fakeCollection
@@ -76,8 +77,110 @@ describe('A MediaWallHeaderView', function () {
             wallHeaderView.render();
             expect(wallHeaderView.$el.children().length).toBe(1);
             expect(wallHeaderView._postButton instanceof UploadButton).toBe(true);
+            expect(wallHeaderView._postButton._input.opts.pick.mimetypes).toEqual(WallHeaderView.mimetypes.photo);
+        });
+        it('when .video, uses UploadButton with video mimetypes', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.video,
+                collection: fakeCollection
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView.$el.children().length).toBe(1);
+            expect(wallHeaderView._postButton instanceof UploadButton).toBe(true);
+            expect(wallHeaderView._postButton._input.opts.pick.mimetypes).toEqual(WallHeaderView.mimetypes.video);
+        });
+        it('when .photosAndVideos, uses UploadButton with photo+video mimetypes', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.photosAndVideos,
+                collection: fakeCollection
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView.$el.children().length).toBe(1);
+            expect(wallHeaderView._postButton instanceof UploadButton).toBe(true);
+
+            var mimetypes = WallHeaderView.mimetypes.video.concat(WallHeaderView.mimetypes.photo);
+            expect(wallHeaderView._postButton._input.opts.pick.mimetypes).toEqual(mimetypes);
+        });
+        it('when .contentWithVideos, uses ContentEditorButton with mediaEnabled and video mimetypes', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                collection: fakeCollection
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView.$el.children().length).toBe(1);
+            expect(wallHeaderView._postButton instanceof ContentEditorButton).toBe(true);
+            expect(wallHeaderView._postButton._input.opts.mediaEnabled).toBe(true);
+            expect(wallHeaderView._postButton._input.opts.mimetypes).toEqual(WallHeaderView.mimetypes.video);
+        });
+        it('when .contentWithPhotosAndVideos, uses ContentEditorButton with mediaEnabled and photo+video mimetypes', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithPhotosAndVideos,
+                collection: fakeCollection
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView.$el.children().length).toBe(1);
+            expect(wallHeaderView._postButton instanceof ContentEditorButton).toBe(true);
+            expect(wallHeaderView._postButton._input.opts.mediaEnabled).toBe(true);
+
+            var mimetypes = WallHeaderView.mimetypes.video.concat(WallHeaderView.mimetypes.photo);
+            expect(wallHeaderView._postButton._input.opts.mimetypes).toEqual(mimetypes);
         });
     });
+    describe('opts.postConfig', function () {
+        it('passes through the showTitle attribute but not when postButton is an UploadButton', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {showTitle: true},
+                collection: fakeCollection
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView._postButton._input.opts.showTitle).toBe(true);
+
+            wallHeaderView = new WallHeaderView({
+                postButton: postButtons.photosAndVideos,
+                collection: fakeCollection,
+                postConfig: {showTitle: true}
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView._postButton._input.opts.showTitle).toBeUndefined();
+        });
+
+        it('passes through the maxAttachmentsPerPost attribute but not when postButton is an UploadButton', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {maxAttachmentsPerPost: 1},
+                collection: fakeCollection
+            });
+            expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBe(1);
+
+            wallHeaderView = new WallHeaderView({
+                postButton: postButtons.photosAndVideos,
+                collection: fakeCollection,
+                postConfig: {maxAttachmentsPerPost: 1}
+            });
+            wallHeaderView.render();
+            expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBeUndefined();
+        });
+
+        it('defaults maxAttachmentsPerPost to 1', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {},
+                collection: fakeCollection
+            });
+            expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBe(1);
+        });
+
+        it('passes through mediaRequired attribute', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {mediaRequired: true},
+                collection: fakeCollection
+            });
+            expect(wallHeaderView._postButton._input.opts.mediaRequired).toBe(true);
+        });
+    });
+
     describe('upload button', function () {
         it('does not render if there is no auth login delegate', function () {
             var wallHeaderView = new WallHeaderView({

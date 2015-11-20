@@ -140,6 +140,35 @@ describe('A MediaWallComponent', function () {
             });
             expect(wall.$('menu').children().length).toBe(0);
         });
+        it('is can be translated', function () {
+            auth.delegate({
+                login: function () {}
+            });
+            var fakeCollection = {
+                pipe: function () {}
+            };
+            var translation = 'What up!';
+            var wall = new WallComponent({
+                collection: fakeCollection, // may not always work
+                postButton: 'content',
+                postButtonText: translation
+            });
+            wall.render();
+            expect(wall.$('.lf-comment-btn').html()).toBe(translation);
+
+            //should be able to configure as well, including unset
+            wall.configure({
+                postButtonText: undefined
+            });
+
+            expect(wall.$('.lf-comment-btn').html()).toBe('What\'s on your mind?');
+
+            wall.configure({
+                postButtonText: translation
+            });
+
+            expect(wall.$('.lf-comment-btn').html()).toBe(translation);
+        });
     });
     describe('.enteredView', function () {
         it('is a function', function () {
@@ -165,7 +194,7 @@ describe('A MediaWallComponent', function () {
             expect(oldWallView.destroy).toHaveBeenCalled();
         });
         it('initializes a new wallView replacing the existing one', function () {
-            spyOn(wall, '_initializeWallView').andCallThrough();
+            var spy = spyOn(wall, '_initializeWallView').and.callThrough();
             var oldWallView = wall._wallView;
             wall.setCollection(collection);
             expect(wall._initializeWallView).toHaveBeenCalled();

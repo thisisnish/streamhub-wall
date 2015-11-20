@@ -18,7 +18,7 @@ var View = require('view');
  */
 var WallHeaderView = module.exports = function (opts) {
     View.apply(this, arguments);
-    opts = opts || {};
+    opts = this.opts = opts || {};
 
     /**
      * Whether the button should be forced to render or not.
@@ -141,29 +141,62 @@ function getEditorButtonStyles(opts) {
 }
 
 /**
+ * Accepted mimetypes
+ * @type {Object<string, Array>}
+ */
+WallHeaderView.mimetypes = {
+    video: ['video/avi', 'video/mp4', 'video/x-ms-wmv', 'video/x-ms-asf', 'video/x-msvideo',
+            'video/mpeg', 'video/quicktime', 'video/x-qtc', 'video/x-dv', 'video/x-m4v',
+            'video/3gpp', 'video/3gpp2', 'video/webm', 'video/ogg'],
+    photo: ['image/*']
+};
+
+/**
  * Create the Button that will let the user post content into the
  * right Collection
- * @param kind - 'content', 'contentWithPhotos', 'photo', true, or falsy
+ * @param kind - 'content', 'contentWithPhotos', 'contentWithVideos', 'video', 'photo', true, or falsy
  */
 WallHeaderView.prototype._createPostButton = function (kind) {
     var mediaEnabled;
     var button;
     var self = this;
+    var videoMimeTypes = WallHeaderView.mimetypes.video;
+    var photoMimeTypes = WallHeaderView.mimetypes.photo;
+    var postConfig = this.opts.postConfig || {};
+    postConfig.maxAttachmentsPerPost = postConfig.maxAttachmentsPerPost || 1;
+
+    function makeUploadButton(opts, mimetypes) {
+        return new UploadButton({
+            _i18n: self.opts._i18n,
+            modal: createModal(),
+            stylePrefix: opts.stylePrefix,
+            styles: getEditorButtonStyles(opts.themeOpts),
+            mimetypes: mimetypes
+        });
+    }
 
     switch (kind) {
         case postButtons.photo:
-            button = new UploadButton({
-                modal: createModal(),
-                stylePrefix: this.opts.stylePrefix,
-                styles: getEditorButtonStyles(this.opts.themeOpts)
-            });
+            button = makeUploadButton(this.opts, photoMimeTypes);
+            break;
+        case postButtons.video:
+            button = makeUploadButton(this.opts, videoMimeTypes);
+            break;
+        case postButtons.photosAndVideos:
+            button = makeUploadButton(this.opts, videoMimeTypes.concat(photoMimeTypes));
             break;
         case postButtons.content:
             button = createEditorButton(false);
             break;
+        case postButtons.contentWithVideos:
+            button = createEditorButton(true, videoMimeTypes);
+            break;
+        case postButtons.contentWithPhotosAndVideos:
+            button = createEditorButton(true, videoMimeTypes.concat(photoMimeTypes));
+            break;
         case postButtons.contentWithPhotos:
         case true:
-            button = createEditorButton(true);
+            button = createEditorButton(true, photoMimeTypes);
             break;
     }
 
@@ -179,27 +212,47 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     // Create an editor button with or without media enabled. This also grabs
     // theme options from the opts object provided to this class so the button
     // can be styled appropriately.
-    function createEditorButton(mediaEnabled) {
+    // @param {boolean} mediaEnabled
+    // @param {Object} uploadOpts
+    // @param {Array<string>=} mimetypes Optional array of mimetypes
+    function createEditorButton(mediaEnabled, mimetypes) {
         return new ContentEditorButton({
+            _i18n: self.opts._i18n,
             mediaEnabled: mediaEnabled,
             modal: createModal(),
-            input: createInput(mediaEnabled),
+            input: createInput(mediaEnabled, mimetypes, self.opts._i18n),
             stylePrefix: self.opts.stylePrefix,
-            styles: getEditorButtonStyles(self.opts.themeOpts)
+            styles: getEditorButtonStyles(self.opts.themeOpts),
+            mimetypes: mimetypes,
+            maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
+            showTitle: postConfig.showTitle,
+            mediaRequired: postConfig.mediaRequired
         });
     }
 
     // Create a custom ContentEditor input whose UploadButton will launch
     // a modal that has the right packageAttribute on its parent
-    function createInput(mediaEnabled) {
+    // @param {boolean} mediaEnabled
+    // @param {Array<string>=} mimetypes Optional array of mimetypes
+    function createInput(mediaEnabled, mimetypes, _i18n) {
         var input = ContentEditorButton.prototype.createInput.call(this, {
-            mediaEnabled: mediaEnabled
+            _i18n: _i18n,
+            mediaEnabled: mediaEnabled,
+            mimetypes: mimetypes,
+            showTitle: postConfig.showTitle,
+            maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
+            mediaRequired: postConfig.mediaRequired
         });
         // patch .createUploadButton to create one that uses a modal
         // with streamhub-wall packageAttribute
         var ogCreateUploadButton = input.createUploadButton;
         input.createUploadButton = function (opts) {
-            opts = opts || {};
+            opts = opts || {
+                mimetypes: mimetypes,
+                showTitle: postConfig.showTitle,
+                maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
+                mediaRequired: postConfig.mediaRequired
+            };
             opts.modal = createModal();
             var uploadButton = ogCreateUploadButton.call(this, opts);
             return uploadButton;
