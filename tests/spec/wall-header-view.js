@@ -161,6 +161,24 @@ describe('A MediaWallHeaderView', function () {
             wallHeaderView.render();
             expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBeUndefined();
         });
+
+        it('defaults maxAttachmentsPerPost to 1', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {},
+                collection: fakeCollection
+            });
+            expect(wallHeaderView._postButton._input.opts.maxAttachmentsPerPost).toBe(1);
+        });
+
+        it('passes through mediaRequired attribute', function () {
+            var wallHeaderView = new WallHeaderView({
+                postButton: postButtons.contentWithVideos,
+                postConfig: {mediaRequired: true},
+                collection: fakeCollection
+            });
+            expect(wallHeaderView._postButton._input.opts.mediaRequired).toBe(true);
+        });
     });
 
     describe('upload button', function () {
