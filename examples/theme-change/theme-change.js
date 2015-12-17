@@ -30,6 +30,12 @@ $, Collection, Content, Auth, LiveMediaWall) {
         el: document.getElementById("listView"),
         collection: opts,
         postButton: true,
+
+        postButtonText: 'its post button text',             //Default value: "What's on your mind?"
+        postModalTitle: 'its post modal title',             //Default value: "Post Your Comment"
+        postModalButton: 'its post modal button',           //Default value: "Post Your Comment"
+        postModalPlaceholder: 'its post modal placeholder', //Default value: "What would you like to say?"
+
         sharer: function (content) {
             console.log('share', content);
         }
@@ -79,7 +85,7 @@ $, Collection, Content, Auth, LiveMediaWall) {
                 break;
               case 'uploadphotovideo':
                 config = {
-                  postButton: 'photosAndVideos'
+                  postButton: 'photoAndVideo'
                 };
                 break;
               case 'uploadtextphotovideo':

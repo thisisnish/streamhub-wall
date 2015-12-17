@@ -81,6 +81,42 @@ Boolean or String. What sort of "Post Content" button should appear on the LiveM
             minContentWidth: 300
         });
 
+####```postButtonText```
+
+String. Sets the text of the “What’s on your mind?” button. Default value: “Whats on your mind?”.
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            postButtonText: “Whats on your mind?”
+        });
+
+####```postModalTitle```
+
+String. Sets the title of the UGC upload dialog. Default value: “Post Your Comment”.
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            postModalTitle: “Post Your Comment”
+        });
+
+####```postModalButton```
+
+String. Sets the button text of the UGC upload dialog. Default value: “Post Your Comment”.
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            postModalButton: “Post Your Comment”
+        });
+
+####```postModalPlaceholder```
+
+String. Sets the content placeholder of the UGC upload dialog. Default value: “What would you like to say?”.
+
+        var wallView = new LiveMediaWall({
+            el: document.getElementById('wall'),
+            postModalPlaceholder: “What would you like to say?”
+        });
+
 ####```minContentWidth```
 
 Number. The Media Wall will choose an appropriate number of columns depending on the width of its
