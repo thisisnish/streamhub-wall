@@ -92,7 +92,7 @@ article.content .content-source-logo {
 .content-created-at {
     white-space: nowrap;
 }
-.content-body-main {
+.content-body-main, .content-body-title {
     word-break: keep-all;
     word-wrap: break-word;
 }
