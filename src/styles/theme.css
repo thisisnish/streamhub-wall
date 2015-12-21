@@ -82,3 +82,19 @@ article.content .content-source-logo {
     background: var(--showMoreActiveBackgroundColor);
     border-color: var(--showMoreActiveBorderColor);
 }
+
+.content-header {
+    word-wrap: break-word;
+}
+.hub-btn.hub-btn-link.hub-content-share {
+    white-space: pre-wrap;
+}
+.content-created-at {
+    white-space: nowrap;
+}
+.content-body-main {
+    word-break: keep-all;
+    word-wrap: break-word;
+}
+
+
