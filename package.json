@@ -1,5 +1,5 @@
 {
-  "name": "streamhub-wall",
+  "name": "streamhub-wall-emitter",
   "description": "Livefyre LiveMediaWall",
   "author": "Livefyre <support@livefyre.com>",
   "version": "3.9.3",
@@ -37,6 +37,8 @@
     "jsdoc": "rm -rf docs/api && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json"
   },
   "dependencies": {
+    "activity-streams-vocabulary": "git+ssh://git@github.com/Livefyre/activity-streams-vocabulary.git",
+    "insights-emitter": "git+ssh://git@github.com/Livefyre/insights-emitter",
     "livefyre-package-attribute": "git://github.com/Livefyre/livefyre-package-attribute.git#v0.1.1"
   },
   "lfeslint": {

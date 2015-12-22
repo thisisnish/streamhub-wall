@@ -16,6 +16,9 @@ var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
+var InsightsEmitter = require('insights-emitter');
+var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
+var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
 
 /**
  * LiveMediaWall Component
@@ -70,6 +73,9 @@ var WallComponent = module.exports = function (opts) {
   if (this._collection) {
     this._collection.pipe(this._wallView);
   }
+
+  this._emitter = null;
+  this._initializeEmitter(opts);
 };
 
 inherits(WallComponent, Passthrough);
@@ -221,6 +227,60 @@ WallComponent.prototype._initializeWallView = function (opts) {
   // including more, so that Collection piping works right
   this.more = new Passthrough();
   this.more.pipe(this._wallView.more);
+};
+
+
+WallComponent.prototype._initializeEmitter = function (opts) {
+    opts = opts || {};
+
+    this._emitter = new InsightsEmitter({
+        network: opts.collection.network,
+        siteId: opts.collection.siteId,
+        uuid: this._uuid,
+        name: 'Media Wall',
+        version: packageAttribute.value.split('#')[1],
+        type: 'App'
+    });
+    
+    var self = this;
+    var emitter = this._emitter;
+    emitter.once('emitter:registered', function () {
+        emitter.send(ActivityTypes.INIT);
+    });
+
+    if (this._collection) {
+        this._collection.on('_initFromBootstrap', function (err, initData) {
+            emitter.collectionId = this.id;
+            emitter.send(ActivityTypes.LOAD);
+        });
+    }
+
+    if (this._wallView) {
+        var view = this._wallView;
+
+        // Show more listener
+        if (view.showMoreButton
+            && view.showMoreButton.$el) {
+            view.showMoreButton.$el.on('showMore.hub', function () {
+                emitter.send(ActivityTypes.REQUEST_MORE)
+            });
+        }
+
+        // Modal listener
+        if (view.modal) {
+            view.$el.on('focusContent.hub', function (evt, data) {
+                var evtData = {};
+                if (data && data.content) {
+                    evtData.content = data.content,
+                    evtData.type = ObjectTypes.CONTENT
+                }
+
+                emitter.send(ActivityTypes.MODAL_LOAD, evtData);
+            });
+        }
+    }
+
+    emitter.registerApp();
 };
 
 /**
