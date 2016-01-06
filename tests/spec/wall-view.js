@@ -29,6 +29,16 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
             });
         });
 
+        it ('always returns a whole number >= 1 for max items for column', function () {
+            var view = new MediaWallView();
+            view._maxVisibleItems = 3;
+            view._numberOfColumns = 4;
+            expect(view._getMaxVisibleItemsForColumn()).toBe(1);
+
+            view._maxVisibleItems = 5;
+            expect(view._getMaxVisibleItemsForColumn()).toBe(2);
+        });
+
         // post construction behavior
         describe ("after correct construction", function () {
             var view;

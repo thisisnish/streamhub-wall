@@ -257,11 +257,13 @@ define([
     };
 
     /**
-     * Gets the number of maximum visible items for a given column view
+     * Gets the number of maximum visible items for a given column view. Uses
+     * ceil to ensure that the number is a positive whole number >= 1. If it
+     * is a decimal, it won't show the cards properly.
      * @returns {Number} The number of maximum visible items for a given column view
      */
     MediaWallView.prototype._getMaxVisibleItemsForColumn = function () {
-        return this._maxVisibleItems/this._numberOfColumns;
+        return Math.ceil(this._maxVisibleItems/this._numberOfColumns);
     };
 
     MediaWallView.prototype._attachColumnView = function (columnView) {
