@@ -72,11 +72,28 @@ define([
 
     MediaWallView.columnPickers = {
         roundRobin: function (contentView, forcedIndex) {
+            var cols = this._numberOfColumns;
+
+            // If "show more" has not been used, the number of columns to use
+            // in the round robin should be limited to the smaller of:
+            //   1. number of comments to load initially
+            //   2. maximum number of columns
+            //
+            // `_bound` is an instance variable in `ContentListView` that
+            // determines whether the count of content is bound by a number.
+            // Initially it is true since the initial count is set, but when
+            // "show more" is fired, it is false, so that content will flow in
+            // and not check if there is space in the view.
+            if (this._bound) {
+                var maxVisible = this._maxVisibleItems || this._numberOfColumns;
+                cols = Math.min(maxVisible, this._numberOfColumns);
+            }
+
             if (this._roundRobinInsertIndex === undefined) {
                 this._roundRobinInsertIndex = -1;
             }
             this._roundRobinInsertIndex++;
-            this._roundRobinInsertIndex = this._roundRobinInsertIndex % this._numberOfColumns;
+            this._roundRobinInsertIndex = this._roundRobinInsertIndex % cols;
             return this._roundRobinInsertIndex;
         },
         shortestColumn: function (contentView, forcedIndex) {
