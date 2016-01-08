@@ -127,11 +127,11 @@ Object. postConfig is the object with properties showTitle, maxAttachmentsPerPos
 
         var wallView = new LiveMediaWall({
             el: document.getElementById('wall'),
-             postConfig: {
-                            maxAttachmentsPerPost: 1,
-                            mediaRequired: true,
-                            showTitle: true
-                         }
+            postConfig: {
+                maxAttachmentsPerPost: 1,
+                mediaRequired: true,
+                showTitle: true
+            }
         });
 
 ####```minContentWidth```

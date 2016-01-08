@@ -83,18 +83,6 @@ article.content .content-source-logo {
     border-color: var(--showMoreActiveBorderColor);
 }
 
-.content-header {
-    word-wrap: break-word;
-}
-.hub-btn.hub-btn-link.hub-content-share {
-    white-space: pre-wrap;
-}
-.content-created-at {
-    white-space: nowrap;
-}
-.content-body-main, .content-body-title {
-    word-break: keep-all;
-    word-wrap: break-word;
-}
+
 
 
