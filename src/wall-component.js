@@ -244,19 +244,33 @@ WallComponent.prototype._initializeEmitter = function (opts) {
     
     var self = this;
     var emitter = this._emitter;
+
+    // Init listner
     emitter.once('emitter:registered', function () {
         emitter.send(ActivityTypes.INIT);
     });
-
-    if (this._collection) {
-        this._collection.on('_initFromBootstrap', function (err, initData) {
-            emitter.collectionId = this.id;
-            emitter.send(ActivityTypes.LOAD);
-        });
-    }
+    emitter.registerApp();
 
     if (this._wallView) {
         var view = this._wallView;
+
+        // App loaded listener
+        var cnt = 0;
+        var checkGoal = function () {
+            if (++cnt < view.more.getGoal()) {
+                // Save off the collectionId for later at this point because
+                // its not available until we start adding content in
+                if (!self.collectionId && self._collection.id) {
+                    emitter.collectionId = self._collection.id;
+                }
+
+                return;
+            }
+
+            view.removeListener('added', checkGoal);
+            emitter.send(ActivityTypes.LOAD);
+        };
+        view.on('added', checkGoal);
 
         // Show more listener
         if (view.showMoreButton
@@ -279,8 +293,6 @@ WallComponent.prototype._initializeEmitter = function (opts) {
             });
         }
     }
-
-    emitter.registerApp();
 };
 
 /**
