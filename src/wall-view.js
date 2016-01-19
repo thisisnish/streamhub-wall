@@ -329,6 +329,32 @@ define([
                     Math.ceil(forcedIndex / this._columnViews.length),
                     targetColumnView.views.length);
         }
+        var reply;
+        var retweet;
+        var favorite;
+        contentView._footerView._controls.left.forEach(function (button) {
+            if(button.el.getAttribute('class') == 'hub-btn hub-content-action hub-content-action-reply') {
+                reply = button.el.getElementsByTagName('a')[0].getAttribute('href');
+            }
+
+            if(button.el.getAttribute('class') == 'hub-btn hub-content-action hub-content-action-retweet') {
+                retweet = button.el.getElementsByTagName('a')[0].getAttribute('href');
+            }
+            if(button.el.getAttribute('class') == 'hub-btn hub-content-action hub-content-action-favorite') {
+                favorite = button.el.getElementsByTagName('a')[0].getAttribute('href');
+            }
+        });
+
+        //  var ua = window.navigator.userAgent;
+        if (window.navigator.userAgent.indexOf("Trident/7.0") > 0)
+        {
+
+            $('.hub-content-action-reply').html('<a href="' + reply + '" target="_blank" />');
+            $('.hub-content-action-retweet').html('<a href="' + retweet + '" target="_blank"  />');
+            $('.hub-content-action-favorite').html('<a href="' + favorite + '" target="_blank"  />');
+
+        }
+        
         targetColumnView.add(contentView, forcedIndex);
 
         // IE8 will not automatically push the 'show more' button down as the
