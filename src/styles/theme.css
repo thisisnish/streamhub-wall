@@ -82,7 +82,10 @@ article.content .content-source-logo {
     background: var(--showMoreActiveBackgroundColor);
     border-color: var(--showMoreActiveBorderColor);
 }
-
+.content-attachment-link-thumbnail {
+    width:21.8% !important;
+    height:77% !important;
+}
 
 
 
