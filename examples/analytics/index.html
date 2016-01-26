@@ -16,19 +16,27 @@
             requirejs({
                 baseUrl: "/",
                 paths: {
-                    'insights-dispatch': 'node_modules/insights-dispatch/dist/main'
+                    'insights-dispatch': 'node_modules/insights-dispatch/dist/main',
+                    'insights-emitter': 'node_modules/insights-emitter/dist/main'
                 }
             });
         </script>
         <script>
         require([
             'insights-dispatch',
+            'insights-emitter',
             'streamhub-sdk/collection',
             'streamhub-sdk/content',
             'streamhub-wall'
-        ],function (InsightsDispatch, Collection, Content, LiveMediaWall) {
-            var dispatch = window.dispatch = new InsightsDispatch();
+        ],function (InsightsDispatch, InsightsEmitter, Collection, Content, LiveMediaWall) {
+            var dispatch = window.dispatch = new InsightsDispatch({
+                "services": [{
+                    "type": "livefyre-analytics",
+                    "buffered": false
+                }]
+            });
 
+            // Many items in the collection
             var opts = {
                 "network": "labs-t402.fyre.co",
                 "siteId": "303827",
@@ -38,12 +46,21 @@
                 "environment": "t402.livefyre.com"
             };
 
+            // 2 items in the collection
+            // var opts = {
+            //     "network": "qa-blank.fyre.co",
+            //     "siteId": "291345",
+            //     "articleId": "designer-app-1449777062779"
+            // };
+
             var collection = new Collection(opts);
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
                 collection: collection,
-                postButton: true
+                postButton: true,
+                // emitterDebug: true,
+                emitter: InsightsEmitter
             });
         });
         </script>

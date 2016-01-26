@@ -93,9 +93,6 @@ require.config({
     name: 'activity-streams-vocabulary',
     location: 'node_modules/activity-streams-vocabulary/src',
     main: 'index'
-  }, {
-    name: 'insights-emitter',
-    location: 'node_modules/insights-emitter/src'
   }],
   shim: {
     jquery: {

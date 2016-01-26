@@ -9,18 +9,23 @@
     <script src="//cdn.livefyre.com/Livefyre.js"></script>
     <script>
     Livefyre.require([
-        'https://livefyre-cdn-dev.s3.amazonaws.com/libs/insights-dispatch/v0.0.0/main.min.js',
+        'https://livefyre-cdn-dev.s3.amazonaws.com/libs/insights-dispatch/v0.0.0/main.js',
+        'https://livefyre-cdn-dev.s3.amazonaws.com/libs/insights-emitter/v0.0.0/main.js',
         'https://cdn.livefyre.com/libs/streamhub-sdk/v2.18.2/streamhub-sdk.min.js',
-        'https://livefyre-cdn-dev.s3.amazonaws.com/libs/streamhub-wall-emitter/v3.7.2/streamhub-wall.min.js'
-    ], function(Dispatch, SDK, Wall) {
+        'https://livefyre-cdn-dev.s3.amazonaws.com/libs/streamhub-wall-emitter/v3.7.5/streamhub-wall.min.js'
+    ], function (Dispatch, Emitter, SDK, Wall) {
         var dispatch = window.dispatch = new Dispatch({
             services: [{
-                type: 'google-analytics',
-                trackingId: 'UA-66596061-1'
+                "type": "livefyre-analytics",
+                "buffered": false
+            }, {
+                "type": "google-analytics",
+                "trackingId": "UA-66596061-1"
             }]
         });
         var wall = window.wall = new Wall({
             el: document.getElementById("view"),
+            emitter: Emitter,
             collection: new SDK.Collection({
                 "network": "labs-t402.fyre.co",
                 "siteId": "303827",

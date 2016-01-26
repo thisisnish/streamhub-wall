@@ -16,7 +16,7 @@ var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
-var InsightsEmitter = require('insights-emitter');
+var BasicActivityEmitter = require('./basic-activity-emitter');
 var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
 var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
 
@@ -41,6 +41,8 @@ var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
  * @param [opts.modal] A modal instance to use when items in the wall are clicked,
  *     or false if you want it disabled. Used if you don't provide opts.wallView
  * @param [opts.autoRender=true] Whether to automatically render on construction
+ * @param [opts.emitter] A "new-able" Emitter class to use for sending events. If none
+ *     is provided, a BasicActivityEmitter will be used instead.
  */
 var WallComponent = module.exports = function (opts) {
   opts = this._opts = opts || {};
@@ -232,14 +234,18 @@ WallComponent.prototype._initializeWallView = function (opts) {
 
 WallComponent.prototype._initializeEmitter = function (opts) {
     opts = opts || {};
+    var EmitterCls = opts.emitter || BasicActivityEmitter;
 
-    this._emitter = new InsightsEmitter({
+    this._emitter = new EmitterCls({
+        appName: opts.appName,
         network: opts.collection.network,
         siteId: opts.collection.siteId,
         uuid: this._uuid,
         name: 'Media Wall',
         version: packageAttribute.value.split('#')[1],
-        type: 'App'
+        type: 'App',
+        debug: opts.emitterDebug,
+        disabled: opts.emitterDisabled
     });
     
     var self = this;
@@ -256,13 +262,24 @@ WallComponent.prototype._initializeEmitter = function (opts) {
 
         // App loaded listener
         var cnt = 0;
-        var checkGoal = function () {
-            if (++cnt < view.more.getGoal()) {
+        var checkGoalTimer = null;
+        var checkGoal = function (content) {
+            if (checkGoalTimer) {
+                clearTimeout(checkGoalTimer);
+            }
+
+            // Check for existence of content first.. if it's empty,
+            // it means we came from the timeout as opposed to the
+            // actual "add" trigger, and that means we never met the
+            // goal because there is less content than the goal
+            // provided.
+            if (content && ++cnt <= view.more.getGoal()) {
                 // Save off the collectionId for later at this point because
                 // its not available until we start adding content in
                 if (!self.collectionId && self._collection.id) {
                     emitter.collectionId = self._collection.id;
                 }
+                checkGoalTimer = setTimeout(checkGoal.bind(this, null), 100);
 
                 return;
             }
