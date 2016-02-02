@@ -16,7 +16,7 @@ var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
-var BasicActivityEmitter = require('./basic-activity-emitter');
+var InsightsBasicEmitter = require('insights-basic-emitter');
 var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
 var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
 
@@ -42,7 +42,7 @@ var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
  *     or false if you want it disabled. Used if you don't provide opts.wallView
  * @param [opts.autoRender=true] Whether to automatically render on construction
  * @param [opts.emitter] A "new-able" Emitter class to use for sending events. If none
- *     is provided, a BasicActivityEmitter will be used instead.
+ *     is provided, a InsightsBasicEmitter will be used instead.
  */
 var WallComponent = module.exports = function (opts) {
   opts = this._opts = opts || {};
@@ -234,7 +234,7 @@ WallComponent.prototype._initializeWallView = function (opts) {
 
 WallComponent.prototype._initializeEmitter = function (opts) {
     opts = opts || {};
-    var EmitterCls = opts.emitter || BasicActivityEmitter;
+    var EmitterCls = opts.emitter || InsightsBasicEmitter;
 
     this._emitter = new EmitterCls({
         appName: opts.appName,
