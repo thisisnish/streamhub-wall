@@ -29,6 +29,16 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
             });
         });
 
+        it ('always returns a whole number >= 1 for max items for column', function () {
+            var view = new MediaWallView();
+            view._maxVisibleItems = 3;
+            view._numberOfColumns = 4;
+            expect(view._getMaxVisibleItemsForColumn()).toBe(1);
+
+            view._maxVisibleItems = 5;
+            expect(view._getMaxVisibleItemsForColumn()).toBe(2);
+        });
+
         // post construction behavior
         describe ("after correct construction", function () {
             var view;
@@ -55,6 +65,57 @@ function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
         });
 
         describe("Round-robin column insertion", function () {
+
+            describe("when `initial` value is set", function () {
+                var content1 = new Content({ body: 'what1' }),
+                    content2 = new Content({ body: 'what2' }),
+                    content3 = new Content({ body: 'what3' }),
+                    content4 = new Content({ body: 'what4' });
+
+                beforeEach(function () {
+                    setFixtures('<div id="hub-MediaWallView"></div>');
+                    $('#hub-MediaWallView').width(300*3); //220px is the default width of content
+                });
+
+                function makeView(initial) {
+                    var view = new MediaWallView({
+                        el: $('#hub-MediaWallView').get(0),
+                        initial: initial
+                    });
+
+                    view.add(content1);
+                    view.add(content2);
+                    view.add(content3);
+                    view.add(content4);
+
+                    return view;
+                }
+
+                it("should handle `initial` smaller than the number of columns", function () {
+                    var view = makeView(2);
+                    expect(view._columnViews.length).toEqual(3);
+                    expect(view._columnViews[0].views[0].content).toEqual(content3);
+                    expect(view._columnViews[1].views[0].content).toEqual(content4);
+                    expect(view._columnViews[2].views.length).toEqual(0);
+                });
+
+                it("should handle `initial` equal to the number of columns", function () {
+                    var view = makeView(3);
+                    expect(view._columnViews.length).toEqual(3);
+                    expect(view._columnViews[0].views[0].content).toEqual(content4);
+                    expect(view._columnViews[1].views[0].content).toEqual(content2);
+                    expect(view._columnViews[2].views[0].content).toEqual(content3);
+                });
+
+                it("should handle `initial` greater than the number of columns", function () {
+                    var view = makeView(4);
+                    expect(view._columnViews.length).toEqual(3);
+                    expect(view._columnViews[0].views[0].content).toEqual(content4);
+                    expect(view._columnViews[0].views[1].content).toEqual(content1);
+                    expect(view._columnViews[1].views[0].content).toEqual(content2);
+                    expect(view._columnViews[2].views[0].content).toEqual(content3);
+                });
+            });
 
             describe("when adding content with different .createdAt dates", function () {
                 var view,
