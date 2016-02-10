@@ -6,7 +6,7 @@ build: node_modules
 
 dist: build src requirejs.conf.js tools
 	mkdir -p dist
-	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js	
+	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js
 
 # if package.json changes, install
 node_modules: package.json
@@ -18,6 +18,9 @@ server: build
 
 test: build
 	npm test
+
+lint:
+	npm run lint
 
 clean:
 	rm -rf node_modules lib dist
