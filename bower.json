@@ -35,6 +35,7 @@
     "streamhub-ui": "0.2.0",
     "mout": "0.11.0",
     "cajon": "~0.1.11",
-    "streamhub-share": "0.3.0"
+    "streamhub-share": "0.3.0",
+    "streamhub-sdk": "2.20.0"
   }
 }
