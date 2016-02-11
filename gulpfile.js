@@ -8,21 +8,21 @@ var util = require('gulp-util');
 
 function lessify(path) {
   gulp.src(path)
-    .pipe(less({ paths: [ __dirname ] }).on('error', util.log))
+    .pipe(less({paths: [__dirname]}).on('error', util.log))
     .pipe(gulp.dest('dev'));
 }
 
-gulp.task('default', function() {
+gulp.task('default', function () {
 
   /**
    * Run the server
    */
-  nodemon({ script: 'node_modules/http-server/bin/http-server' });
+  nodemon({script: 'node_modules/http-server/bin/http-server'});
 
   /**
    * Watch for less file changes.
    */
-  gulp.watch('src/**/*.less', function(event) {
+  gulp.watch('src/**/*.less', function (event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     lessify(event.path);
   });
@@ -34,7 +34,7 @@ gulp.task('default', function() {
 /**
  * Prefix all selectors in the CSS file with the app version.
  */
-gulp.task('prefix', function() {
+gulp.task('prefix', function () {
   var appName = packageJson.name;
   var version = packageJson.version;
   gulp.src('src/styles/wall-component.less')

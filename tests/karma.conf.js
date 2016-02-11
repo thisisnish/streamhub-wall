@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Thu Nov 21 2013 14:47:59 GMT-0800 (PST)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
@@ -34,7 +34,7 @@ module.exports = function(config) {
       {pattern: 'node_modules/livefyre-package-attribute/src/*.js', included: false},
       {pattern: 'node_modules/livefyre-package-attribute/tools/*.js', included: false},
       {pattern: 'node_modules/jasmine-jquery/**/*.js', included: false},
-      'tests/test-in-karma.js',
+      'tests/test-in-karma.js'
     ],
 
 
@@ -79,8 +79,8 @@ module.exports = function(config) {
     },
 
     coverageReporter: {
-      type : 'lcov',
-      dir : 'coverage/'
+      type: 'lcov',
+      dir: 'coverage/'
     },
 
     junitReporter: {
