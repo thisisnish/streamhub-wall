@@ -22,33 +22,33 @@ require.config({
     'tinycolor': 'lib/tinycolor/tinycolor'
   },
   packages: [{
-    name: "streamhub-wall",
-    location: "./src"
+    name: 'streamhub-wall',
+    location: './src'
   },{
-    name: "streamhub-sdk",
-    location: "lib/streamhub-sdk/src"
+    name: 'streamhub-sdk',
+    location: 'lib/streamhub-sdk/src'
   },{
-    name: "streamhub-sdk/modal",
-    location: "lib/streamhub-sdk/src/modal"
+    name: 'streamhub-sdk/modal',
+    location: 'lib/streamhub-sdk/src/modal'
   },{
-    name: "streamhub-sdk/collection",
+    name: 'streamhub-sdk/collection',
     location: 'lib/streamhub-sdk/src/collection'
   },{
-    name: "streamhub-sdk/auth",
+    name: 'streamhub-sdk/auth',
     location: 'lib/streamhub-sdk/src/auth'
   },{
-    name: "streamhub-sdk/content",
+    name: 'streamhub-sdk/content',
     location: 'lib/streamhub-sdk/src/content'
   },{
     name: 'streamhub-sdk-tests',
     location: 'lib/streamhub-sdk/tests'
   },{
-    name: "stream",
-    location: "lib/stream/src"
+    name: 'stream',
+    location: 'lib/stream/src'
   },{
-    name: "view",
-    location: "lib/view/src",
-    main: "view"
+    name: 'view',
+    location: 'lib/view/src',
+    main: 'view'
   },{
     name: 'auth',
     location: 'lib/auth/src'
@@ -72,13 +72,13 @@ require.config({
     name: 'livefyre-theme-styler',
     location: 'lib/livefyre-theme-styler/src'
   },{
-    name: "css",
-    location: "lib/require-css",
-    main: "css"
+    name: 'css',
+    location: 'lib/require-css',
+    main: 'css'
   },{
-    name: "less",
-    location: "lib/require-less",
-    main: "less"
+    name: 'less',
+    location: 'lib/require-less',
+    main: 'less'
   },{
     name: 'streamhub-share',
     location: 'lib/streamhub-share/src',
@@ -87,24 +87,24 @@ require.config({
     name: 'streamhub-ui',
     location: 'lib/streamhub-ui/src'
   },{
-    name: "livefyre-bootstrap",
-    location: "lib/livefyre-bootstrap/src"
+    name: 'livefyre-bootstrap',
+    location: 'lib/livefyre-bootstrap/src'
   }],
   shim: {
     jquery: {
-        exports: '$'
+      exports: '$'
     },
     jasmineRequire: {
-        exports: ['jasmineRequire']
+      exports: ['jasmineRequire']
     },
     'jasmine-html': {
-        deps: ['jasmine']
+      deps: ['jasmine']
     },
     'jasmine-jquery': {
-        deps: ['jquery', 'jasmine']
+      deps: ['jquery', 'jasmine']
     },
     rework: {
-        exports: 'rework'
+      exports: 'rework'
     }
   },
   css: {
@@ -119,7 +119,7 @@ require.config({
     paths: ['lib'],
     relativeUrls: true,
     modifyVars: {
-      '@icon-font-path': "\"https://cdn.livefyre.com/libs/livefyre-bootstrap/v1.3.4/fonts/\""
+      '@icon-font-path': '"https://cdn.livefyre.com/libs/livefyre-bootstrap/v1.3.4/fonts/"'
     }
   }
 });
