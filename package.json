@@ -12,7 +12,6 @@
     "gulp-rework": "~1.0.2",
     "gulp-util": "*",
     "http-server": "*",
-    "insights-emitter": "git+ssh://git@github.com/Livefyre/insights-emitter",
     "jasmine-core": "^2.3.4",
     "jasmine-jquery": "^2.1.0",
     "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
@@ -39,7 +38,7 @@
   },
   "dependencies": {
     "activity-streams-vocabulary": "git+ssh://git@github.com/Livefyre/activity-streams-vocabulary.git",
-    "insights-basic-emitter": "git+ssh://git@github.com/Livefyre/insights-basic-emitter.git",
+    "insights-emitter": "git+ssh://git@github.com/Livefyre/insights-emitter",
     "livefyre-package-attribute": "git://github.com/Livefyre/livefyre-package-attribute.git#v0.1.1"
   },
   "lfeslint": {

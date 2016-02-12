@@ -16,8 +16,7 @@
             requirejs({
                 baseUrl: "/",
                 paths: {
-                    'insights-dispatch': 'node_modules/insights-dispatch/dist/main',
-                    'insights-emitter': 'node_modules/insights-emitter/dist/main'
+                    'insights-dispatch': 'node_modules/insights-dispatch/dist/insights-dispatch.min'
                 }
             });
         </script>
@@ -32,7 +31,8 @@
             var dispatch = window.dispatch = new InsightsDispatch({
                 "services": [{
                     "type": "livefyre-analytics",
-                    "buffered": false
+                    "buffered": false,
+                    "debug": true
                 }]
             });
 
@@ -59,8 +59,16 @@
                 el: document.getElementById("view"),
                 collection: collection,
                 postButton: true,
-                // emitterDebug: true
-                emitter: InsightsEmitter
+
+                // Insights Emitter as an object
+                // insightsEmitter: {
+                //     cls: InsightsEmitter,
+                //     debug: true
+                //     disabled: true
+                // }
+                
+                // Insights Emitter as just a function/class
+                // insightsEmitter: InsightsEmitter
             });
         });
         </script>

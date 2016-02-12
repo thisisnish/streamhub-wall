@@ -16,9 +16,12 @@ var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
-var InsightsBasicEmitter = require('insights-basic-emitter');
+var InsightsEmitter = require('insights-emitter');
 var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
 var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
+var forIn = require('mout/object/forIn');
+var has = require('mout/object/has');
+
 
 /**
  * LiveMediaWall Component
@@ -41,8 +44,8 @@ var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
  * @param [opts.modal] A modal instance to use when items in the wall are clicked,
  *     or false if you want it disabled. Used if you don't provide opts.wallView
  * @param [opts.autoRender=true] Whether to automatically render on construction
- * @param [opts.emitter] A "new-able" Emitter class to use for sending events. If none
- *     is provided, a InsightsBasicEmitter will be used instead.
+ * @param [opts.insightsEmitter] A "new-able" Emitter class to use for sending events. If none
+ *     is provided, a Insights Emitter will be used instead.
  */
 var WallComponent = module.exports = function (opts) {
   opts = this._opts = opts || {};
@@ -76,8 +79,7 @@ var WallComponent = module.exports = function (opts) {
     this._collection.pipe(this._wallView);
   }
 
-  this._emitter = null;
-  this._initializeEmitter(opts);
+  this._insightsEmitter = this._initializeInsightsEmitter(opts);
 };
 
 inherits(WallComponent, Passthrough);
@@ -232,33 +234,64 @@ WallComponent.prototype._initializeWallView = function (opts) {
 };
 
 
-WallComponent.prototype._initializeEmitter = function (opts) {
-    opts = opts || {};
-    var EmitterCls = opts.emitter || InsightsBasicEmitter;
+WallComponent.prototype._initializeInsightsEmitter = function (opts) {
+    var EmitterCls;
+    var insightsEmitter = opts.insightsEmitter
+    var userEmitterOpts = {};
 
-    this._emitter = new EmitterCls({
+    // Have 4 cases that we have to consider:
+    // 1. We want whatever's built-in, so no Insights Emitter has been passed in
+    // 2. We want to use a different Insights Emitter Class, so we'll pass one in
+    // 3. We want to use the stock Insights Emitter, but want to pass it options as an object
+    // 4. We want to pass in a different Insighst Emitter Class with options
+    if (!insightsEmitter) {
+        EmitterCls = InsightsEmitter;
+    }
+    else if (typeof insightsEmitter === 'function') {
+        EmitterCls = insightsEmitter;
+    }
+    else if (typeof insightsEmitter === 'object') {
+        if (insightsEmitter.cls && typeof insightsEmitter.cls === 'function') {
+            EmitterCls = insightsEmitter.cls;
+            delete insightsEmitter.cls;
+        }
+        
+        userEmitterOpts = insightsEmitter;
+    }
+
+    // If there's no EmitterCls at this point, it means that only options
+    // were passed in and no class was specified (case #3), so let's
+    // use the default emitter
+    if (!EmitterCls) {
+        EmitterCls = InsightsEmitter;
+    }
+
+    var emitterOpts = {
         appName: opts.appName,
+        el: this.el,
         network: opts.collection.network,
         siteId: opts.collection.siteId,
         uuid: this._uuid,
         name: 'Media Wall',
         version: packageAttribute.value.split('#')[1],
-        type: 'App',
-        debug: opts.emitterDebug,
-        disabled: opts.emitterDisabled
-    });
-    
-    var self = this;
-    var emitter = this._emitter;
+        type: 'App'
+    };
 
-    // Init listner
-    emitter.once('emitter:registered', function () {
-        emitter.send(ActivityTypes.INIT);
+    // Merge options onto emitterOpts only if it doesn't have
+    // the key/value, yet.
+    forIn(userEmitterOpts, function (val, key) {
+        if (!has(emitterOpts, key)) {
+            emitterOpts[key] = val;
+        }
     });
-    emitter.registerApp();
+    var emitter = new EmitterCls(emitterOpts);
+    emitter.send({
+        activityType: ActivityTypes.INIT
+    });
 
     if (this._wallView) {
         var view = this._wallView;
+        var self = this;
 
         // App loaded listener
         var cnt = 0;
@@ -285,31 +318,38 @@ WallComponent.prototype._initializeEmitter = function (opts) {
             }
 
             view.removeListener('added', checkGoal);
-            emitter.send(ActivityTypes.LOAD);
+            emitter.send({
+                activityType: ActivityTypes.LOAD
+            });
         };
         view.on('added', checkGoal);
 
         // Show more listener
-        if (view.showMoreButton
-            && view.showMoreButton.$el) {
+        if (view.showMoreButton && view.showMoreButton.$el) {
             view.showMoreButton.$el.on('showMore.hub', function () {
-                emitter.send(ActivityTypes.REQUEST_MORE)
+                emitter.send({
+                    activityType: ActivityTypes.REQUEST_MORE
+                });
             });
         }
 
         // Modal listener
         if (view.modal) {
             view.$el.on('focusContent.hub', function (evt, data) {
-                var evtData = {};
+                var evtData = {
+                    activityType: ActivityTypes.MODAL_LOAD
+                };
                 if (data && data.content) {
-                    evtData.content = data.content,
-                    evtData.type = ObjectTypes.CONTENT
+                    evtData.content = data.content;
+                    evtData.type = ObjectTypes.CONTENT;
                 }
 
-                emitter.send(ActivityTypes.MODAL_LOAD, evtData);
+                emitter.send(evtData);
             });
         }
     }
+
+    return emitter;
 };
 
 /**

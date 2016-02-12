@@ -12,15 +12,13 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    lodash: 'lib/lodash/dist/lodash.min',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
     mout: 'lib/mout/src',
     'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index',
-    'tinycolor': 'lib/tinycolor/tinycolor',
-    'insights-basic-emitter': 'node_modules/insights-basic-emitter/src/main'
+    'tinycolor': 'lib/tinycolor/tinycolor'
   },
   packages: [{
     name: 'streamhub-wall',
@@ -94,6 +92,9 @@ require.config({
     name: 'activity-streams-vocabulary',
     location: 'node_modules/activity-streams-vocabulary/src',
     main: 'index'
+  }, {
+    name: 'insights-emitter',
+    location: 'node_modules/insights-emitter/src'
   }],
   shim: {
     jquery: {
