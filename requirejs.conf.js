@@ -86,8 +86,8 @@ require.config({
     name: 'streamhub-ui',
     location: 'lib/streamhub-ui/src'
   },{
-    name: "livefyre-bootstrap",
-    location: "lib/livefyre-bootstrap/src"
+    name: 'livefyre-bootstrap',
+    location: 'lib/livefyre-bootstrap/src'
   }, {
     name: 'activity-streams-vocabulary',
     location: 'node_modules/activity-streams-vocabulary/src',
