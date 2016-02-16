@@ -4,3 +4,4 @@
 /.awspublish*
 /dist
 /dev
+*.sublime-workspace
