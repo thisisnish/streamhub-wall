@@ -44,7 +44,7 @@ define([
       this.setColumns(opts.columns);
     }
 
-    opts.singleMediaView = true;
+    opts.useSingleMediaView = true;
 
     ContentListView.call(this, opts);
 
