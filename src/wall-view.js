@@ -44,8 +44,10 @@ define([
       this.setColumns(opts.columns);
     }
 
+    opts.useSingleMediaView = true;
+
     ContentListView.call(this, opts);
-    
+
     if (this.modal) {
       // Patch the modal so that it has the right package selector when it
       // is shown (like data-lf-package="streamhub-wall#3.0.0")
