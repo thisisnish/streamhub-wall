@@ -1,11 +1,11 @@
 {
   "name": "streamhub-wall",
-  "version": "3.9.1",
+  "version": "3.9.2",
   "main": [
     "./src/main.js"
   ],
   "dependencies": {
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.21.1",
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.21.2",
     "cajon": "git://github.com/requirejs/cajon.git#~0.1.11",
     "streamhub-input": "Livefyre/streamhub-input#0.7.4",
     "rework": "gobengo/rework#~0.21.0",
@@ -35,7 +35,7 @@
     "streamhub-ui": "0.2.0",
     "mout": "0.11.0",
     "cajon": "~0.1.11",
-    "streamhub-sdk": "2.21.1",
+    "streamhub-sdk": "2.21.2",
     "streamhub-share": "0.3.0"
   }
 }
