@@ -19,8 +19,7 @@ require.config({
     mout: 'lib/mout/src',
     'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index',
-    'tinycolor': 'lib/tinycolor/tinycolor',
-    tweetImpressions: '//platform.twitter.com/impressions'
+    'tinycolor': 'lib/tinycolor/tinycolor'
   },
   packages: [{
     name: 'streamhub-wall',
