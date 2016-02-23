@@ -235,9 +235,10 @@ WallComponent.prototype._initializeWallView = function (opts) {
 /**
  * Create and configure an insights emitter as well as attaching
  * events.
- *  
+ * @private
+ *
  * @param  {Object} opts Options
- * @return {Function} Instance of Insights Emitter or a passed in emitter
+ * @return {?function()} Instance of Insights Emitter or a passed in emitter
  */
 WallComponent.prototype._initializeInsightsEmitter = function (opts) {
   // We can't emit any meaningful stats without the collection
