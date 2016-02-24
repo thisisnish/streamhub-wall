@@ -285,6 +285,11 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
     version: packageAttribute.value.split('#')[1],
     type: 'App'
   };
+
+  if (opts.inDesigner || opts.inShare) {
+    emitterOpts.disabled = true;
+  }
+
   // Merge options; emitterOpts takes precedence
   fillIn(emitterOpts, userEmitterOpts);
 
