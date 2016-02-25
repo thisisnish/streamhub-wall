@@ -431,6 +431,15 @@ define([
     return ContentListView.prototype.remove.apply(this, arguments);
   };
 
+  MediaWallView.prototype.scrollToPermalink = function (contentId) {
+    for (var i = 0; i < this.views.length; i++) {
+      if (this.views[i].content.id === contentId) {
+        this.views[i].el.scrollIntoView(true);
+        return;
+      }
+    }
+  };
+
   /**
    * Returns a function, that, as long as it continues to be invoked, will not be triggered.
    * The function will be called after it stops being called for N milliseconds.

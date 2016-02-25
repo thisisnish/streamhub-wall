@@ -201,6 +201,59 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
 };
 
 /**
+ * Sets up postMessage listener on window and sends a registration
+ * message to the permalink-hub running inside of Livefyre.js. On
+ * message from the hub it will perform its default permalink
+ * behavior.
+ * @private
+ */
+WallComponent.prototype._initPermalink = function () {
+  var name = 'media-wall-' + ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+    return v.toString(16);
+  }));
+  var msgEvent = window.addEventListener ? 'message' : 'onmessage';
+  var addEvent = window.addEventListener || window.attachEvent;
+  var self = this;
+
+  function onPostMessage(event) {
+    var msg = null;
+
+    if (typeof event.data === 'object') {
+      msg = event.data;
+    } else {
+      try {
+        msg = JSON.parse(event.data);
+      } catch (e) {
+        return;
+      }
+    }
+
+    if (msg.to !== name || !msg.data || msg.action !== 'put') {
+      return;
+    }
+
+    self._wallView.scrollToPermalink(msg.data.contentId);
+  }
+
+  function sendRegistration(collectionId) {
+    var msg = {
+      from: name,
+      to: 'permalink',
+      action: 'post',
+      data: {
+        name: name,
+        collectionId: collectionId
+      }
+    };
+    window.postMessage(JSON.stringify(msg), '*');
+  }
+
+  addEvent(msgEvent, onPostMessage, false);
+  sendRegistration(this._collection.id);
+};
+
+/**
  * Create a WallView and assign to this._wallView.
  * Also pipe this WallComponent's writable side and .more to the WallView's
  * @param opts {object} WallComponent configuration options.
@@ -396,6 +449,12 @@ WallComponent.prototype.configure = function (configOpts) {
   }
 };
 
+/** @override */
+WallComponent.prototype.destroy = function () {
+  View.prototype.destroy.call(this);
+  this._collection && this._collection.off('_initFromBootstrap', null, null);
+};
+
 /**
  * The entered view callback
  */
@@ -423,7 +482,7 @@ WallComponent.prototype.render = function () {
 
     // append container and subviews
   var container = document.createElement('div');
-  $(container).addClass('streamhub-wall-component');
+  container.className += ' streamhub-wall-component';
   var frag = document.createDocumentFragment();
 
   subviews.forEach(function (view) {
@@ -453,6 +512,10 @@ WallComponent.prototype.render = function () {
  */
 WallComponent.prototype.setCollection = function (newCollection) {
   this.configure({collection: newCollection});
+
+  if (!this._collection.id) {
+    this._collection.once('_initFromBootstrap', $.proxy(this._initPermalink, this));
+  }
 };
 
 /**
