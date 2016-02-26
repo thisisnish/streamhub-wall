@@ -12,7 +12,6 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    lodash: 'lib/lodash/dist/lodash.min',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
@@ -89,6 +88,13 @@ require.config({
   },{
     name: 'livefyre-bootstrap',
     location: 'lib/livefyre-bootstrap/src'
+  }, {
+    name: 'activity-streams-vocabulary',
+    location: 'node_modules/activity-streams-vocabulary/src',
+    main: 'index'
+  }, {
+    name: 'insights-emitter',
+    location: 'node_modules/insights-emitter/src'
   }],
   shim: {
     jquery: {
