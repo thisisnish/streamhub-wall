@@ -20,7 +20,7 @@ lint:
 
 # if package.json changes, install
 node_modules: package.json
-	npm install
+	npm install --dev
 	touch $@
 
 package: build
