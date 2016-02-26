@@ -16,6 +16,11 @@ var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
+var InsightsEmitter = require('insights-emitter');
+var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
+var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
+var fillIn = require('mout/object/fillIn');
+
 
 /**
  * LiveMediaWall Component
@@ -38,6 +43,8 @@ var themableCss = require('text!streamhub-wall/styles/theme.css');
  * @param [opts.modal] A modal instance to use when items in the wall are clicked,
  *     or false if you want it disabled. Used if you don't provide opts.wallView
  * @param [opts.autoRender=true] Whether to automatically render on construction
+ * @param [opts.insightsEmitter] A "new-able" Emitter class to use for sending events. If none
+ *     is provided, a Insights Emitter will be used instead.
  */
 var WallComponent = module.exports = function (opts) {
   opts = this._opts = opts || {};
@@ -70,6 +77,8 @@ var WallComponent = module.exports = function (opts) {
   if (this._collection) {
     this._collection.pipe(this._wallView);
   }
+
+  this._insightsEmitter = this._initializeInsightsEmitter(opts);
 };
 
 inherits(WallComponent, Passthrough);
@@ -221,6 +230,139 @@ WallComponent.prototype._initializeWallView = function (opts) {
   // including more, so that Collection piping works right
   this.more = new Passthrough();
   this.more.pipe(this._wallView.more);
+};
+
+/**
+ * Create and configure an insights emitter as well as attaching
+ * events.
+ * @private
+ *
+ * @param  {Object} opts Options
+ * @return {?function()} Instance of Insights Emitter or a passed in emitter
+ */
+WallComponent.prototype._initializeInsightsEmitter = function (opts) {
+  // We can't emit any meaningful stats without the collection
+  // information, so if we don't have it, exit and wait until we do.
+  if (!opts.collection) {
+    return null;
+  }
+
+  var EmitterCls;
+  var insightsEmitter = opts.insightsEmitter;
+  var userEmitterOpts = {};
+
+  // Have 4 cases that we have to consider:
+  // 1. We want whatever's built-in, so no Insights Emitter has been passed in
+  // 2. We want to use a different Insights Emitter Class, so we'll pass one in
+  // 3. We want to use the stock Insights Emitter, but want to pass it options as an object
+  // 4. We want to pass in a different Insighst Emitter Class with options
+  if (!insightsEmitter) {
+    EmitterCls = InsightsEmitter;
+  } else if (typeof insightsEmitter === 'function') {
+    EmitterCls = insightsEmitter;
+  } else if (typeof insightsEmitter === 'object') {
+    if (insightsEmitter.cls && typeof insightsEmitter.cls === 'function') {
+      EmitterCls = insightsEmitter.cls;
+      delete insightsEmitter.cls;
+    }
+    userEmitterOpts = insightsEmitter;
+  }
+
+  // If there's no EmitterCls at this point, it means that only options
+  // were passed in and no class was specified (case #3), so let's
+  // use the default emitter
+  if (!EmitterCls) {
+    EmitterCls = InsightsEmitter;
+  }
+
+  var emitterOpts = {
+    appName: opts.appName,
+    el: this.el,
+    network: opts.collection.network,
+    siteId: opts.collection.siteId,
+    uuid: this._uuid,
+    name: 'Media Wall',
+    version: packageAttribute.value.split('#')[1],
+    type: 'App'
+  };
+
+  if (opts.inDesigner || opts.inShare) {
+    emitterOpts.disabled = true;
+  }
+
+  // Merge options; emitterOpts takes precedence
+  fillIn(emitterOpts, userEmitterOpts);
+
+  var emitter = new EmitterCls(emitterOpts);
+  emitter.send({
+    activityType: ActivityTypes.INIT
+  });
+
+  // Things after this point rely on there being a wall view to attach
+  // to, so let's make sure that a wall view exist.. if not exit early.
+  if (!this._wallView) {
+    return emitter;
+  }
+
+  var view = this._wallView;
+  var self = this;
+
+  // App loaded listener
+  var cnt = 0;
+  var checkGoalTimer = null;
+  var checkGoal = function (content) {
+    if (checkGoalTimer) {
+      clearTimeout(checkGoalTimer);
+    }
+
+    // Check for existence of content first.. if it's empty,
+    // it means we came from the timeout as opposed to the
+    // actual "add" trigger, and that means we never met the
+    // goal because there is less content than the goal
+    // provided.
+    if (content && ++cnt <= view.more.getGoal()) {
+      // Save off the collectionId for later at this point because
+      // its not available until we start adding content in
+      if (!self.collectionId && self._collection.id) {
+        emitter.collectionId = self._collection.id;
+      }
+      checkGoalTimer = setTimeout(checkGoal.bind(this, null), 100);
+
+      return;
+    }
+
+    view.removeListener('added', checkGoal);
+    emitter.send({
+      activityType: ActivityTypes.LOAD
+    });
+  };
+  view.on('added', checkGoal);
+
+  // Show more listener
+  if (view.showMoreButton && view.showMoreButton.$el) {
+    view.showMoreButton.$el.on('showMore.hub', function () {
+      emitter.send({
+        activityType: ActivityTypes.REQUEST_MORE
+      });
+    });
+  }
+
+  // Modal listener
+  if (view.modal) {
+    view.$el.on('focusContent.hub', function (evt, data) {
+      var evtData = {
+        activityType: ActivityTypes.MODAL_LOAD
+      };
+      if (data && data.content) {
+        evtData.content = data.content;
+        evtData.type = ObjectTypes.CONTENT;
+      }
+
+      emitter.send(evtData);
+    });
+  }
+
+  return emitter;
 };
 
 /**
@@ -394,6 +536,9 @@ WallComponent.prototype.configure = function (configOpts) {
   if (needCollectionPipeToWallView && this._collection) {
     this._collection.pipe(this._wallView);
   }
+  if ('collection' in configOpts && !this._insightsEmitter) {
+    this._initializeInsightsEmitter(configOpts);
+  }
 };
 
 /**
@@ -467,4 +612,19 @@ WallComponent.prototype.setElement = function (el) {
   View.prototype.setElement.apply(this, arguments);
   packageAttribute.decorate(this.el);
   this.el.setAttribute('lf-wall-uuid', this._uuid);
+};
+
+/**
+ * Clean up things and null out references.
+ */
+WallComponent.prototype.destroy = function () {
+  View.prototype.destroy.call(this);
+  this._headerView.destroy();
+  this._headerView = null;
+  this._insightsEmitter.destroy();
+  this._insightsEmitter = null;
+  this._themeStyler.destroy();
+  this._themeStyler = null;
+  this._wallView.destroy();
+  this._wallView = null;
 };
