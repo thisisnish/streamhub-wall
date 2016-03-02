@@ -295,7 +295,9 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
 
   var emitter = new EmitterCls(emitterOpts);
   emitter.send({
-    activityType: ActivityTypes.INIT
+    activity: {
+      type: ActivityTypes.INIT
+    }
   });
 
   // Things after this point rely on there being a wall view to attach
@@ -333,7 +335,9 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
 
     view.removeListener('added', checkGoal);
     emitter.send({
-      activityType: ActivityTypes.LOAD
+      activity: {
+        type: ActivityTypes.LOAD
+      }
     });
   };
   view.on('added', checkGoal);
@@ -342,7 +346,9 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
   if (view.showMoreButton && view.showMoreButton.$el) {
     view.showMoreButton.$el.on('showMore.hub', function () {
       emitter.send({
-        activityType: ActivityTypes.REQUEST_MORE
+        activity: {
+          type: ActivityTypes.REQUEST_MORE
+        }
       });
     });
   }
@@ -351,7 +357,9 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
   if (view.modal) {
     view.$el.on('focusContent.hub', function (evt, data) {
       var evtData = {
-        activityType: ActivityTypes.MODAL_LOAD
+        activity: {
+          type: ActivityTypes.MODAL_LOAD
+        }
       };
       if (data && data.content) {
         evtData.content = data.content;
