@@ -4,11 +4,11 @@
  * @enum {string}
  */
 module.exports = {
-    content: 'content',
-    contentWithPhotos: 'contentWithPhoto',
-    photo: 'photo',
-    contentWithVideos: 'contentWithVideo',
-    video: 'video',
-    contentWithPhotosAndVideos: 'contentWithPhotoAndVideo',
-    photosAndVideos: 'photoAndVideo'
+  content: 'content',
+  contentWithPhotos: 'contentWithPhoto',
+  photo: 'photo',
+  contentWithVideos: 'contentWithVideo',
+  video: 'video',
+  contentWithPhotosAndVideos: 'contentWithPhotoAndVideo',
+  photosAndVideos: 'photoAndVideo'
 };

@@ -1,11 +1,12 @@
+
+require('less!streamhub-wall/styles/wall-component');
+
 var $ = require('streamhub-sdk/jquery');
 var inherits = require('inherits');
 var View = require('view');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
-var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
 var Passthrough = require('stream/passthrough');
-var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
 var TSColors = require('livefyre-theme-styler/colors');
@@ -39,35 +40,36 @@ var themableCss = require('text!streamhub-wall/styles/theme.css');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  */
 var WallComponent = module.exports = function (opts) {
-    opts = this._opts = opts || {};
+  opts = this._opts = opts || {};
 
-    this._uuid = uuid();
-    this._stylePrefix = ['[lf-wall-uuid="',this._uuid,'"] '].join('');
+  this._uuid = uuid();
+  this._stylePrefix = ['[lf-wall-uuid="',this._uuid,'"] '].join('');
 
-    View.apply(this, arguments);
-    // Be a writable that really just proxies to the wallView
-    Passthrough.apply(this, arguments);
+  View.apply(this, arguments);
 
-    if (opts.collection) {
-        this._setCollection(opts.collection);
-    }
-    
-    //set up translations
-    this._configure_i18n(opts);
+  // Be a writable that really just proxies to the wallView
+  Passthrough.apply(this, arguments);
 
-    // List of apps to render.
-    this._toRender = [];
-    this._themeOpts = this._getThemeOpts(opts);
-    this._initializeHeaderView(opts);
-    this._initializeWallView(opts);
+  if (opts.collection) {
+    this._setCollection(opts.collection);
+  }
 
-    if (( ! ('autoRender' in opts)) || opts.autoRender) {
-        this.render();
-    }
+  // set up translations
+  this._configure_i18n(opts);
 
-    if (this._collection) {
-        this._collection.pipe(this._wallView);
-    }
+  // List of apps to render.
+  this._toRender = [];
+  this._themeOpts = this._getThemeOpts(opts);
+  this._initializeHeaderView(opts);
+  this._initializeWallView(opts);
+
+  if ((!('autoRender' in opts)) || opts.autoRender) {
+    this.render();
+  }
+
+  if (this._collection) {
+    this._collection.pipe(this._wallView);
+  }
 };
 
 inherits(WallComponent, Passthrough);
@@ -91,28 +93,28 @@ var THEMABLE_ELEMENTS = ['post', 'showMore'];
  * @type {Object}
  */
 var THEMABLE_STYLES = {
-    dark: {
-        activeBackgroundColor: {fn: 'blacken', amt: 5},
-        activeBorderColor: {fn: 'blacken', amt: 20},
-        activeTextColor: {color: '#fff'},
-        backgroundColor: null,
-        borderColor: {fn: 'blacken', amt: 15},
-        hoverBackgroundColor: null,
-        hoverBorderColor: null,
-        hoverTextColor: {color: '#fff'},
-        textColor: {color: '#fff'}
-    },
-    light: {
-        activeBackgroundColor: {fn: 'lighten', amt: 5},
-        activeBorderColor: {fn: 'lighten', amt: 20},
-        activeTextColor: {color: '#000'},
-        backgroundColor: null,
-        borderColor: {fn: 'lighten', amt: 15},
-        hoverBackgroundColor: null,
-        hoverBorderColor: null,
-        hoverTextColor: {color: '#000'},
-        textColor: {color: '#000'}
-    }
+  dark: {
+    activeBackgroundColor: {fn: 'blacken', amt: 5},
+    activeBorderColor: {fn: 'blacken', amt: 20},
+    activeTextColor: {color: '#fff'},
+    backgroundColor: null,
+    borderColor: {fn: 'blacken', amt: 15},
+    hoverBackgroundColor: null,
+    hoverBorderColor: null,
+    hoverTextColor: {color: '#fff'},
+    textColor: {color: '#fff'}
+  },
+  light: {
+    activeBackgroundColor: {fn: 'lighten', amt: 5},
+    activeBorderColor: {fn: 'lighten', amt: 20},
+    activeTextColor: {color: '#000'},
+    backgroundColor: null,
+    borderColor: {fn: 'lighten', amt: 15},
+    hoverBackgroundColor: null,
+    hoverBorderColor: null,
+    hoverTextColor: {color: '#000'},
+    textColor: {color: '#000'}
+  }
 };
 
 /**
@@ -121,13 +123,13 @@ var THEMABLE_STYLES = {
  * @private
  */
 WallComponent.prototype._applyTheme = function (theme) {
-    $.extend(this._opts, theme);
+  $.extend(this._opts, theme);
 
-    this._themeStyler = this._themeStyler || new ThemeStyler({
-        css: themableCss,
-        prefix: this._stylePrefix
-    });
-    this._themeStyler.applyTheme(theme);
+  this._themeStyler = this._themeStyler || new ThemeStyler({
+    css: themableCss,
+    prefix: this._stylePrefix
+  });
+  this._themeStyler.applyTheme(theme);
 };
 
 /**
@@ -138,20 +140,20 @@ WallComponent.prototype._applyTheme = function (theme) {
  * @private
  */
 function configureThemeOpts(opts) {
-    var prefix;
-    var styles;
-    var _opts = {};
+  var prefix;
+  var styles;
+  var _opts = {};
 
-    if (!opts.linkColor) {
-        return;
-    }
+  if (!opts.linkColor) {
+    return;
+  }
 
-    for (var i=0; i<THEMABLE_ELEMENTS.length; i++) {
-        prefix = THEMABLE_ELEMENTS[i];
-        styles = TSColors.generateColors(prefix, opts.linkColor, THEMABLE_STYLES);
-        $.extend(_opts, styles);
-    }
-    return _opts;
+  for (var i=0; i<THEMABLE_ELEMENTS.length; i++) {
+    prefix = THEMABLE_ELEMENTS[i];
+    styles = TSColors.generateColors(prefix, opts.linkColor, THEMABLE_STYLES);
+    $.extend(_opts, styles);
+  }
+  return _opts;
 }
 
 /**
@@ -161,24 +163,24 @@ function configureThemeOpts(opts) {
  * @private
  */
 WallComponent.prototype._getThemeOpts = function (opts) {
-    opts = opts || {};
+  opts = opts || {};
 
-    var fontSize = opts.fontSize ? opts.fontSize.toLowerCase() : '';
-    var fontSizeOpts = {};
-    var theme;
+  var fontSize = opts.fontSize ? opts.fontSize.toLowerCase() : '';
+  var fontSizeOpts = {};
+  var theme;
 
-    if (fontSize === 'small') {
-        fontSizeOpts = smallTheme;
-    } else if (fontSize === 'medium') {
-        fontSizeOpts = mediumTheme;
-    } else if (fontSize === 'large') {
-        fontSizeOpts = largeTheme;
-    }
+  if (fontSize === 'small') {
+    fontSizeOpts = smallTheme;
+  } else if (fontSize === 'medium') {
+    fontSizeOpts = mediumTheme;
+  } else if (fontSize === 'large') {
+    fontSizeOpts = largeTheme;
+  }
 
-    theme = $.extend({}, this._themeOpts || {}, opts);
-    theme = $.extend(theme, configureThemeOpts(theme));
+  theme = $.extend({}, this._themeOpts || {}, opts);
+  theme = $.extend(theme, configureThemeOpts(theme));
 
-    return $.extend({}, opts, theme, fontSizeOpts);
+  return $.extend({}, opts, theme, fontSizeOpts);
 };
 
 /**
@@ -187,15 +189,15 @@ WallComponent.prototype._getThemeOpts = function (opts) {
  * @private
  */
 WallComponent.prototype._initializeHeaderView = function (opts) {
-    this._headerView = opts.headerView || new WallHeaderView({
-        _i18n: opts._i18n,
-        collection: opts.collection,
-        forceButtonRender: opts.forceButtonRender,
-        postButton: opts.postButton,
-        postConfig: opts.postConfig || {},
-        stylePrefix: this._stylePrefix,
-        themeOpts: this._themeOpts
-    });
+  this._headerView = opts.headerView || new WallHeaderView({
+    _i18n: opts._i18n,
+    collection: opts.collection,
+    forceButtonRender: opts.forceButtonRender,
+    postButton: opts.postButton,
+    postConfig: opts.postConfig || {},
+    stylePrefix: this._stylePrefix,
+    themeOpts: this._themeOpts
+  });
 };
 
 /**
@@ -205,20 +207,20 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
  * @private
  */
 WallComponent.prototype._initializeWallView = function (opts) {
-    this._wallView = opts.wallView || new WallView({
-        autoRender: false,
-        minContentWidth: opts.minContentWidth,
-        columns: opts.columns,
-        initial: opts.initial,
-        showMore: opts.showMore,
-        modal: opts.modal,
-        pickColumn: opts.pickColumn
-    });
+  this._wallView = opts.wallView || new WallView({
+    autoRender: false,
+    minContentWidth: opts.minContentWidth,
+    columns: opts.columns,
+    initial: opts.initial,
+    showMore: opts.showMore,
+    modal: opts.modal,
+    pickColumn: opts.pickColumn
+  });
 
-    this.pipe(this._wallView);
-    // including more, so that Collection piping works right
-    this.more = new Passthrough();
-    this.more.pipe(this._wallView.more);
+  this.pipe(this._wallView);
+  // including more, so that Collection piping works right
+  this.more = new Passthrough();
+  this.more.pipe(this._wallView.more);
 };
 
 /**
@@ -228,8 +230,8 @@ WallComponent.prototype._initializeWallView = function (opts) {
  * @private
  */
 WallComponent.prototype._isSameCollection = function (collection) {
-    var oldCollection = this._collection;
-    return oldCollection && collection
+  var oldCollection = this._collection;
+  return oldCollection && collection
         && oldCollection.network === collection.network
         && oldCollection.environment === collection.environment
         && oldCollection.siteId === collection.siteId
@@ -242,7 +244,7 @@ WallComponent.prototype._isSameCollection = function (collection) {
  * @private
  */
 WallComponent.prototype._removeTheme = function () {
-    this._themeStyler.destroy();
+  this._themeStyler.destroy();
 };
 
 /**
@@ -252,21 +254,21 @@ WallComponent.prototype._removeTheme = function () {
  * @private
  */
 WallComponent.prototype._setCollection = function (newCollection) {
-    var oldCollection = this._collection;
+  var oldCollection = this._collection;
 
-    if (oldCollection && typeof oldCollection.unpipe === 'function') {
-        oldCollection.unpipe(this._wallView);
-    }
+  if (oldCollection && typeof oldCollection.unpipe === 'function') {
+    oldCollection.unpipe(this._wallView);
+  }
 
-    // If this is not a full streamhub-sdk newCollection object, then make
-    // it one
-    if (newCollection && typeof newCollection.pipe !== 'function') {
-        newCollection = new Collection(newCollection);
-    }
+  // If this is not a full streamhub-sdk newCollection object, then make
+  // it one
+  if (newCollection && typeof newCollection.pipe !== 'function') {
+    newCollection = new Collection(newCollection);
+  }
 
-    // Actually set internal state
-    this._collection = newCollection;
-    this._opts.collection = newCollection;
+  // Actually set internal state
+  this._collection = newCollection;
+  this._opts.collection = newCollection;
 };
 
 /**
@@ -275,25 +277,24 @@ WallComponent.prototype._setCollection = function (newCollection) {
  * @private
  */
 WallComponent.prototype._configure_i18n = function (configOpts) {
-    var changed = false;
-    var self = this;
-    this._opts._i18n = this._opts._i18n || {};
+  var changed = false;
+  var self = this;
+  this._opts._i18n = this._opts._i18n || {};
 
-    $.each(I18N_MAP, function(key, value) {
-        if (key in configOpts) {
-            for (var i = 0; i < value.length; i++) {
-                if (!configOpts[key] || configOpts[key].length === 0) {
-                    delete self._opts._i18n[value[i]];
-                } 
-                else {
-                    self._opts._i18n[value[i]] = configOpts[key];
-                }
-            }
-            changed = true;
+  $.each(I18N_MAP, function (key, value) {
+    if (key in configOpts) {
+      for (var i = 0; i < value.length; i++) {
+        if (!configOpts[key] || configOpts[key].length === 0) {
+          delete self._opts._i18n[value[i]];
+        } else {
+          self._opts._i18n[value[i]] = configOpts[key];
         }
-    });
+      }
+      changed = true;
+    }
+  });
 
-    return changed;
+  return changed;
 };
 
 /**
@@ -301,10 +302,10 @@ WallComponent.prototype._configure_i18n = function (configOpts) {
  * @private
  */
 WallComponent.prototype._unconfigure = function () {
-    this._removeTheme();
-    this.configure({
-        collection: null
-    });
+  this._removeTheme();
+  this.configure({
+    collection: null
+  });
 };
 
 /**
@@ -312,137 +313,137 @@ WallComponent.prototype._unconfigure = function () {
  * @param configOpts {collection} WallComponent configuration object
  */
 WallComponent.prototype.configure = function (configOpts) {
-    var reconstructWallView = false;
-    var reconstructHeaderView = false;
-    var newCollection;
-    var needRender = false;
-    var needCollectionPipeToWallView = false;
+  var reconstructWallView = false;
+  var reconstructHeaderView = false;
+  var newCollection;
+  var needRender = false;
+  var needCollectionPipeToWallView = false;
 
-    if (!configOpts) {
-        this._unconfigure();
-        return;
-    }
+  if (!configOpts) {
+    this._unconfigure();
+    return;
+  }
 
-    if (configOpts.linkColor !== this._themeOpts.linkColor) {
-        reconstructHeaderView = true;
-    }
+  if (configOpts.linkColor !== this._themeOpts.linkColor) {
+    reconstructHeaderView = true;
+  }
 
-    this._themeOpts = this._getThemeOpts(configOpts);
-    this._applyTheme(this._themeOpts);
+  this._themeOpts = this._getThemeOpts(configOpts);
+  this._applyTheme(this._themeOpts);
 
-    if ('columns' in configOpts) {
-        this._opts.columns = configOpts.columns;
-        this._wallView.relayout({
-            columns: configOpts.columns
-        });
+  if ('columns' in configOpts) {
+    this._opts.columns = configOpts.columns;
+    this._wallView.relayout({
+      columns: configOpts.columns
+    });
+  }
+  if ('initial' in configOpts) {
+    this._opts.initial = configOpts.initial;
+    newCollection = this._collection;
+    reconstructWallView = true;
+  }
+  if ('modal' in configOpts) {
+    this._opts.modal = configOpts.modal;
+    newCollection = this._collection;
+    reconstructWallView = true;
+  }
+  if ('collection' in configOpts) {
+    newCollection = configOpts.collection;
+    if (!this._isSameCollection(newCollection)) {
+      this._setCollection(newCollection);
+      reconstructWallView = true;
+      reconstructHeaderView = true;
     }
-    if ('initial' in configOpts) {
-        this._opts.initial = configOpts.initial;
-        newCollection = this._collection;
-        reconstructWallView = true;
+  }
+  if ('postButton' in configOpts) {
+    this._opts.postButton = configOpts.postButton;
+    reconstructHeaderView = true;
+  }
+  if ('showTitle' in configOpts || 'mediaRequired' in configOpts) {
+    this._opts.postConfig = this._opts.postConfig || {};
+    if ('showTitle' in configOpts) {
+      this._opts.postConfig.showTitle = configOpts.showTitle;
     }
-    if ('modal' in configOpts) {
-        this._opts.modal = configOpts.modal;
-        newCollection = this._collection;
-        reconstructWallView = true;
+    if ('mediaRequired' in configOpts) {
+      this._opts.postConfig.mediaRequired = configOpts.mediaRequired;
     }
-    if ('collection' in configOpts) {
-        newCollection = configOpts.collection;
-        if ( ! this._isSameCollection(newCollection)) {
-            this._setCollection(newCollection);
-            reconstructWallView = true;
-            reconstructHeaderView = true;
-        }
-    }
-    if ('postButton' in configOpts) {
-        this._opts.postButton = configOpts.postButton;
-        reconstructHeaderView = true;
-    }
-    if ('showTitle' in configOpts || 'mediaRequired' in configOpts) {
-        this._opts.postConfig = this._opts.postConfig || {};
-        if ('showTitle' in configOpts) {
-            this._opts.postConfig.showTitle = configOpts.showTitle;
-        }
-        if ('mediaRequired' in configOpts) {
-            this._opts.postConfig.mediaRequired = configOpts.mediaRequired;
-        }
-        reconstructHeaderView = true;
-    }
-    
-    //translations
-    if (this._configure_i18n(configOpts)) {
-        reconstructHeaderView = true;
-    }
+    reconstructHeaderView = true;
+  }
 
-    if (reconstructWallView) {
-        this._wallView.destroy();
-        this._initializeWallView(this._opts);
-        needRender = true;
-        needCollectionPipeToWallView = true;
-        this._toRender.push(this._wallView);
-    }
-    if (reconstructHeaderView) {
-        this._headerView.destroy();
-        this._initializeHeaderView(this._opts);
-        needRender = true;
-        this._toRender.push(this._headerView);
-    }
-    if (needRender) {
-        this.render();
-    }
-    if (needCollectionPipeToWallView && this._collection) {
-        this._collection.pipe(this._wallView);
-    }
+  // translations
+  if (this._configure_i18n(configOpts)) {
+    reconstructHeaderView = true;
+  }
+
+  if (reconstructWallView) {
+    this._wallView.destroy();
+    this._initializeWallView(this._opts);
+    needRender = true;
+    needCollectionPipeToWallView = true;
+    this._toRender.push(this._wallView);
+  }
+  if (reconstructHeaderView) {
+    this._headerView.destroy();
+    this._initializeHeaderView(this._opts);
+    needRender = true;
+    this._toRender.push(this._headerView);
+  }
+  if (needRender) {
+    this.render();
+  }
+  if (needCollectionPipeToWallView && this._collection) {
+    this._collection.pipe(this._wallView);
+  }
 };
 
 /**
  * The entered view callback
  */
 WallComponent.prototype.enteredView = function () {
-    this._wallView.relayout();
+  this._wallView.relayout();
 };
 
 /**
  * Render the WallComponent
  */
 WallComponent.prototype.render = function () {
-    View.prototype.render.apply(this, arguments);
+  View.prototype.render.apply(this, arguments);
 
-    if (this._themeOpts) {
-        this._applyTheme(this._themeOpts);
-    }
+  if (this._themeOpts) {
+    this._applyTheme(this._themeOpts);
+  }
 
-    var el = this.el;
-    var subviews = [this._headerView, this._wallView];
+  var el = this.el;
+  var subviews = [this._headerView, this._wallView];
 
     // Clear children
-    while (el.firstChild) {
-        el.removeChild(el.firstChild);
-    }
+  while (el.firstChild) {
+    el.removeChild(el.firstChild);
+  }
 
     // append container and subviews
-    var container = document.createElement('div');
-    $(container).addClass('streamhub-wall-component');
-    var frag = document.createDocumentFragment();
+  var container = document.createElement('div');
+  $(container).addClass('streamhub-wall-component');
+  var frag = document.createDocumentFragment();
 
-    subviews.forEach(function (view) {
-        container.appendChild(view.el);
-    });
+  subviews.forEach(function (view) {
+    container.appendChild(view.el);
+  });
 
-    frag.appendChild(container);
-    el.appendChild(frag);
+  frag.appendChild(container);
+  el.appendChild(frag);
 
-    // Only render the subviews that we want to render. `_toRender` has the
-    // views that the `configure` function has determined should be rendered.
-    subviews = this._toRender.length ? this._toRender : subviews;
+  // Only render the subviews that we want to render. `_toRender` has the
+  // views that the `configure` function has determined should be rendered.
+  subviews = this._toRender.length ? this._toRender : subviews;
 
-    // then render them
-    subviews.forEach(function (view) {
-        view.render();
-    });
+  // then render them
+  subviews.forEach(function (view) {
+    view.render();
+  });
 
-    this._toRender = [];
-    return el;
+  this._toRender = [];
+  return el;
 };
 
 /**
@@ -451,7 +452,7 @@ WallComponent.prototype.render = function () {
  * @param collection {object|Collection} Collection to compare to.
  */
 WallComponent.prototype.setCollection = function (newCollection) {
-    this.configure({ collection: newCollection });
+  this.configure({collection: newCollection});
 };
 
 /**
@@ -460,10 +461,10 @@ WallComponent.prototype.setCollection = function (newCollection) {
  * @param el {HTMLElement}
  */
 WallComponent.prototype.setElement = function (el) {
-    if (this.el) {
-        packageAttribute.undecorate(this.el);
-    }
-    View.prototype.setElement.apply(this, arguments);
-    packageAttribute.decorate(this.el);
-    this.el.setAttribute('lf-wall-uuid', this._uuid);
+  if (this.el) {
+    packageAttribute.undecorate(this.el);
+  }
+  View.prototype.setElement.apply(this, arguments);
+  packageAttribute.decorate(this.el);
+  this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
