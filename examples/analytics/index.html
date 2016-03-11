@@ -16,7 +16,7 @@
             requirejs({
                 baseUrl: "/",
                 paths: {
-                    'insights-dispatch': 'node_modules/insights-dispatch/dist/insights-dispatch.min'
+                    'insights-dispatch': 'node_modules/insights-dispatch/dist/insights-dispatch.compiled'
                 }
             });
         </script>
@@ -37,14 +37,14 @@
             });
 
             // Many items in the collection
-            var opts = {
-                "network": "labs-t402.fyre.co",
-                "siteId": "303827",
-                // Fast Collection
-                // "articleId": "labs_demo_fire",
-                "articleId": "xbox-0",
-                "environment": "t402.livefyre.com"
-            };
+            // var opts = {
+            //     "network": "labs-t402.fyre.co",
+            //     "siteId": "303827",
+            //     // Fast Collection
+            //     // "articleId": "labs_demo_fire",
+            //     "articleId": "xbox-0",
+            //     "environment": "t402.livefyre.com"
+            // };
 
             // 2 items in the collection
             // var opts = {
@@ -52,6 +52,14 @@
             //     "siteId": "291345",
             //     "articleId": "designer-app-1449777062779"
             // };
+            // 
+            
+            var opts = {
+                "network": "studio-qa-1.fyre.co",
+                "siteId": "291351",
+                "articleId": "designer-app-1455856571925",
+                "environment": "qa-ext.livefyre.com"
+            };
 
             var collection = new Collection(opts);
 
