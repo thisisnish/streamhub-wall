@@ -18,7 +18,6 @@ var Collection = require('streamhub-sdk/collection');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
 var InsightsEmitter = require('insights-emitter');
 var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
-var ObjectTypes = require('activity-streams-vocabulary').ObjectTypes;
 var fillIn = require('mout/object/fillIn');
 
 
@@ -295,9 +294,7 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
 
   var emitter = new EmitterCls(emitterOpts);
   emitter.send({
-    activity: {
-      type: ActivityTypes.INIT
-    }
+    type: ActivityTypes.INIT
   });
 
   // Things after this point rely on there being a wall view to attach
@@ -335,9 +332,7 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
 
     view.removeListener('added', checkGoal);
     emitter.send({
-      activity: {
-        type: ActivityTypes.LOAD
-      }
+      type: ActivityTypes.LOAD
     });
   };
   view.on('added', checkGoal);
@@ -346,9 +341,7 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
   if (view.showMoreButton && view.showMoreButton.$el) {
     view.showMoreButton.$el.on('showMore.hub', function () {
       emitter.send({
-        activity: {
-          type: ActivityTypes.REQUEST_MORE
-        }
+        type: ActivityTypes.REQUEST_MORE
       });
     });
   }
@@ -357,13 +350,10 @@ WallComponent.prototype._initializeInsightsEmitter = function (opts) {
   if (view.modal) {
     view.$el.on('focusContent.hub', function (evt, data) {
       var evtData = {
-        activity: {
-          type: ActivityTypes.MODAL_LOAD
-        }
+        type: ActivityTypes.MODAL_LOAD
       };
       if (data && data.content) {
         evtData.content = data.content;
-        evtData.type = ObjectTypes.CONTENT;
       }
 
       emitter.send(evtData);

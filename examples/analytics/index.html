@@ -30,15 +30,19 @@
             'insights-dispatch',
             'insights-emitter',
             'streamhub-sdk/collection',
-            'streamhub-sdk/content',
             'streamhub-wall'
-        ],function (auth, LFEP, InsightsDispatch, InsightsEmitter, Collection, Content, LiveMediaWall) {
+        ],function (auth, LFEP, InsightsDispatch, InsightsEmitter, Collection, LiveMediaWall) {
+            // Livefyre.js usually puts this on the page, but since we're not using it, it doesn't
+            // get put on the page. Therefore, let's manually put it there, as well as auth, so that
+            // we can test all the things.
+            window.Livefyre = window.Livefyre || {};
+            Livefyre.auth = auth;
             var dispatch = window.dispatch = new InsightsDispatch();
+
             var authDelegate = new LFEP({
                 app: 'https://identity.qa-ext.livefyre.com/qa-blank.fyre.co'
             });
             auth.delegate(authDelegate);
-            Livefyre.auth = auth;
 
             // Many items in the collection
             // var opts = {

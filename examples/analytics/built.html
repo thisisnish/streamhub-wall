@@ -12,22 +12,22 @@
         'auth',
         'https://livefyre-cdn-dev.s3.amazonaws.com/libs/identity/v1.0.7/simple/javascripts/customprofiles.min.js',
         'https://livefyre-cdn-dev.s3.amazonaws.com/libs/insights-dispatch/v0.0.0/insights-dispatch.compiled.js',
-        'https://cdn.livefyre.com/libs/streamhub-sdk/v2.18.2/streamhub-sdk.min.js',
         '../../dist/streamhub-wall.min.js'
-    ], function (auth, LFEP, Dispatch, SDK, Wall) {
+    ], function (auth, LFEP, Dispatch, Wall) {
         var dispatch = window.dispatch = new Dispatch();
         var authDelegate = new LFEP({
             app: 'https://identity.qa-ext.livefyre.com/qa-blank.fyre.co'
         });
         auth.delegate(authDelegate);
+
         var wall = window.wall = new Wall({
             el: document.getElementById("view"),
-            collection: new SDK.Collection({
+            collection: {
                 "network": "qa-blank.fyre.co",
                 "siteId": "291345",
                 "articleId": "designer-app-1457740215925",
                 "environment": "qa-ext.livefyre.com"
-            }),
+            },
             postButton: true,
             initial: 4
         });
