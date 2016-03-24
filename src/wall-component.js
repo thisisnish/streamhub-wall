@@ -216,6 +216,7 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
  */
 WallComponent.prototype._initializeWallView = function (opts) {
   this._wallView = opts.wallView || new WallView({
+    _i18n: opts.i18n,
     autoRender: false,
     minContentWidth: opts.minContentWidth,
     columns: opts.columns,

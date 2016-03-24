@@ -305,7 +305,8 @@ define([
       stash: this.more,
       animate: this._animate,
       modal: this.modal,
-      autoRender: false
+      autoRender: false,
+      _i18n: this.opts._i18n
     });
     columnView.$el.addClass(this.columnClassName);
     return columnView;
