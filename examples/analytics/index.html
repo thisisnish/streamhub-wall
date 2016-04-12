@@ -11,11 +11,13 @@
         <div id="view"></div>
         <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
         <script src="/requirejs.conf.js" type="text/javascript"></script>
+
+        <!-- Note: You need to symlink insights-dispatch and livefyre-auth for this to work -->
         <script>
             requirejs({
                 baseUrl: "/",
                 paths: {
-                    'insights-dispatch': 'node_modules/insights-dispatch/dist/insights-dispatch.compiled',
+                    'insights-dispatch': 'node_modules/insights-dispatch/dist/insights-dispatch',
                 },
                 packages: [{
                     name: 'livefyre-auth',
@@ -23,15 +25,15 @@
                 }]
             });
         </script>
+
         <script>
         require([
             'livefyre-auth',
             'https://livefyre-cdn-dev.s3.amazonaws.com/libs/identity/v1.0.7/simple/javascripts/customprofiles.min.js',
             'insights-dispatch',
-            'insights-emitter',
             'streamhub-sdk/collection',
             'streamhub-wall'
-        ],function (auth, LFEP, InsightsDispatch, InsightsEmitter, Collection, LiveMediaWall) {
+        ],function (auth, LFEP, InsightsDispatch, Collection, LiveMediaWall) {
             // Livefyre.js usually puts this on the page, but since we're not using it, it doesn't
             // get put on the page. Therefore, let's manually put it there, as well as auth, so that
             // we can test all the things.
