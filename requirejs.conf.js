@@ -18,11 +18,15 @@ require.config({
     mout: 'lib/mout/src',
     'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index',
-    'tinycolor': 'lib/tinycolor/tinycolor'
+    'tinycolor': 'lib/tinycolor/tinycolor',
+    urnlib: 'lib/urnlib.js/index'
   },
   packages: [{
     name: 'streamhub-wall',
     location: './src'
+  },{
+    name: 'app-base',
+    location: 'lib/app-base/src'
   },{
     name: 'streamhub-sdk',
     location: 'lib/streamhub-sdk/src'
@@ -38,6 +42,10 @@ require.config({
   },{
     name: 'streamhub-sdk/content',
     location: 'lib/streamhub-sdk/src/content'
+  },{
+    name: 'streamhub-sdk/i18n',
+    location: 'lib/streamhub-sdk/src',
+    main: 'i18n'
   },{
     name: 'streamhub-sdk-tests',
     location: 'lib/streamhub-sdk/tests'
@@ -88,13 +96,14 @@ require.config({
   },{
     name: 'livefyre-bootstrap',
     location: 'lib/livefyre-bootstrap/src'
-  }, {
+  },{
     name: 'activity-streams-vocabulary',
-    location: 'node_modules/activity-streams-vocabulary/src',
+    location: 'lib/activity-streams-vocabulary/src',
     main: 'index'
-  }, {
+  },{
     name: 'insights-emitter',
-    location: 'node_modules/insights-emitter/src'
+    location: 'lib/insights-emitter',
+    main: 'insights-emitter'
   }],
   shim: {
     jquery: {
