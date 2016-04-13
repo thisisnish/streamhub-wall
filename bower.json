@@ -1,6 +1,6 @@
 {
   "name": "streamhub-wall",
-  "version": "3.10.2",
+  "version": "3.10.3",
   "main": [
     "./src/main.js"
   ],
@@ -35,7 +35,7 @@
     "streamhub-ui": "0.2.0",
     "mout": "0.11.0",
     "cajon": "~0.1.11",
-    "streamhub-sdk": "2.21.3",
+    "streamhub-sdk": "2.21.4",
     "streamhub-share": "0.3.0"
   }
 }
