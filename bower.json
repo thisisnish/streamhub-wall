@@ -1,12 +1,12 @@
 {
   "name": "streamhub-wall",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "main": [
     "./src/main.js"
   ],
   "dependencies": {
-    "app-base": "git@github.com:Livefyre/app-base#1.0.0",
     "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.23.0",
+    "app-base": "git@github.com:Livefyre/app-base#1.0.1",
     "cajon": "git://github.com/requirejs/cajon.git#~0.1.11",
     "streamhub-input": "Livefyre/streamhub-input#0.9.0",
     "rework": "gobengo/rework#~0.21.0",
