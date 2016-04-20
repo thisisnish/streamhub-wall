@@ -1,4 +1,5 @@
 var $ = require('streamhub-sdk/jquery');
+var debounce = require('mout/function/debounce');
 var ActivityTypes = require('activity-streams-vocabulary').ActivityTypes;
 var AppBase = require('app-base');
 var inherits = require('inherits');
@@ -46,6 +47,9 @@ var WallComponent = module.exports = function (opts) {
   this._toRender = [];
   this._initializeHeaderView(this.opts);
   this._initializeWallView(this.opts);
+
+  this._inViewTimeout = null;
+  this._inViewScrollFn = null;
 
   // Configure the app.
   this.configure(this.opts);
@@ -271,12 +275,90 @@ WallComponent.prototype.handleEmitterReady = function () {
   };
   view.on('added', checkGoal);
 
+  // "View" listener
+  view.once('added', $.proxy(this._hookupInViewHandler, this));
+
   // Show more listener
   if (view.showMoreButton && view.showMoreButton.$el) {
     view.showMoreButton.$el.on('showMore.hub', function () {
       view.$el.trigger('insights:local', {type: ActivityTypes.REQUEST_MORE});
     });
   }
+};
+
+/**
+ * Function that evaluates whether or not the widget is "visible" and should
+ * trigger the "View" insight.
+ * @private
+ *
+ * @param  {ContentView} card ContentView that's being inserted.
+ */
+WallComponent.prototype._handleInView = function (card) {
+  var self = this;
+  var $window = $(window);
+  var windowHeight = $window.height();
+  var headerHeight = this._headerView.$el.children().length ?
+   this._headerView.$el.outerHeight() :
+   0;
+  var footerHeight = this._wallView.showMoreButton.$el.css('display') !== 'none' ?
+   this._wallView.showMoreButton.$el.outerHeight() :
+   0;
+  var screenTopPos = $window.scrollTop();
+  var screenBotPos = screenTopPos + windowHeight;
+  var cardHeight = card.$el.outerHeight();
+  var triggerOffset = Math.floor(cardHeight * 0.6);
+  var elTopPos = this.$el.offset().top + headerHeight;
+  var elBotPos = elTopPos + cardHeight - footerHeight;
+
+  var isVisible = this.$el.css('display') !== 'none' &&
+   this.$el.css('visibility') !== 'hidden' &&
+   this.$el.children().css('display') !== 'none' &&
+   this.$el.children().css('visibility') !== 'hidden' &&
+   this._wallView.$el.css('display') !== 'none' &&
+   this._wallView.$el.css('visibility') !== 'hidden';
+  var viewedTop = screenBotPos >= elTopPos + triggerOffset && screenBotPos <= elBotPos;
+  var viewedBottom = screenTopPos <= elBotPos - triggerOffset && screenTopPos >= elTopPos;
+  var viewedMiddle = windowHeight > cardHeight ?
+    screenTopPos <= elTopPos && screenBotPos >= elBotPos :
+    screenTopPos >= elTopPos && screenBotPos <= elBotPos;
+
+  if (this._inViewTimeout) {
+    clearTimeout(this._inViewTimeout);
+    this._inViewTimeout = null;
+  }
+
+  // Checks the following:
+  // - is the element "visible"? (see isVisible to understand what qualifies as visible)
+  // - if partially on screen, is the revealed portion greater or equal to specified
+  //   trigger height and are we looking at the top portion of the element (this
+  //   covers if we're scrolling down)
+  // - if partially on screen, is the revealed portion less than or equal to the
+  //   specified trigger height (this covers if we're scrolling up)
+  // - is the element inside the screen's bounding box (this covers us if we
+  //   scroll and the widget is in the viewing space somewhere) or is the element
+  //   larger than the screen's bounding box and are we in the middle of it?
+  // - if we're "viewing" the piece of content for at least 1 second
+  if (isVisible && (viewedTop || viewedBottom || viewedMiddle)) {
+    this._inViewTimeout = setTimeout(function () {
+      $window.off('scroll', self._inViewScrollFn);
+      self._inViewScrollFnRef = null;
+      self.$el.trigger('insights:local', {type: ActivityTypes.VIEW});
+    }, 1000);
+  }
+};
+
+/**
+ * Check the to see if the card is in plain view on initial load as well as
+ * setting up the scroll handler to process whether or not the piece of
+ * content is in view.
+ * @private
+ *
+ * @param  {ContentView} newView The new view to that was added.
+ */
+WallComponent.prototype._hookupInViewHandler = function (newView) {
+  this._handleInView(newView);
+  this._inViewScrollFn = debounce($.proxy(this._handleInView, this, newView), 200);
+  $(window).on('scroll', this._inViewScrollFn);
 };
 
 /**
