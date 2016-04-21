@@ -151,6 +151,18 @@ WallHeaderView.mimetypes = {
 };
 
 /**
+ * Create a Modal that will add the streamhub-wall#vN attribute to its parent
+ * when it is shown, so that our css rules can be namespaced nicely.
+ * @return {ModalView}
+ * @private
+ */
+WallHeaderView.prototype._createModal = function () {
+  var modal = new ModalView({creator: this});
+  packageAttribute.decorateModal(modal);
+  return modal;
+};
+
+/**
  * Create the Button that will let the user post content into the
  * right Collection
  * @param kind - 'content', 'contentWithPhotos', 'contentWithVideos', 'video', 'photo', true, or falsy
@@ -166,7 +178,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
   function makeUploadButton(opts, mimetypes) {
     return new UploadButton({
       _i18n: self.opts._i18n,
-      modal: createModal(),
+      modal: self._createModal(),
       stylePrefix: opts.stylePrefix,
       styles: getEditorButtonStyles(opts.themeOpts),
       mimetypes: mimetypes
@@ -198,15 +210,6 @@ WallHeaderView.prototype._createPostButton = function (kind) {
       break;
   }
 
-  // Create a Modal that will add the streamhub-wall#vN attribute
-  // to its parent when it is shown, so that our css rules can be namespaced
-  // nicely
-  function createModal() {
-    var modal = new ModalView();
-    packageAttribute.decorateModal(modal);
-    return modal;
-  }
-
   // Create an editor button with or without media enabled. This also grabs
   // theme options from the opts object provided to this class so the button
   // can be styled appropriately.
@@ -217,7 +220,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     return new ContentEditorButton({
       _i18n: self.opts._i18n,
       mediaEnabled: mediaEnabled,
-      modal: createModal(),
+      modal: self._createModal(),
       input: createInput(mediaEnabled, mimetypes, self.opts._i18n),
       stylePrefix: self.opts.stylePrefix,
       styles: getEditorButtonStyles(self.opts.themeOpts),
@@ -252,7 +255,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
         maxAttachmentsPerPost: postConfig.maxAttachmentsPerPost,
         mediaRequired: postConfig.mediaRequired
       };
-      opts.modal = createModal();
+      opts.modal = self._createModal();
       var uploadButton = ogCreateUploadButton.call(this, opts);
       return uploadButton;
     };
