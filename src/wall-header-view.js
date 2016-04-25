@@ -256,8 +256,7 @@ WallHeaderView.prototype._createPostButton = function (kind) {
         mediaRequired: postConfig.mediaRequired
       };
       opts.modal = self._createModal();
-      var uploadButton = ogCreateUploadButton.call(this, opts);
-      return uploadButton;
+      return ogCreateUploadButton.call(this, opts);
     };
     return input;
   }
