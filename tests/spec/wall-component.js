@@ -5,6 +5,16 @@ var MockCollection = require('streamhub-sdk-tests/mocks/collection/mock-collecti
 var packageAttribute = require('streamhub-wall/package-attribute');
 var auth = require('auth');
 
+
+function buildWall(opts, collection) {
+  var wall = new WallComponent(opts);
+  spyOn(collection, 'initFromBootstrap').and.callFake(function () {
+    wall._hasReceivedTranslations = true;
+  });
+  return wall;
+}
+
+
 describe('A MediaWallComponent', function () {
   beforeEach(function () {
     auth.delegate({});
@@ -20,19 +30,22 @@ describe('A MediaWallComponent', function () {
     var wall = new WallComponent();
     wall.render();
     expect(wall.$el.attr(attr).indexOf(value)).not.toBe(-1);
+    wall.destroy();
   });
 
   it('has a wall-header-view menu when rendered', function () {
     var wall = new WallComponent();
     wall.render();
     expect(wall._headerView).toBeTruthy();
-    expect(wall.$('menu').length).toBe(1);
+    expect(wall.$el.find('menu').length).toBe(1);
+    wall.destroy();
   });
 
   it('has css class .streamhub-wall-component', function () {
     var wall = new WallComponent();
     wall.render();
-    expect(wall.$('.streamhub-wall-component').length).toBe(1);
+    expect(wall.$el.find('.streamhub-wall-component').length).toBe(1);
+    wall.destroy();
   });
 
   describe('opts.collection', function () {
@@ -48,6 +61,7 @@ describe('A MediaWallComponent', function () {
       });
       expect(wall._collection.network).toBe(collectionOpts.network);
       expect(typeof wall._collection.pipe).toBe('function');
+      wall.destroy();
     });
   });
 
@@ -55,22 +69,23 @@ describe('A MediaWallComponent', function () {
     it('does not render if there is no auth login delegate', function () {
       var wall = new WallComponent();
       wall.render();
-      expect(wall.$('menu').children().length).toBe(0);
+      expect(wall.$el.find('menu').children().length).toBe(0);
+      wall.destroy();
     });
 
     it('is present if there is an auth login delegate and collection and opts.postButton is truthy', function () {
       auth.delegate({
         login: function () {}
       });
-      var fakeCollection = {
-        pipe: function () {}
-      };
-      var wall = new WallComponent({
-        collection: fakeCollection, // may not always work
+
+      var collection = new MockCollection();
+      var wall = buildWall({
+        collection: collection, // may not always work
         postButton: true
-      });
+      }, collection);
       wall.render();
-      expect(wall.$('menu').children().length).toBe(1);
+      expect(wall.$el.find('menu').children().length).toBe(1);
+      wall.destroy();
     });
 
     it('can be set as one of content, photo, or contentWithPhoto', function () {
@@ -89,31 +104,31 @@ describe('A MediaWallComponent', function () {
       }];
             // try on construction
       trials.forEach(function (trial) {
-        var fakeCollection = {
-          pipe: function () {}
-        };
-        var wall = new WallComponent({
-          collection: fakeCollection, // may not always work
+        var collection = new MockCollection();
+        var wall = buildWall({
+          collection: collection, // may not always work
           postButton: trial.postButton
-        });
-        wall.render();
-        expect(wall.$('menu').children().length).toBe(1);
-        expect(wall.$('menu').children().hasClass(trial.buttonHasClass)).toBe(true);
+        }, collection);
+        wall._hasReceivedTranslations = true;
+        wall.configure({forceReconstruct: true});
+        expect(wall.$el.find('menu').children().length).toBe(1);
+        expect(wall.$el.find('menu').children().hasClass(trial.buttonHasClass)).toBe(true);
+        wall.destroy();
       });
             // try changing at runtime
       trials.forEach(function (trial) {
-        var fakeCollection = {
-          pipe: function () {}
-        };
-        var wall = new WallComponent({
-          collection: fakeCollection
-        });
-        wall.render();
+        var collection = new MockCollection();
+        var wall = buildWall({
+          collection: collection
+        }, collection);
+        wall._hasReceivedTranslations = true;
+        wall.configure({forceReconstruct: true});
         wall.configure({
           postButton: trial.postButton
         });
-        expect(wall.$('menu').children().length).toBe(1);
-        expect(wall.$('menu').children().hasClass(trial.buttonHasClass)).toBe(true);
+        expect(wall.$el.find('menu').children().length).toBe(1);
+        expect(wall.$el.find('menu').children().hasClass(trial.buttonHasClass)).toBe(true);
+        wall.destroy();
       });
     });
 
@@ -121,60 +136,49 @@ describe('A MediaWallComponent', function () {
       auth.delegate({
         login: function () {}
       });
-      var fakeCollection = {
-        pipe: function () {}
-      };
-      var wall = new WallComponent({
-        collection: fakeCollection, // may not always work
+
+      var collection = new MockCollection();
+      var wall = buildWall({
+        collection: collection, // may not always work
         postButton: true
-      });
-      wall.render();
-      expect(wall.$('menu').children().length).toBe(1);
+      }, collection);
+      wall._hasReceivedTranslations = true;
+      wall.configure({forceReconstruct: true});
+      expect(wall.$el.find('menu').children().length).toBe(1);
             // ok now to remove it by specifying false
       wall.configure({
         postButton: false
       });
-      expect(wall.$('menu').children().length).toBe(0);
+      expect(wall.$el.find('menu').children().length).toBe(0);
             // restore
       wall.configure({
         postButton: true
       });
-      expect(wall.$('menu').children().length).toBe(1);
+      expect(wall.$el.find('menu').children().length).toBe(1);
             // ok now to remove it by specifying undefined
       wall.configure({
         postButton: undefined
       });
-      expect(wall.$('menu').children().length).toBe(0);
+      expect(wall.$el.find('menu').children().length).toBe(0);
+      wall.destroy();
     });
 
-    it('is can be translated', function () {
+    it('can be translated', function () {
       auth.delegate({
         login: function () {}
       });
-      var fakeCollection = {
-        pipe: function () {}
-      };
+
+      var collection = new MockCollection();
       var translation = 'What up!';
-      var wall = new WallComponent({
-        collection: fakeCollection, // may not always work
+      var wall = buildWall({
+        collection: collection, // may not always work
         postButton: 'content',
         postButtonText: translation
-      });
-      wall.render();
-      expect(wall.$('.lf-comment-btn').html()).toBe(translation);
-
-      // should be able to configure as well, including unset
-      wall.configure({
-        postButtonText: undefined
-      });
-
-      expect(wall.$('.lf-comment-btn').html()).toBe('What\'s on your mind?');
-
-      wall.configure({
-        postButtonText: translation
-      });
-
-      expect(wall.$('.lf-comment-btn').html()).toBe(translation);
+      }, collection);
+      spyOn(wall, 'canRender').and.returnValue(true);
+      wall.configure({forceReconstruct: true});
+      expect(wall.$el.find('.lf-comment-btn').html()).toBe(translation);
+      wall.destroy();
     });
   });
 
@@ -182,6 +186,7 @@ describe('A MediaWallComponent', function () {
     it('is a function', function () {
       var wall = new WallComponent();
       expect(typeof wall.enteredView).toBe('function');
+      wall.destroy();
     });
   });
 
@@ -190,7 +195,11 @@ describe('A MediaWallComponent', function () {
     var collection = new MockCollection();
 
     beforeEach(function () {
-      wall = new WallComponent();
+      wall = buildWall({}, collection);
+    });
+
+    afterEach(function () {
+      wall.destroy();
     });
 
     it('updates #_wallView.collection property', function () {
