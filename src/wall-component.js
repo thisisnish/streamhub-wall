@@ -89,6 +89,12 @@ var THEMABLE_STYLES = {
 };
 
 /** @override */
+WallComponent.prototype.i18nMap = {
+  shareButtonText: ['shareButtonText'],
+  showMoreButtonText: ['showMoreButtonText']
+};
+
+/** @override */
 WallComponent.prototype.configureInternal = function (configOpts) {
   var reconstructWallView = false;
   var reconstructHeaderView = false;
@@ -96,7 +102,7 @@ WallComponent.prototype.configureInternal = function (configOpts) {
   var needRender = false;
   var needCollectionPipeToWallView = false;
 
-  if (configOpts.linkColor !== this._themeOpts.linkColor) {
+  if (this._themeChanged) {
     reconstructHeaderView = true;
   }
 
@@ -291,7 +297,7 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
     forceButtonRender: opts.forceButtonRender,
     postButton: opts.postButton,
     postConfig: opts.postConfig || {},
-    stylePrefix: this.getPrefix(),
+    stylePrefix: this.generateStylePrefix(),
     themeOpts: this._themeOpts
   });
 };
