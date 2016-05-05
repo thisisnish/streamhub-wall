@@ -16,7 +16,7 @@ dist: build src requirejs.conf.js tools lint
 	./node_modules/requirejs/bin/r.js -o ./tools/build.conf.js
 
 lint:
-	npm run lint
+	./node_modules/.bin/lfeslint
 
 # if package.json changes, install
 node_modules: package.json

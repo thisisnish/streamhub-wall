@@ -196,6 +196,7 @@ describe('A MediaWallComponent', function () {
 
     beforeEach(function () {
       wall = buildWall({}, collection);
+      spyOn(wall, 'canRender').and.returnValue(true);
     });
 
     afterEach(function () {
