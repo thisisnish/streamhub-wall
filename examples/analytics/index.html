@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>-->
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Insights Emitter Test Page</title>
+    <meta name="keywords" content="test,meta keywords,something,omgwtfbbq">
+    <style> body { margin: 0; padding: 0; background-color: #EFEFEF; }</style>
+</head>
+    <body>
+        <div id="view"></div>
+        <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
+        <script src="/requirejs.conf.js" type="text/javascript"></script>
+
+        <!-- Note: You need to symlink insights-dispatch and livefyre-auth for this to work -->
+        <script>
+            requirejs({
+                baseUrl: "/",
+                paths: {
+                    'insights-dispatch': 'node_modules/insights-dispatch/dist/insights-dispatch',
+                },
+                packages: [{
+                    name: 'livefyre-auth',
+                    location: 'node_modules/livefyre-auth/src'
+                }]
+            });
+        </script>
+
+        <script>
+        require([
+            'livefyre-auth',
+            'https://livefyre-cdn-dev.s3.amazonaws.com/libs/identity/v1.0.7/simple/javascripts/customprofiles.min.js',
+            'insights-dispatch',
+            'streamhub-sdk/collection',
+            'streamhub-wall'
+        ],function (auth, LFEP, InsightsDispatch, Collection, LiveMediaWall) {
+            // Livefyre.js usually puts this on the page, but since we're not using it, it doesn't
+            // get put on the page. Therefore, let's manually put it there, as well as auth, so that
+            // we can test all the things.
+            window.Livefyre = window.Livefyre || {};
+            Livefyre.auth = auth;
+            var dispatch = window.dispatch = new InsightsDispatch();
+
+            var authDelegate = new LFEP({
+                app: 'https://identity.qa-ext.livefyre.com/qa-blank.fyre.co'
+            });
+            auth.delegate(authDelegate);
+
+            // Many items in the collection
+            // var opts = {
+            //     "network": "labs-t402.fyre.co",
+            //     "siteId": "303827",
+            //     // Fast Collection
+            //     // "articleId": "labs_demo_fire",
+            //     "articleId": "xbox-0",
+            //     "environment": "t402.livefyre.com"
+            // };
+
+            // 2 items in the collection
+            // var opts = {
+            //     "network": "qa-blank.fyre.co",
+            //     "siteId": "291345",
+            //     "articleId": "designer-app-1449777062779"
+            // };
+            // 
+            
+            var opts = {
+                "network": "qa-blank.fyre.co",
+                "siteId": "291345",
+                "articleId": "designer-app-1457740215925",
+                "environment": "qa-ext.livefyre.com"
+            };
+
+            var collection = new Collection(opts);
+
+            var view = window.view = new LiveMediaWall({
+                el: document.getElementById("view"),
+                collection: collection,
+                postButton: true,
+                initial: 4
+
+                // If the wall is in either designer or share mode, we should
+                // disable the emitter.. so this is here for that testing.
+                // inDesigner: false,
+                // inShare: true,
+
+                // Insights Emitter as an object
+                // insightsEmitter: {
+                //     cls: InsightsEmitter,
+                //     debug: true
+                //     disabled: true
+                // }
+
+                // Insights Emitter as just a function/class
+                // insightsEmitter: InsightsEmitter
+            });
+        });
+        </script>
+    </body>
+</html>

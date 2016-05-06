@@ -20,26 +20,35 @@
         require([
             'streamhub-sdk/collection',
             'streamhub-sdk/content',
-            'streamhub-wall'
-        ],function (Collection, Content, LiveMediaWall) {
+            'streamhub-wall',
+            'auth'
+        ],function (Collection, Content, LiveMediaWall, auth) {
+            auth.delegate({login: function() {}});
             var opts = {
-                "network": "labs-t402.fyre.co",
-                "siteId": "303827",
+                "network": "livefyre.com",
+                "siteId": "286470",
                 // Fast Collection
                 // "articleId": "labs_demo_fire",
-                "articleId": "xbox-0",
-                "environment": "t402.livefyre.com"
+                "articleId": "nein",
+                "environment": "fy.re"
             };
 
-
-
             var collection = new Collection(opts);
+
+            document.body.addEventListener('insights', function (data) {
+                console.log('Received:', data.detail.type, data);
+            });
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
                 collection: collection,
-                postButton: true
+                postButton: 'content',
+                showMoreButtonText: 'get more sucka',
+                shareButtonText: 'derp',
+                initial: 2
             });
+
+            view.render();
         });
         </script>
     </body>
