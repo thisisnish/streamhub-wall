@@ -16,6 +16,7 @@ define([
    * @param opts.relayoutWait {number} The number of milliseconds to wait when debouncing
    *        .relayout(). Defaults to 200ms.
    * @param opts.css {boolean} Whether to insert default media wall css. Default true.
+   * @param opts.animate {boolean} Whether to enable animations. Default true.
    * @constructor
    */
   var MediaWallView = function (opts) {
@@ -194,6 +195,10 @@ define([
     this.$el
       .addClass(this.mediaWallClassName)
       .addClass('streamhub-media-wall-' + this._id);
+
+    if (!this.opts.animate) {
+      this.$el.addClass('streamhub-media-wall-view-no-animate');
+    }
 
     // If you're changing to a new element, it could have diff dimensions
     // and thus need a diff number of columns

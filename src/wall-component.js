@@ -36,6 +36,7 @@ var largeTheme = require('streamhub-wall/themes/large');
  * @param [opts.autoRender=true] Whether to automatically render on construction
  * @param [opts.insightsEmitter] A "new-able" Emitter class to use for sending events. If none
  *     is provided, a Insights Emitter will be used instead.
+ * @param [opts.animations] Whether to turn on animations. Default true.
  */
 var WallComponent = module.exports = function (opts) {
   AppBase.call(this, opts);
@@ -316,7 +317,8 @@ WallComponent.prototype._initializeWallView = function (opts) {
     initial: opts.initial,
     showMore: opts.showMore,
     modal: opts.modal,
-    pickColumn: opts.pickColumn
+    pickColumn: opts.pickColumn,
+    animate: opts.animations
   });
 
   this.pipe(this._wallView);
@@ -346,7 +348,7 @@ WallComponent.prototype.render = function () {
 
     // append container and subviews
   var container = document.createElement('div');
-  $(container).addClass('streamhub-wall-component');
+  container.className = 'streamhub-wall-component';
   var frag = document.createDocumentFragment();
 
   subviews.forEach(function (view) {
