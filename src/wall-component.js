@@ -89,12 +89,6 @@ var THEMABLE_STYLES = {
 };
 
 /** @override */
-WallComponent.prototype.i18nMap = {
-  shareButtonText: ['shareButtonText'],
-  showMoreButtonText: ['showMoreButtonText']
-};
-
-/** @override */
 WallComponent.prototype.configureInternal = function (configOpts) {
   var reconstructWallView = false;
   var reconstructHeaderView = false;
