@@ -5,3 +5,4 @@
 /dist
 /dev
 *.sublime-workspace
+.DS_Store
