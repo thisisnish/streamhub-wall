@@ -134,7 +134,7 @@ require.config({
     paths: ['lib'],
     relativeUrls: true,
     modifyVars: {
-      '@icon-font-path': '"https://cdn.livefyre.com/libs/livefyre-bootstrap/v1.3.4/fonts/"'
+      '@icon-font-path': '"https://cdn.livefyre.com/libs/livefyre-bootstrap/v1.4.19/fonts/"'
     }
   }
 });
