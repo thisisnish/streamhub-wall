@@ -9,9 +9,11 @@ var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
 require('less!streamhub-wall/styles/wall-component');
 
+var xsmallTheme = require('streamhub-wall/themes/xsmall');
 var smallTheme = require('streamhub-wall/themes/small');
 var mediumTheme = require('streamhub-wall/themes/medium');
 var largeTheme = require('streamhub-wall/themes/large');
+var xlargeTheme = require('streamhub-wall/themes/xlarge');
 
 /**
  * LiveMediaWall Component
@@ -52,6 +54,18 @@ var WallComponent = module.exports = function (opts) {
 };
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, AppBase);
+
+/**
+ * Map of theme size to theme object.
+ * @enum {Object}
+ */
+var THEME_MAP = {
+  xsmall: xsmallTheme,
+  small: smallTheme,
+  medium: mediumTheme,
+  large: largeTheme,
+  xlarge: xlargeTheme
+};
 
 /**
  * Element prefixes that we want to theme.
@@ -223,18 +237,9 @@ WallComponent.prototype.getThemeOpts = function (opts) {
   opts = opts || {};
 
   var fontSize = opts.fontSize ? opts.fontSize.toLowerCase() : '';
-  var fontSizeOpts = {};
-  var theme;
+  var fontSizeOpts = THEME_MAP[fontSize] || {};
 
-  if (fontSize === 'small') {
-    fontSizeOpts = smallTheme;
-  } else if (fontSize === 'medium') {
-    fontSizeOpts = mediumTheme;
-  } else if (fontSize === 'large') {
-    fontSizeOpts = largeTheme;
-  }
-
-  theme = $.extend({}, this._themeOpts || {}, opts);
+  var theme = $.extend({}, this._themeOpts || {}, opts);
   theme = $.extend(theme, this.generateColors(THEMABLE_ELEMENTS, THEMABLE_STYLES, theme));
 
   return $.extend({}, opts, theme, fontSizeOpts);

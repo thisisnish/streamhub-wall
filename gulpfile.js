@@ -6,10 +6,14 @@ var rework = require('gulp-rework');
 var prefixSelectors = require('rework/lib/plugins/prefix-selectors');
 var util = require('gulp-util');
 
-function lessify(path) {
+function lessify(path, dest) {
+  dest = dest || 'dev';
+  var appName = packageJson.name;
+  var version = packageJson.version;
   gulp.src(path)
     .pipe(less({paths: [__dirname]}).on('error', util.log))
-    .pipe(gulp.dest('dev'));
+    .pipe(rework(prefixSelectors('[data-lf-package="' + appName + '#' + version + '"]')))
+    .pipe(gulp.dest(dest));
 }
 
 gulp.task('default', function () {
@@ -35,10 +39,5 @@ gulp.task('default', function () {
  * Prefix all selectors in the CSS file with the app version.
  */
 gulp.task('prefix', function () {
-  var appName = packageJson.name;
-  var version = packageJson.version;
-  gulp.src('src/styles/wall-component.less')
-    .pipe(less())
-    .pipe(rework(prefixSelectors('[data-lf-package="' + appName + '#' + version + '"]')))
-    .pipe(gulp.dest('dist/temp'));
+  lessify(__dirname + '/src/styles/wall-component.less', 'dist/temp');
 });
