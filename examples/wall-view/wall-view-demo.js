@@ -24,7 +24,7 @@ $, Collection, Content, Auth, WallView, packageAttribute) {
     network: 'build-validator-qa-s2.fyre.co',
     siteId: '291251',
     articleId: 'designer-app-1473897378865',
-    environment: "qa-ext.livefyre.com"
+    environment: 'qa-ext.livefyre.com'
   };
   window.Collection = Collection;
   var collection = new Collection(opts);
