@@ -21,10 +21,10 @@ $, Collection, Content, Auth, WallView, packageAttribute) {
   packageAttribute.decorate(document.getElementById('container'));
 
   var opts = {
-    'network': 'livefyre.com',
-    'siteId': '313878',
-    'articleId': '1',
-    'environment': 'livefyre.com'
+    network: 'build-validator-qa-s2.fyre.co',
+    siteId: '291251',
+    articleId: 'designer-app-1473897378865',
+    environment: "qa-ext.livefyre.com"
   };
   window.Collection = Collection;
   var collection = new Collection(opts);
