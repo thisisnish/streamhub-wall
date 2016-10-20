@@ -310,12 +310,14 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
 WallComponent.prototype._initializeWallView = function (opts) {
   this._wallView = opts.wallView || new WallView({
     autoRender: false,
-    minContentWidth: opts.minContentWidth,
     columns: opts.columns,
     initial: opts.initial,
-    showMore: opts.showMore,
+    liker: opts.liker,
+    minContentWidth: opts.minContentWidth,
     modal: opts.modal,
-    pickColumn: opts.pickColumn
+    pickColumn: opts.pickColumn,
+    sharer: opts.sharer,
+    showMore: opts.showMore
   });
 
   this.pipe(this._wallView);
