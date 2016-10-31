@@ -7,7 +7,6 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: '..',
 
-
     // frameworks to use
     frameworks: ['jasmine', 'cajon'],
 
@@ -34,6 +33,8 @@ module.exports = function (config) {
       {pattern: 'node_modules/livefyre-package-attribute/src/*.js', included: false},
       {pattern: 'node_modules/livefyre-package-attribute/tools/*.js', included: false},
       {pattern: 'node_modules/jasmine-jquery/**/*.js', included: false},
+      {pattern: 'node_modules/insights-emitter/**/*.js', included: false},
+      {pattern: 'node_modules/activity-streams-vocabulary/**/*.js', included: false},
       'tests/test-in-karma.js'
     ],
 

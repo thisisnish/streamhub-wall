@@ -9,3 +9,7 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     padding: 5px; }
+
+.streamhub-media-wall-view .content-tumblr .content-attachments-stacked {
+    display: none;
+}

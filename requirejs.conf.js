@@ -12,18 +12,21 @@ require.config({
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
     json: 'lib/requirejs-plugins/src/json',
-    lodash: 'lib/lodash/dist/lodash.min',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',
     observer: 'lib/observer/src/observer',
     mout: 'lib/mout/src',
     'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index',
-    'tinycolor': 'lib/tinycolor/tinycolor'
+    'tinycolor': 'lib/tinycolor/tinycolor',
+    urnlib: 'lib/urnlib.js/index'
   },
   packages: [{
     name: 'streamhub-wall',
     location: './src'
+  },{
+    name: 'app-base',
+    location: 'lib/app-base/src'
   },{
     name: 'streamhub-sdk',
     location: 'lib/streamhub-sdk/src'
@@ -39,6 +42,10 @@ require.config({
   },{
     name: 'streamhub-sdk/content',
     location: 'lib/streamhub-sdk/src/content'
+  },{
+    name: 'streamhub-sdk/i18n',
+    location: 'lib/streamhub-sdk/src',
+    main: 'i18n'
   },{
     name: 'streamhub-sdk-tests',
     location: 'lib/streamhub-sdk/tests'
@@ -89,6 +96,14 @@ require.config({
   },{
     name: 'livefyre-bootstrap',
     location: 'lib/livefyre-bootstrap/src'
+  },{
+    name: 'activity-streams-vocabulary',
+    location: 'lib/activity-streams-vocabulary/src',
+    main: 'index'
+  },{
+    name: 'insights-emitter',
+    location: 'lib/insights-emitter',
+    main: 'insights-emitter'
   }],
   shim: {
     jquery: {
@@ -119,7 +134,7 @@ require.config({
     paths: ['lib'],
     relativeUrls: true,
     modifyVars: {
-      '@icon-font-path': '"https://cdn.livefyre.com/libs/livefyre-bootstrap/v1.3.4/fonts/"'
+      '@icon-font-path': '"https://cdn.livefyre.com/libs/livefyre-bootstrap/v1.4.19/fonts/"'
     }
   }
 });
