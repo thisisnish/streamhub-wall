@@ -1,0 +1,16 @@
+{
+  "main": "streamhub-wall",
+  "name": "streamhub-wall",
+  "hasAuth": true,
+  "hasCollection": true,
+  "hasUrl": false,
+  "isHiddenS1": false,
+  "version": "{{VERSION}}",
+  "icons": [
+    {
+      "type": "fycon",
+      "src": "fycon-icon-wall"
+    }
+  ],
+  "configSchema": {}
+}
