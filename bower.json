@@ -1,6 +1,6 @@
 {
   "name": "streamhub-wall",
-  "version": "4.3.4",
+  "version": "5.0.2",
   "main": [
     "./src/main.js"
   ],

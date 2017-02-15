@@ -1,0 +1,19 @@
+{
+  "main": "streamhub-wall",
+  "name": "streamhub-wall",
+  "urn": "urn:livefyre:service=designer:component=media-wall",
+  "hasAuth": true,
+  "hasCollection": true,
+  "streamType": "threaded",
+  "hasUrl": false,
+  "isHiddenS1": false,
+  "version": "{{VERSION}}",
+  "icons": [
+    {
+      "type": "fycon",
+      "src": "fycon-icon-wall"
+    }
+  ],
+  "configSchema": {},
+  "capabilities": ["details", "settings", "stream", "designer"]
+}
