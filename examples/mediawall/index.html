@@ -24,16 +24,54 @@
             'auth'
         ],function (Collection, Content, LiveMediaWall, auth) {
             auth.delegate({login: function() {}});
-            var opts = {
-                "network": "livefyre.com",
-                "siteId": "286470",
-                // Fast Collection
-                // "articleId": "labs_demo_fire",
-                "articleId": "nein",
-                "environment": "fy.re"
-            };
 
-            var collection = new Collection(opts);
+            // var opts = {
+            //   network: 'build-validator-qa-s2.fyre.co',
+            //   siteId: '291251',
+            //   articleId: 'designer-app-1473897378865',
+            //   environment: 'qa-ext.livefyre.com'
+            // };
+
+            var collections = [
+              {
+                network: 'build-validator-qa-s2.fyre.co',
+                siteId: '291251',
+                articleId: 'designer-app-1473897378865',
+                environment: 'qa-ext.livefyre.com'
+              },
+              { // products
+                network: 'qa-blank.fyre.co',
+                siteId: '291345',
+                articleId: 'designer-app-1490911843246',
+                environment: 'qa-ext.livefyre.com'
+              },
+              { // products 2
+                env: 'qa-ext.livefyre.com',
+                network: 'qa-blank.fyre.co',
+                siteId: '291364',
+                articleId: 'designer-app-1489184626785'
+              },
+              { // products 3
+                env: 'qa-ext.livefyre.com',
+                network: 'qa-blank.fyre.co',
+                siteId: '291364',
+                articleId: 'designer-app-1487964533074'
+              },
+              { // surfing
+                env: 'qa-ext.livefyre.com',
+                network: 'client-solutions.fyre.co',
+                siteId: '376431',
+                articleId: 'custom-1437089633525'
+              },
+              { // baloons
+                env: 'qa-ext.livefyre.com',
+                network: 'client-solutions.fyre.co',
+                siteId: '376431',
+                articleId: 'custom-1437155554245'
+              }
+            ];
+
+            var collection = new Collection(collections[1]);
 
             document.body.addEventListener('insights', function (data) {
                 console.log('Received:', data.detail.type, data);
@@ -45,7 +83,8 @@
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
                 shareButtonText: 'derp',
-                initial: 2
+                productDetailShow: 'phototitleprice',
+                showProduct: true
             });
 
             view.render();

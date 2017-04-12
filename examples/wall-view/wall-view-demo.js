@@ -20,19 +20,44 @@ $, Collection, Content, Auth, WallView, packageAttribute) {
 
   packageAttribute.decorate(document.getElementById('container'));
 
-  var opts = {
-    network: 'build-validator-qa-s2.fyre.co',
-    siteId: '291251',
-    articleId: 'designer-app-1473897378865',
-    environment: 'qa-ext.livefyre.com'
-  };
+  var collections = [
+    {
+      network: 'build-validator-qa-s2.fyre.co',
+      siteId: '291251',
+      articleId: 'designer-app-1473897378865',
+      environment: 'qa-ext.livefyre.com'
+    },
+    { // products
+      network: 'qa-blank.fyre.co',
+      siteId: '291345',
+      articleId: 'designer-app-1490911843246',
+      environment: 'qa-ext.livefyre.com'
+    },
+    { // products 2
+      env: 'qa-ext.livefyre.com',
+      network: 'qa-blank.fyre.co',
+      siteId: '291364',
+      articleId: 'designer-app-1489184626785'
+    },
+    { // products 3
+      env: 'qa-ext.livefyre.com',
+      network: 'qa-blank.fyre.co',
+      siteId: '291364',
+      articleId: 'designer-app-1487964533074'
+    }
+  ];
+
   window.Collection = Collection;
-  var collection = new Collection(opts);
+  var collection = new Collection(collections[2]);
 
   var wallView = window.view = new WallView({
     sharer: function (content) {
       console.log('share', content);
-    }
+    },
+    productDetailPhotoShow: true,
+    productDetailTitleShow: true,
+    productDetailPriceShow: true,
+    showProduct: true
   });
 
   collection.pipe(wallView);
