@@ -37,6 +37,8 @@
     "livefyre-theme-styler": "~1.4.0",
     "mout": "0.11.1",
     "streamhub-ui": "0.4.4",
-    "view": "1.4.1"
+    "view": "1.4.1",
+    "streamhub-input": "0.10.2",
+    "streamhub-sdk": "2.27.0"
   }
 }
