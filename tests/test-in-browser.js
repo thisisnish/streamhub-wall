@@ -68,8 +68,8 @@ function (jasmine, jasmineRequire, jasmineHtml, $) {
     'tests/spec/wall-component',
     'tests/spec/main',
     'tests/spec/wall-header-view'
-  ], function (){
-    $(function (){
+  ], function () {
+    $(function () {
       htmlReporter.initialize();
       env.execute();
     });

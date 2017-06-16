@@ -44,6 +44,10 @@ define([
       this.setColumns(opts.columns);
     }
 
+    // Tells `hasAttachmentModal` within `ContentListView` to use the new modal
+    // when the `focusContent.hub` event is triggered instead of just showing
+    // the content media within a modal.
+    opts.useNewModal = true;
     opts.useSingleMediaView = true;
 
     ContentListView.call(this, opts);
@@ -200,6 +204,24 @@ define([
     if (prevEl && this._autoFitColumns) {
       this.fitColumns();
     }
+  };
+
+  /**
+   * Overrides the `createContentView` function to create a content view with
+   * additional params:
+   *   `productOptions` enables the product conversion functionality.
+   *   `spectrum` enables a new style design for the cards.
+   * @param {Content} content Object to create a corresponding view for.
+   * @returns {ContentView} Content view object for the given piece of content.
+   * @override
+   */
+  MediaWallView.prototype.createContentView = function (content) {
+    return this.contentViewFactory.createContentView(content, {
+      liker: this._liker,
+      productOptions: this.opts.productOptions,
+      sharer: this._sharer,
+      spectrum: true
+    });
   };
 
   /**
