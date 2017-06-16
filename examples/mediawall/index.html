@@ -24,16 +24,62 @@
             'auth'
         ],function (Collection, Content, LiveMediaWall, auth) {
             auth.delegate({login: function() {}});
-            var opts = {
-                "network": "livefyre.com",
-                "siteId": "286470",
-                // Fast Collection
-                // "articleId": "labs_demo_fire",
-                "articleId": "nein",
-                "environment": "fy.re"
+
+            // var opts = {
+            //   network: 'build-validator-qa-s2.fyre.co',
+            //   siteId: '291251',
+            //   articleId: 'designer-app-1473897378865',
+            //   environment: 'qa-ext.livefyre.com'
+            // };
+
+            var starwarsCollection = {
+                network: 'build-validator-qa-s2.fyre.co',
+                siteId: '291251',
+                articleId: 'designer-app-1473897378865',
+                environment: 'qa-ext.livefyre.com'
             };
 
-            var collection = new Collection(opts);
+            var productsCollection = {
+                network: 'qa-blank.fyre.co',
+                siteId: '291345',
+                articleId: 'designer-app-1490911843246',
+                environment: 'qa-ext.livefyre.com'
+            };
+            
+            var productsCollection2 = {
+                env: 'qa-ext.livefyre.com',
+                network: 'qa-blank.fyre.co',
+                siteId: '291364',
+                articleId: 'designer-app-1489184626785'
+            };
+            
+            var productsCollection3 = {
+                env: 'qa-ext.livefyre.com',
+                network: 'qa-blank.fyre.co',
+                siteId: '291364',
+                articleId: 'designer-app-1487964533074'
+            };
+            
+            var surfingCollection = {
+                env: 'qa-ext.livefyre.com',
+                network: 'client-solutions.fyre.co',
+                siteId: '376431',
+                articleId: 'custom-1437089633525'
+            };
+            
+            var balloonsCollection = {
+                env: 'qa-ext.livefyre.com',
+                network: 'client-solutions.fyre.co',
+                siteId: '376431',
+                articleId: 'custom-1437155554245'
+            };
+            
+            var testCollection = {
+                env: 'qa-ext.livefyre.com',
+                network: 'build-validator-qa-s2.fyre.co',
+                siteId: '291366',
+                articleId: 'designer-app-1495575581781'
+            };
 
             document.body.addEventListener('insights', function (data) {
                 console.log('Received:', data.detail.type, data);
@@ -41,11 +87,18 @@
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
-                collection: collection,
+                collection: testCollection,
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
                 shareButtonText: 'derp',
-                initial: 2
+                productDetailShow: 'phototitleprice',
+                showProduct: true,
+                productAnalytics: {
+                    cid: 'test:{source}:{contentId}',
+                    another: 'more'
+                },
+                productAnalyticsEnabled: true,
+                productRequiresRightsGranted: false
             });
 
             view.render();
