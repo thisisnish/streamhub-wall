@@ -1,7 +1,4 @@
 var Content = require('streamhub-sdk/content');
-var ContentListView = require('streamhub-sdk/content/views/content-list-view');
-var Hub = require('streamhub-sdk');
-var jasmine = require('jasmine');
 var MediaWallView = require('streamhub-wall/wall-view');
 var MockStream = require('streamhub-sdk-tests/mocks/mock-attachments-stream');
 var ModalContentCardView = require('streamhub-sdk/content/views/modal-content-card-view');
