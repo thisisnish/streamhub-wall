@@ -84,7 +84,7 @@ describe('A MediaWallView', function () {
 
       beforeEach(function () {
         setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        $('#hub-MediaWallView').width(300*3); // 220px is the default width of content
+        $('#hub-MediaWallView').width(300 * 3); // 220px is the default width of content
       });
 
       function makeView(initial) {
@@ -156,7 +156,7 @@ describe('A MediaWallView', function () {
 
       beforeEach(function () {
         setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
+        $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
         view = new MediaWallView({
           el: $('#hub-MediaWallView').get(0),
           pickColumn: MediaWallView.columnPickers.roundRobin
@@ -184,7 +184,7 @@ describe('A MediaWallView', function () {
       var view, content1, content2, content3;
       beforeEach(function () {
         setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
+        $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
         view = new MediaWallView({
           el: $('#hub-MediaWallView').get(0),
           pickColumn: MediaWallView.columnPickers.roundRobin
@@ -231,7 +231,7 @@ describe('A MediaWallView', function () {
 
       beforeEach(function () {
         setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        $('#hub-MediaWallView').height(1000).width(300*3); // 220px is the default width of content
+        $('#hub-MediaWallView').height(1000).width(300 * 3); // 220px is the default width of content
         view = new MediaWallView({
           el: $('#hub-MediaWallView').get(0),
           pickColumn: MediaWallView.columnPickers.shortestColumn,
@@ -305,7 +305,7 @@ describe('A MediaWallView', function () {
       var view, content1, content2, content3;
       beforeEach(function () {
         setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
+        $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
         view = new MediaWallView({
           el: $('#hub-MediaWallView').get(0),
           pickColumn: MediaWallView.columnPickers.shortestColumn
@@ -349,14 +349,14 @@ describe('auto fitting columns', function () {
 
   it('calls #fitColumns() in constructor if no opts.columns specified', function () {
     spyOn(MediaWallView.prototype, 'fitColumns');
-    $('#hub-MediaWallView').width(220*4); // 220px is the default width of content
+    $('#hub-MediaWallView').width(220 * 4); // 220px is the default width of content
     view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
     expect(view._autoFitColumns).toBe(true);
     expect(MediaWallView.prototype.fitColumns).toHaveBeenCalled();
   });
 
   it('calls #fitColumns() when window is resized', function () {
-    $('#hub-MediaWallView').width(220*4); // 220px is the default width of content
+    $('#hub-MediaWallView').width(220 * 4); // 220px is the default width of content
     view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
     spyOn(view, 'debouncedRelayout');
     $(window).trigger('resize');
@@ -367,7 +367,7 @@ describe('auto fitting columns', function () {
   it('sets column width proportional to the media wall width', function () {
     $('#hub-MediaWallView').width(12345);
     view = new MediaWallView({el: $('#hub-MediaWallView').get(0), minContentWidth: 400});
-    expect(view._columnViews.length).toBe(parseInt(12345/400, 10));
+    expect(view._columnViews.length).toBe(parseInt(12345 / 400, 10));
   });
 });
 
@@ -376,7 +376,7 @@ describe('when rendering', function () {
 
   beforeEach(function () {
     setFixtures('<div id=\'hub-MediaWallView\'></div>');
-    $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
+    $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
 
     spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
     view = new MediaWallView({
@@ -402,7 +402,7 @@ describe('when relayouting', function () {
 
   beforeEach(function () {
     setFixtures('<div id=\'hub-MediaWallView\'></div>');
-    $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
+    $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
     spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
     view = new MediaWallView({
       el: $('#hub-MediaWallView').get(0)
