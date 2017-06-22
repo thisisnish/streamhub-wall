@@ -310,6 +310,7 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
 WallComponent.prototype._initializeWallView = function (opts) {
   this._wallView = opts.wallView || new WallView({
     autoRender: false,
+    collection: this._collection,
     columns: opts.columns,
     initial: opts.initial,
     liker: opts.liker,
