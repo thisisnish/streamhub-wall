@@ -25,6 +25,7 @@ define([
     this._id = new Date().getTime();
     this._autoFitColumns = true;
     this._contentWidth = opts.minContentWidth || 300;
+    this._collection = opts.collection;
     this._columnViews = [];
     this._containerInnerWidth = null;
     this._columnHeights = {};
