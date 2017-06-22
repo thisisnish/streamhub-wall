@@ -1,7 +1,7 @@
+var CarouselContentView = require('streamhub-sdk/content/views/carousel-content-view');
 var Content = require('streamhub-sdk/content');
 var MediaWallView = require('streamhub-wall/wall-view');
 var MockStream = require('streamhub-sdk-tests/mocks/mock-attachments-stream');
-var ModalContentCardView = require('streamhub-sdk/content/views/modal-content-card-view');
 var ModalView = require('streamhub-sdk/modal');
 require('jasmine-jquery');
 
@@ -36,7 +36,7 @@ describe('A MediaWallView', function () {
         content: new Content({body: 'test'})
       });
       expect(spy.calls.count()).toBe(1);
-      expect(spy.calls.argsFor(0)[0] instanceof ModalContentCardView).toBe(true);
+      expect(spy.calls.argsFor(0)[0] instanceof CarouselContentView).toBe(true);
     });
   });
 
