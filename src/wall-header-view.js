@@ -145,8 +145,8 @@ function getEditorButtonStyles(opts) {
  */
 WallHeaderView.mimetypes = {
   video: ['video/avi', 'video/mp4', 'video/x-ms-wmv', 'video/x-ms-asf', 'video/x-msvideo',
-            'video/mpeg', 'video/quicktime', 'video/x-qtc', 'video/x-dv', 'video/x-m4v',
-            'video/3gpp', 'video/3gpp2', 'video/webm', 'video/ogg'],
+    'video/mpeg', 'video/quicktime', 'video/x-qtc', 'video/x-dv', 'video/x-m4v',
+    'video/3gpp', 'video/3gpp2', 'video/webm', 'video/ogg'],
   photo: ['image/*']
 };
 
