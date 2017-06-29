@@ -1,391 +1,420 @@
-define([
-  'jasmine',
-  'streamhub-wall/wall-view',
-  'streamhub-sdk/content/views/content-list-view',
-  'streamhub-sdk',
-  'streamhub-sdk/content',
-  'streamhub-sdk-tests/mocks/mock-attachments-stream',
-  'jasmine-jquery'],
-function (jasmine, MediaWallView, ContentListView, Hub, Content, MockStream) {
-  'use strict';
+var CarouselContentView = require('streamhub-sdk/content/views/carousel-content-view');
+var Content = require('streamhub-sdk/content');
+var MediaWallView = require('streamhub-wall/wall-view');
+var MockStream = require('streamhub-sdk-tests/mocks/mock-attachments-stream');
+var ModalView = require('streamhub-sdk/modal');
+require('jasmine-jquery');
 
-  describe('A MediaWallView', function () {
-    // construction behavior
-    describe('can be constructed', function () {
-      it('with no options', function () {
-        var view = new MediaWallView();
-        expect(view).toBeDefined();
-      });
-      it('with empty options', function () {
-        var view = new MediaWallView({});
-        expect(view).toBeDefined();
-      });
-      it('with an el', function () {
-        setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        var view = new MediaWallView({
-          el: $('#hub-MediaWallView')
-        });
-        expect(view).toBeDefined();
-      });
-    });
+'use strict';
 
-    it('always returns a whole number >= 1 for max items for column', function () {
+describe('A MediaWallView', function () {
+  // construction behavior
+  describe('can be constructed', function () {
+    it('with no options', function () {
       var view = new MediaWallView();
-      view._maxVisibleItems = 3;
-      view._numberOfColumns = 4;
-      expect(view._getMaxVisibleItemsForColumn()).toBe(1);
-
-      view._maxVisibleItems = 5;
-      expect(view._getMaxVisibleItemsForColumn()).toBe(2);
+      expect(view).toBeDefined();
     });
 
-    // post construction behavior
-    describe('after correct construction', function () {
-      var view;
-      var stream;
+    it('with empty options', function () {
+      var view = new MediaWallView({});
+      expect(view).toBeDefined();
+    });
+
+    it('with an el', function () {
+      setFixtures('<div id=\'hub-MediaWallView\'></div>');
+      var view = new MediaWallView({
+        el: $('#hub-MediaWallView')
+      });
+      expect(view).toBeDefined();
+    });
+
+    it('uses the new modal', function () {
+      var modal = new ModalView();
+      var spy = spyOn(modal, 'show');
+      var view = new MediaWallView({modal: modal});
+      view.$el.trigger('focusContent.hub', {
+        content: new Content({body: 'test'})
+      });
+      expect(spy.calls.count()).toBe(1);
+      expect(spy.calls.argsFor(0)[0] instanceof CarouselContentView).toBe(true);
+    });
+  });
+
+  it('always returns a whole number >= 1 for max items for column', function () {
+    var view = new MediaWallView();
+    view._maxVisibleItems = 3;
+    view._numberOfColumns = 4;
+    expect(view._getMaxVisibleItemsForColumn()).toBe(1);
+
+    view._maxVisibleItems = 5;
+    expect(view._getMaxVisibleItemsForColumn()).toBe(2);
+  });
+
+  // post construction behavior
+  describe('after correct construction', function () {
+    var view;
+    var stream;
+
+    beforeEach(function () {
+      setFixtures('<div id=\'hub-MediaWallView\'></div>');
+      stream = new MockStream();
+      view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
+    });
+
+    it('should contain 9 mock items & childViews (from MockAttatchmentsStream) after stream start', function (done) {
+      stream.pipe(view);
+      stream.on('error', done);
+      stream.on('end', function () {
+        try {
+          expect(view.views.length).toBe(9);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+    });
+  });
+
+  describe('Round-robin column insertion', function () {
+    describe('when `initial` value is set', function () {
+      var content1 = new Content({body: 'what1'}),
+        content2 = new Content({body: 'what2'}),
+        content3 = new Content({body: 'what3'}),
+        content4 = new Content({body: 'what4'});
 
       beforeEach(function () {
         setFixtures('<div id=\'hub-MediaWallView\'></div>');
-        stream = new MockStream();
-        view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
+        $('#hub-MediaWallView').width(300 * 3); // 220px is the default width of content
       });
 
-      it('should contain 9 mock items & childViews (from MockAttatchmentsStream) after stream start', function (done) {
-        stream.pipe(view);
-        stream.on('error', done);
-        stream.on('end', function () {
-          try {
-            expect(view.views.length).toBe(9);
-            done();
-          } catch (e) {
-            done(e);
-          }
-        });
-      });
-    });
-
-    describe('Round-robin column insertion', function () {
-      describe('when `initial` value is set', function () {
-        var content1 = new Content({body: 'what1'}),
-          content2 = new Content({body: 'what2'}),
-          content3 = new Content({body: 'what3'}),
-          content4 = new Content({body: 'what4'});
-
-        beforeEach(function () {
-          setFixtures('<div id=\'hub-MediaWallView\'></div>');
-          $('#hub-MediaWallView').width(300*3); // 220px is the default width of content
+      function makeView(initial) {
+        var view = new MediaWallView({
+          el: $('#hub-MediaWallView').get(0),
+          initial: initial
         });
 
-        function makeView(initial) {
-          var view = new MediaWallView({
-            el: $('#hub-MediaWallView').get(0),
-            initial: initial
-          });
+        view.add(content1);
+        view.add(content2);
+        view.add(content3);
+        view.add(content4);
 
-          view.add(content1);
-          view.add(content2);
-          view.add(content3);
-          view.add(content4);
+        return view;
+      }
 
-          return view;
-        }
-
-        it('should handle `initial` smaller than the number of columns', function () {
-          var view = makeView(2);
-          expect(view._columnViews.length).toEqual(3);
-          expect(view._columnViews[0].views[0].content).toEqual(content3);
-          expect(view._columnViews[1].views[0].content).toEqual(content4);
-          expect(view._columnViews[2].views.length).toEqual(0);
-        });
-
-        it('should handle `initial` equal to the number of columns', function () {
-          var view = makeView(3);
-          expect(view._columnViews.length).toEqual(3);
-          expect(view._columnViews[0].views[0].content).toEqual(content4);
-          expect(view._columnViews[1].views[0].content).toEqual(content2);
-          expect(view._columnViews[2].views[0].content).toEqual(content3);
-        });
-
-        it('should handle `initial` greater than the number of columns', function () {
-          var view = makeView(4);
-          expect(view._columnViews.length).toEqual(3);
-          expect(view._columnViews[0].views[0].content).toEqual(content4);
-          expect(view._columnViews[0].views[1].content).toEqual(content1);
-          expect(view._columnViews[1].views[0].content).toEqual(content2);
-          expect(view._columnViews[2].views[0].content).toEqual(content3);
-        });
+      it('should handle `initial` smaller than the number of columns', function () {
+        var view = makeView(2);
+        expect(view._columnViews.length).toEqual(3);
+        expect(view._columnViews[0].views[0].content).toEqual(content3);
+        expect(view._columnViews[1].views[0].content).toEqual(content4);
+        expect(view._columnViews[2].views.length).toEqual(0);
       });
 
-      describe('when adding content with different .createdAt dates', function () {
-        var view,
-          startDateInt = 1375383041586,
-          date1 = new Date(startDateInt),
-          date2 = new Date(startDateInt + 1 * 10000),
-          date3 = new Date(startDateInt + 2 * 10000),
-          content1, content2, content3;
-
-        beforeEach(function () {
-          setFixtures('<div id=\'hub-MediaWallView\'></div>');
-          $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
-          view = new MediaWallView({
-            el: $('#hub-MediaWallView').get(0),
-            pickColumn: MediaWallView.columnPickers.roundRobin
-          });
-          content1 = new Content({body: 'what1'});
-          content1.createdAt = date1;
-          content2 = new Content({body: 'what2'});
-          content2.createdAt = date2;
-          content3 = new Content({body: 'what3'});
-          content3.createdAt = date3;
-          view.add(content3);
-          view.add(content1);
-          view.add(content2);
-        });
-
-        it('should select target column ContentView to write into', function () {
-          expect(view._columnViews.length).toEqual(4);
-          expect(view._columnViews[0].views[0].content).toEqual(content3);
-          expect(view._columnViews[1].views[0].content).toEqual(content1);
-          expect(view._columnViews[2].views[0].content).toEqual(content2);
-        });
+      it('should handle `initial` equal to the number of columns', function () {
+        var view = makeView(3);
+        expect(view._columnViews.length).toEqual(3);
+        expect(view._columnViews[0].views[0].content).toEqual(content4);
+        expect(view._columnViews[1].views[0].content).toEqual(content2);
+        expect(view._columnViews[2].views[0].content).toEqual(content3);
       });
 
-      describe('when removing content', function () {
-        var view, content1, content2, content3;
-        beforeEach(function () {
-          setFixtures('<div id=\'hub-MediaWallView\'></div>');
-          $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
-          view = new MediaWallView({
-            el: $('#hub-MediaWallView').get(0),
-            pickColumn: MediaWallView.columnPickers.roundRobin
-          });
-          content1 = new Content({body: 'what1'});
-          content2 = new Content({body: 'what2'});
-          content3 = new Content({body: 'what3'});
-          view.add(content3); // column1
-          view.add(content1); // column2
-          view.add(content2); // column3
-        });
-
-        it('should remove the contentView from #views', function () {
-          expect(view.views.length).toEqual(3);
-          view.remove(content1);
-          expect(view.views.length).toEqual(2);
-        });
-
-        it('should remove the contentView from the appropriate column view', function () {
-          var contentView3 = view.getContentView(content3);
-          expect(view._columnViews[0].views.length).toEqual(1);
-          expect(view._columnViews[0].views[0].content.body).toEqual('what3');
-          view.remove(content3);
-          // not in media wall child views array
-          expect(view.views.indexOf(contentView3)).toEqual(-1);
-          // not in specific columnviews child views list
-          expect(view._columnViews[0].views.length).toEqual(0);
-          // not in dom
-          expect(view.$el.has(contentView3.el).length).toEqual(0);
-        });
+      it('should handle `initial` greater than the number of columns', function () {
+        var view = makeView(4);
+        expect(view._columnViews.length).toEqual(3);
+        expect(view._columnViews[0].views[0].content).toEqual(content4);
+        expect(view._columnViews[0].views[1].content).toEqual(content1);
+        expect(view._columnViews[1].views[0].content).toEqual(content2);
+        expect(view._columnViews[2].views[0].content).toEqual(content3);
       });
     });
 
-    describe('Shortest column first insertion', function () {
-      describe('when adding content with different .createdAt dates', function () {
-        var view,
-          startDateInt = 1375383041586,
-          date1 = new Date(startDateInt),
-          date2 = new Date(startDateInt + 1 * 10000),
-          date3 = new Date(startDateInt + 2 * 10000),
-          date4 = new Date(startDateInt + 3 * 10000),
-          date5 = new Date(startDateInt + 4 * 10000),
-          content1, content2, content3, content4, content5;
-
-        beforeEach(function () {
-          setFixtures('<div id=\'hub-MediaWallView\'></div>');
-          $('#hub-MediaWallView').height(1000).width(300*3); // 220px is the default width of content
-          view = new MediaWallView({
-            el: $('#hub-MediaWallView').get(0),
-            pickColumn: MediaWallView.columnPickers.shortestColumn,
-            animate: false
-          });
-          content1 = new Content({body: 'what1'});
-          content1.createdAt = date1;
-          content2 = new Content({body: 'what2'});
-          content2.createdAt = date2;
-          content3 = new Content({body: 'what3'});
-          content3.createdAt = date3;
-          content4 = new Content({body: 'what4'});
-          content4.createdAt = date4;
-          content5 = new Content({body: 'what5'});
-          content5.createdAt = date5;
-        });
-
-        it('should insert into lowest tiebreaker index', function () {
-          expect(view._columnViews.length).toEqual(3);
-          expect(view._columnHeights[0]).toEqual(0);
-          expect(view._columnHeights[1]).toEqual(0);
-          expect(view._columnHeights[2]).toEqual(0);
-
-          view.add(content1);
-          view.views[0].$el.height('36px');
-          view._columnHeights[0] = 36;
-          expect(view._columnViews[0].views[0].content).toEqual(content1);
-
-          view.add(content2);
-          view.views[1].$el.height('36px');
-          view._columnHeights[1] = 36;
-          expect(view._columnViews[1].views[0].content).toEqual(content2);
-
-          view.add(content3);
-          view.views[2].$el.height('36px');
-          view._columnHeights[2] = 36;
-          expect(view._columnViews[2].views[0].content).toEqual(content3);
-        });
-
-        it('should select target column ContentView to write into', function () {
-          view.add(content3);
-          view.views[0].$el.height('500px');
-          view._columnHeights[0] = 500;
-
-          view.add(content1);
-          view.views[1].$el.height('36px');
-          view._columnHeights[1] = 36;
-
-          view.add(content2);
-          view.views[2].$el.height('36px');
-          view._columnHeights[2] = 36;
-
-          view.add(content4);
-          view.views[1].$el.height('72px');
-          view._columnHeights[1] += 72;
-
-          view.add(content5);
-          view.views[2].$el.height('72px');
-          view._columnHeights[2] += 72;
-
-          expect(view._columnViews.length).toEqual(3);
-          expect(view._columnViews[0].views[0].content).toEqual(content4);
-          expect(view._columnViews[1].views[0].content).toEqual(content5);
-          expect(view._columnViews[2].views[0].content).toEqual(content2);
-          expect(view._columnViews[0].views[1].content).toEqual(content3);
-          expect(view._columnViews[1].views[1].content).toEqual(content1);
-        });
+    describe('when adding content', function () {
+      it('should use the spectrum content format', function () {
+        var view = new MediaWallView();
+        var spy = spyOn(view.contentViewFactory, 'createContentView');
+        view.add(new Content({body: 'what1'}));
+        expect(spy.calls.count()).toBe(1);
+        expect(spy.calls.argsFor(0)[1].spectrum).toBe(true);
       });
 
-      describe('when removing content', function () {
-        var view, content1, content2, content3;
-        beforeEach(function () {
-          setFixtures('<div id=\'hub-MediaWallView\'></div>');
-          $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
-          view = new MediaWallView({
-            el: $('#hub-MediaWallView').get(0),
-            pickColumn: MediaWallView.columnPickers.shortestColumn
-          });
-          content1 = new Content({body: 'what1'});
-          content2 = new Content({body: 'what2'});
-          content3 = new Content({body: 'what3'});
-          view.add(content3); // column1
-          view.views[0].$el.height('10px');
-          view._columnHeights[0] = 10;
-          view.add(content1); // column2
-          view.views[1].$el.height('10px');
-          view._columnHeights[1] = 10;
-          view.add(content2); // column3
-          view.views[2].$el.height('10px');
-          view._columnHeights[2] = 10;
-        });
+      it('should pass through product conversion options', function () {
+        var productOptions = {foo: 'bar'};
+        var view = new MediaWallView({productOptions: productOptions});
+        var spy = spyOn(view.contentViewFactory, 'createContentView');
+        view.add(new Content({body: 'what1'}));
+        expect(spy.calls.count()).toBe(1);
+        expect(spy.calls.argsFor(0)[1].productOptions).toBe(productOptions);
+      });
+    });
 
-        it('should remove the contentView from #views', function () {
-          expect(view.views.length).toEqual(3);
-          view.remove(content1);
-          expect(view.views.length).toEqual(2);
-        });
+    describe('when adding content with different .createdAt dates', function () {
+      var view,
+        startDateInt = 1375383041586,
+        date1 = new Date(startDateInt),
+        date2 = new Date(startDateInt + 1 * 10000),
+        date3 = new Date(startDateInt + 2 * 10000),
+        content1, content2, content3;
 
-        it('should remove the contentView from the appropriate column view', function () {
-          expect(view._columnViews[0].views.length).toEqual(1);
-          expect(view._columnViews[0].views[0].content.body).toEqual('what3');
-          view.remove(content3);
-          expect(view._columnViews[0].views.length).toEqual(0);
+      beforeEach(function () {
+        setFixtures('<div id=\'hub-MediaWallView\'></div>');
+        $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
+        view = new MediaWallView({
+          el: $('#hub-MediaWallView').get(0),
+          pickColumn: MediaWallView.columnPickers.roundRobin
         });
+        content1 = new Content({body: 'what1'});
+        content1.createdAt = date1;
+        content2 = new Content({body: 'what2'});
+        content2.createdAt = date2;
+        content3 = new Content({body: 'what3'});
+        content3.createdAt = date3;
+        view.add(content3);
+        view.add(content1);
+        view.add(content2);
+      });
+
+      it('should select target column ContentView to write into', function () {
+        expect(view._columnViews.length).toEqual(4);
+        expect(view._columnViews[0].views[0].content).toEqual(content3);
+        expect(view._columnViews[1].views[0].content).toEqual(content1);
+        expect(view._columnViews[2].views[0].content).toEqual(content2);
+      });
+    });
+
+    describe('when removing content', function () {
+      var view, content1, content2, content3;
+      beforeEach(function () {
+        setFixtures('<div id=\'hub-MediaWallView\'></div>');
+        $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
+        view = new MediaWallView({
+          el: $('#hub-MediaWallView').get(0),
+          pickColumn: MediaWallView.columnPickers.roundRobin
+        });
+        content1 = new Content({body: 'what1'});
+        content2 = new Content({body: 'what2'});
+        content3 = new Content({body: 'what3'});
+        view.add(content3); // column1
+        view.add(content1); // column2
+        view.add(content2); // column3
+      });
+
+      it('should remove the contentView from #views', function () {
+        expect(view.views.length).toEqual(3);
+        view.remove(content1);
+        expect(view.views.length).toEqual(2);
+      });
+
+      it('should remove the contentView from the appropriate column view', function () {
+        var contentView3 = view.getContentView(content3);
+        expect(view._columnViews[0].views.length).toEqual(1);
+        expect(view._columnViews[0].views[0].content.body).toEqual('what3');
+        view.remove(content3);
+        // not in media wall child views array
+        expect(view.views.indexOf(contentView3)).toEqual(-1);
+        // not in specific columnviews child views list
+        expect(view._columnViews[0].views.length).toEqual(0);
+        // not in dom
+        expect(view.$el.has(contentView3.el).length).toEqual(0);
       });
     });
   });
 
-  describe('auto fitting columns', function () {
-    var view;
+  describe('Shortest column first insertion', function () {
+    describe('when adding content with different .createdAt dates', function () {
+      var view,
+        startDateInt = 1375383041586,
+        date1 = new Date(startDateInt),
+        date2 = new Date(startDateInt + 1 * 10000),
+        date3 = new Date(startDateInt + 2 * 10000),
+        date4 = new Date(startDateInt + 3 * 10000),
+        date5 = new Date(startDateInt + 4 * 10000),
+        content1, content2, content3, content4, content5;
 
-    beforeEach(function () {
-      setFixtures('<div id=\'hub-MediaWallView\'></div>');
-    });
+      beforeEach(function () {
+        setFixtures('<div id=\'hub-MediaWallView\'></div>');
+        $('#hub-MediaWallView').height(1000).width(300 * 3); // 220px is the default width of content
+        view = new MediaWallView({
+          el: $('#hub-MediaWallView').get(0),
+          pickColumn: MediaWallView.columnPickers.shortestColumn,
+          animate: false
+        });
+        content1 = new Content({body: 'what1'});
+        content1.createdAt = date1;
+        content2 = new Content({body: 'what2'});
+        content2.createdAt = date2;
+        content3 = new Content({body: 'what3'});
+        content3.createdAt = date3;
+        content4 = new Content({body: 'what4'});
+        content4.createdAt = date4;
+        content5 = new Content({body: 'what5'});
+        content5.createdAt = date5;
+      });
 
-    it('calls #fitColumns() in constructor if no opts.columns specified', function () {
-      spyOn(MediaWallView.prototype, 'fitColumns');
-      $('#hub-MediaWallView').width(220*4); // 220px is the default width of content
-      view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
-      expect(view._autoFitColumns).toBe(true);
-      expect(MediaWallView.prototype.fitColumns).toHaveBeenCalled();
-    });
+      it('should insert into lowest tiebreaker index', function () {
+        expect(view._columnViews.length).toEqual(3);
+        expect(view._columnHeights[0]).toEqual(0);
+        expect(view._columnHeights[1]).toEqual(0);
+        expect(view._columnHeights[2]).toEqual(0);
 
-    it('calls #fitColumns() when window is resized', function () {
-      $('#hub-MediaWallView').width(220*4); // 220px is the default width of content
-      view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
-      spyOn(view, 'debouncedRelayout');
-      $(window).trigger('resize');
-      expect(view._autoFitColumns).toBe(true);
-      expect(view.debouncedRelayout).toHaveBeenCalled();
-    });
+        view.add(content1);
+        view.views[0].$el.height('36px');
+        view._columnHeights[0] = 36;
+        expect(view._columnViews[0].views[0].content).toEqual(content1);
 
-    it('sets column width proportional to the media wall width', function () {
-      $('#hub-MediaWallView').width(12345);
-      view = new MediaWallView({el: $('#hub-MediaWallView').get(0), minContentWidth: 400});
-      expect(view._columnViews.length).toBe(parseInt(12345/400, 10));
-    });
-  });
+        view.add(content2);
+        view.views[1].$el.height('36px');
+        view._columnHeights[1] = 36;
+        expect(view._columnViews[1].views[0].content).toEqual(content2);
 
-  describe('when rendering', function () {
-    var view;
+        view.add(content3);
+        view.views[2].$el.height('36px');
+        view._columnHeights[2] = 36;
+        expect(view._columnViews[2].views[0].content).toEqual(content3);
+      });
 
-    beforeEach(function () {
-      setFixtures('<div id=\'hub-MediaWallView\'></div>');
-      $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
+      it('should select target column ContentView to write into', function () {
+        view.add(content3);
+        view.views[0].$el.height('500px');
+        view._columnHeights[0] = 500;
 
-      spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
-      view = new MediaWallView({
-        el: $('#hub-MediaWallView').get(0),
-        autoRender: false
+        view.add(content1);
+        view.views[1].$el.height('36px');
+        view._columnHeights[1] = 36;
+
+        view.add(content2);
+        view.views[2].$el.height('36px');
+        view._columnHeights[2] = 36;
+
+        view.add(content4);
+        view.views[1].$el.height('72px');
+        view._columnHeights[1] += 72;
+
+        view.add(content5);
+        view.views[2].$el.height('72px');
+        view._columnHeights[2] += 72;
+
+        expect(view._columnViews.length).toEqual(3);
+        expect(view._columnViews[0].views[0].content).toEqual(content4);
+        expect(view._columnViews[1].views[0].content).toEqual(content5);
+        expect(view._columnViews[2].views[0].content).toEqual(content2);
+        expect(view._columnViews[0].views[1].content).toEqual(content3);
+        expect(view._columnViews[1].views[1].content).toEqual(content1);
       });
     });
 
-    it('calls base #render and creates column views', function () {
-      expect(view._numberOfColumns).toBe(4);
-      expect(view._columnViews.length).toEqual(0);
-      view.render();
-      expect(view._columnViews.length).toEqual(view._numberOfColumns);
+    describe('when removing content', function () {
+      var view, content1, content2, content3;
+      beforeEach(function () {
+        setFixtures('<div id=\'hub-MediaWallView\'></div>');
+        $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
+        view = new MediaWallView({
+          el: $('#hub-MediaWallView').get(0),
+          pickColumn: MediaWallView.columnPickers.shortestColumn
+        });
+        content1 = new Content({body: 'what1'});
+        content2 = new Content({body: 'what2'});
+        content3 = new Content({body: 'what3'});
+        view.add(content3); // column1
+        view.views[0].$el.height('10px');
+        view._columnHeights[0] = 10;
+        view.add(content1); // column2
+        view.views[1].$el.height('10px');
+        view._columnHeights[1] = 10;
+        view.add(content2); // column3
+        view.views[2].$el.height('10px');
+        view._columnHeights[2] = 10;
+      });
 
-      view.render();
-      expect(view._numberOfColumns).toBe(4);
-      expect(view._columnViews.length).toEqual(view._numberOfColumns);
+      it('should remove the contentView from #views', function () {
+        expect(view.views.length).toEqual(3);
+        view.remove(content1);
+        expect(view.views.length).toEqual(2);
+      });
+
+      it('should remove the contentView from the appropriate column view', function () {
+        expect(view._columnViews[0].views.length).toEqual(1);
+        expect(view._columnViews[0].views[0].content.body).toEqual('what3');
+        view.remove(content3);
+        expect(view._columnViews[0].views.length).toEqual(0);
+      });
+    });
+  });
+});
+
+describe('auto fitting columns', function () {
+  var view;
+
+  beforeEach(function () {
+    setFixtures('<div id=\'hub-MediaWallView\'></div>');
+  });
+
+  it('calls #fitColumns() in constructor if no opts.columns specified', function () {
+    spyOn(MediaWallView.prototype, 'fitColumns');
+    $('#hub-MediaWallView').width(220 * 4); // 220px is the default width of content
+    view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
+    expect(view._autoFitColumns).toBe(true);
+    expect(MediaWallView.prototype.fitColumns).toHaveBeenCalled();
+  });
+
+  it('calls #fitColumns() when window is resized', function () {
+    $('#hub-MediaWallView').width(220 * 4); // 220px is the default width of content
+    view = new MediaWallView({el: $('#hub-MediaWallView').get(0)});
+    spyOn(view, 'debouncedRelayout');
+    $(window).trigger('resize');
+    expect(view._autoFitColumns).toBe(true);
+    expect(view.debouncedRelayout).toHaveBeenCalled();
+  });
+
+  it('sets column width proportional to the media wall width', function () {
+    $('#hub-MediaWallView').width(12345);
+    view = new MediaWallView({el: $('#hub-MediaWallView').get(0), minContentWidth: 400});
+    expect(view._columnViews.length).toBe(parseInt(12345 / 400, 10));
+  });
+});
+
+describe('when rendering', function () {
+  var view;
+
+  beforeEach(function () {
+    setFixtures('<div id=\'hub-MediaWallView\'></div>');
+    $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
+
+    spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
+    view = new MediaWallView({
+      el: $('#hub-MediaWallView').get(0),
+      autoRender: false
     });
   });
 
-  describe('when relayouting', function () {
-    var view;
+  it('calls base #render and creates column views', function () {
+    expect(view._numberOfColumns).toBe(4);
+    expect(view._columnViews.length).toEqual(0);
+    view.render();
+    expect(view._columnViews.length).toEqual(view._numberOfColumns);
 
-    beforeEach(function () {
-      setFixtures('<div id=\'hub-MediaWallView\'></div>');
-      $('#hub-MediaWallView').width(300*4); // 220px is the default width of content
-      spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
-      view = new MediaWallView({
-        el: $('#hub-MediaWallView').get(0)
-      });
-    });
+    view.render();
+    expect(view._numberOfColumns).toBe(4);
+    expect(view._columnViews.length).toEqual(view._numberOfColumns);
+  });
+});
 
-    it('expects child views to retain their event handlers (e.g. TiledAttachmentListView.el)', function () {
-      expect(view._numberOfColumns).toBe(4);
-      spyOn(MediaWallView.prototype, '_clearColumns').and.callThrough();
-      spyOn(MediaWallView.prototype, '_createColumnView').and.callThrough();
-      view.relayout();
-      expect(MediaWallView.prototype._clearColumns).toHaveBeenCalled();
-      expect(MediaWallView.prototype._createColumnView.calls.count()).toBe(view._numberOfColumns);
+describe('when relayouting', function () {
+  var view;
+
+  beforeEach(function () {
+    setFixtures('<div id=\'hub-MediaWallView\'></div>');
+    $('#hub-MediaWallView').width(300 * 4); // 220px is the default width of content
+    spyOn(MediaWallView.prototype, 'fitColumns').and.callThrough();
+    view = new MediaWallView({
+      el: $('#hub-MediaWallView').get(0)
     });
+  });
+
+  it('expects child views to retain their event handlers (e.g. TiledAttachmentListView.el)', function () {
+    expect(view._numberOfColumns).toBe(4);
+    spyOn(MediaWallView.prototype, '_clearColumns').and.callThrough();
+    spyOn(MediaWallView.prototype, '_createColumnView').and.callThrough();
+    view.relayout();
+    expect(MediaWallView.prototype._clearColumns).toHaveBeenCalled();
+    expect(MediaWallView.prototype._createColumnView.calls.count()).toBe(view._numberOfColumns);
   });
 });

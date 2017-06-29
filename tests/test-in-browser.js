@@ -68,8 +68,8 @@ function (jasmine, jasmineRequire, jasmineHtml, $) {
     'tests/spec/wall-component',
     'tests/spec/main',
     'tests/spec/wall-header-view'
-  ], function (){
-    $(function (){
+  ], function () {
+    $(function () {
       htmlReporter.initialize();
       env.execute();
     });
@@ -79,7 +79,9 @@ function (jasmine, jasmineRequire, jasmineHtml, $) {
      * Helper function for readability above.
      */
   function extend(destination, source) {
-    for (var property in source) destination[property] = source[property];
+    for (var property in source) {
+      destination[property] = source[property];
+    }
     return destination;
   }
 
