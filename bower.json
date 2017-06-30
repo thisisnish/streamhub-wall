@@ -39,6 +39,6 @@
     "streamhub-ui": "0.4.6",
     "view": "1.4.1",
     "streamhub-sdk": "2.27.13",
-    "streamhub-share": "0.5.0"
+    "streamhub-share": "0.5.1"
   }
 }
