@@ -218,6 +218,7 @@ define([
    */
   MediaWallView.prototype.createContentView = function (content) {
     return this.contentViewFactory.createContentView(content, {
+      hideSocialBrandingWithRights: this.opts.hideSocialBrandingWithRights,
       liker: this._liker,
       productOptions: this.opts.productOptions,
       sharer: this._sharer,
@@ -324,11 +325,12 @@ define([
       return;
     }
     var columnView = new ContentListView({
-      maxVisibleItems: this._getMaxVisibleItemsForColumn(),
-      stash: this.more,
       animate: this._animate,
+      autoRender: false,
+      hideSocialBrandingWithRights: this.opts.hideSocialBrandingWithRights,
+      maxVisibleItems: this._getMaxVisibleItemsForColumn(),
       modal: this.modal,
-      autoRender: false
+      stash: this.more
     });
     columnView.$el.addClass(this.columnClassName);
     return columnView;

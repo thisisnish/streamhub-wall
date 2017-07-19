@@ -1,6 +1,6 @@
 {
   "name": "streamhub-wall",
-  "version": "6.0.11",
+  "version": "6.0.14",
   "main": [
     "./src/main.js"
   ],
@@ -12,7 +12,7 @@
     "node-tiny-uuid": "git://github.com/RiveraGroup/node-tiny-uuid.git#ea7f741c9ad912d8ad2201b25fe9f5d945206386",
     "rework": "gobengo/rework#~0.21.0",
     "streamhub-input": "Livefyre/streamhub-input#0.10.2",
-    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.27.12"
+    "streamhub-sdk": "git://github.com/Livefyre/streamhub-sdk.git#2.27.15"
   },
   "devDependencies": {
     "almond": "~0.2.9",
@@ -38,7 +38,7 @@
     "mout": "0.11.1",
     "streamhub-ui": "0.4.6",
     "view": "1.4.1",
-    "streamhub-sdk": "2.27.12",
-    "streamhub-share": "0.5.0"
+    "streamhub-sdk": "2.27.15",
+    "streamhub-share": "0.5.1"
   }
 }
