@@ -7,7 +7,7 @@ var Passthrough = require('stream/passthrough');
 var themableCss = require('text!streamhub-wall/styles/theme.css');
 var WallView = require('./wall-view');
 var WallHeaderView = require('./wall-header-view');
-require('less!streamhub-wall/styles/wall-component');
+require('less!./styles/wall-component.less');
 
 var xsmallTheme = require('streamhub-wall/themes/xsmall');
 var smallTheme = require('streamhub-wall/themes/small');
@@ -310,12 +310,15 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
 WallComponent.prototype._initializeWallView = function (opts) {
   this._wallView = opts.wallView || new WallView({
     autoRender: false,
+    collection: this._collection,
     columns: opts.columns,
+    hideSocialBrandingWithRights: opts.hideSocialBrandingWithRights,
     initial: opts.initial,
     liker: opts.liker,
     minContentWidth: opts.minContentWidth,
     modal: opts.modal,
     pickColumn: opts.pickColumn,
+    productOptions: opts.productOptions,
     sharer: opts.sharer,
     showMore: opts.showMore
   });

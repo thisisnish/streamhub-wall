@@ -19,7 +19,8 @@ require.config({
     'livefyre-package-attribute': 'node_modules/livefyre-package-attribute/src/main',
     'node-uuid': 'lib/node-tiny-uuid/index',
     'tinycolor': 'lib/tinycolor/tinycolor',
-    urnlib: 'lib/urnlib.js/index'
+    urnlib: 'lib/urnlib.js/index',
+    'js-truncate-html': 'lib/js-truncate-html/src/js-truncate-html'
   },
   packages: [{
     name: 'streamhub-wall',
