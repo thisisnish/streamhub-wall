@@ -32,6 +32,7 @@ define([
     this._numberOfColumns = null;
     this._animate = opts.animate === undefined ? true : opts.animate;
     this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.roundRobin;
+    this._constrainAttachmentsByWidth = opts.constrainAttachmentsByWidth || false;
 
     this.debouncedRelayout = debounce(function () {
       var numColumnsChanged = self.fitColumns();
@@ -199,6 +200,10 @@ define([
     this.$el
       .addClass(this.mediaWallClassName)
       .addClass('streamhub-media-wall-' + this._id);
+
+    if (this._constrainAttachmentsByWidth) {
+      this.$el.addClass('content-fit-to-width');
+    }
 
     // If you're changing to a new element, it could have diff dimensions
     // and thus need a diff number of columns
