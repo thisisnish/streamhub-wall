@@ -7,6 +7,7 @@ article.content a.content-author-name {
     color: var(--linkColor);
 }
 article.content .content-body,
+article.content .content-body p,
 article.content .content-author-name {
     color: var(--textColor);
 }
@@ -26,7 +27,8 @@ article.content .content-author-username,
 article.content .content-author-username a {
     color: var(--usernameColor);
 }
-article.content .content-body {
+article.content .content-body,
+article.content .content-body p {
     font-family: var(--fontFamily);
 }
 article.content .content-source-logo {
