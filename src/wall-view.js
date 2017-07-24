@@ -77,6 +77,7 @@ define([
 
   MediaWallView.prototype.mediaWallClassName = 'streamhub-media-wall-view';
   MediaWallView.prototype.columnClassName = 'hub-wall-column';
+  MediaWallView.prototype.fitToWidthClassName ='content-fit-to-width';
 
   MediaWallView.columnPickers = {
     roundRobin: function (contentView, forcedIndex) {
@@ -202,7 +203,7 @@ define([
       .addClass('streamhub-media-wall-' + this._id);
 
     if (this._constrainAttachmentsByWidth) {
-      this.$el.addClass('content-fit-to-width');
+      this.$el.addClass(this.fitToWidthClassName);
     }
 
     // If you're changing to a new element, it could have diff dimensions
