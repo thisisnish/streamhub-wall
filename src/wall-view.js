@@ -77,7 +77,7 @@ define([
 
   MediaWallView.prototype.mediaWallClassName = 'streamhub-media-wall-view';
   MediaWallView.prototype.columnClassName = 'hub-wall-column';
-  MediaWallView.prototype.fitToWidthClassName ='content-fit-to-width';
+  MediaWallView.prototype.fitToWidthClassName = 'content-fit-to-width';
 
   MediaWallView.columnPickers = {
     roundRobin: function (contentView, forcedIndex) {
