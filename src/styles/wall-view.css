@@ -24,6 +24,6 @@
     background-image: none!important;
 }
 
-.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed .content-attachment-photo .content-attachment-actual-image {
+.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed:first-child .content-attachment-photo .content-attachment-actual-image {
     display: block!important;
 }
