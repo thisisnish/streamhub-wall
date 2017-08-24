@@ -9,5 +9,5 @@ deploy:
   lfcdn:
     env: prod
     versionSuffix: true
-  appService: {}
+  appService: true
 ''')
