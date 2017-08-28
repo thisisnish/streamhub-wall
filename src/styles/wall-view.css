@@ -10,13 +10,13 @@
     box-sizing: border-box;
     padding: 5px; }
 
-.streamhub-media-wall-view .content-tumblr .content-attachments-stacked {
+.streamhub-media-wall-view .content-tumblr .content-attachments-stacked,
+.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed {
     display: none;
 }
 
-.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed .content-attachment-square-tile {
-    padding-bottom: 0px;
-    height: 100%;
+.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed:first-child {
+    display: block;
 }
 
 .streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed .content-attachment-photo {
@@ -24,6 +24,6 @@
     background-image: none!important;
 }
 
-.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed .content-attachment-photo .content-attachment-actual-image {
+.streamhub-media-wall-view.content-fit-to-width .hub-list .hub-content-container .oembed:first-child .content-attachment-photo .content-attachment-actual-image {
     display: block!important;
 }
