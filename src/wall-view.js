@@ -327,6 +327,7 @@ define([
     var columnView = new ContentListView({
       animate: this._animate,
       autoRender: false,
+      comparator: this.comparator,
       hideSocialBrandingWithRights: this.opts.hideSocialBrandingWithRights,
       maxVisibleItems: this._getMaxVisibleItemsForColumn(),
       modal: this.modal,
