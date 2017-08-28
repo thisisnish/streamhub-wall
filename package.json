@@ -40,6 +40,6 @@
   },
   "lfeslint": {
     "global": ["spyOn", "$", "expect", "define", "jasmine", "jasmineJquery", "requirejs", "setFixtures"],
-    "ignore": ["lib/**", "tools/build.conf.js"]
+    "ignore": ["examples/**", "lib/**", "tools/build.conf.js", "requirejs.conf.js"]
   }
 }
