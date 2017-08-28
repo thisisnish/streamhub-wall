@@ -6,8 +6,6 @@ deploy:
   git: true
   commands:
     - make clean dist
-  lfcdn:
-    env: prod
-    versionSuffix: true
+  lfcdn: {}
   appService: true
 ''')
