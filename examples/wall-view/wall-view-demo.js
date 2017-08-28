@@ -9,8 +9,8 @@ require([
   'streamhub-sdk/auth',
   'streamhub-wall/wall-view',
   'streamhub-wall/package-attribute'
-],function (auth, createAuthButton, livefyreAuthDelegate, debug,
-$, Collection, Content, Auth, WallView, packageAttribute) {
+], function (auth, createAuthButton, livefyreAuthDelegate, debug,
+  $, Collection, Content, Auth, WallView, packageAttribute) {
   window.auth = auth;
 
   createAuthButton(auth, document.getElementById('auth-button'));
@@ -54,6 +54,7 @@ $, Collection, Content, Auth, WallView, packageAttribute) {
     sharer: function (content) {
       console.log('share', content);
     },
+    constrainAttachmentsByWidth: true,
     productDetailPhotoShow: true,
     productDetailTitleShow: true,
     productDetailPriceShow: true,

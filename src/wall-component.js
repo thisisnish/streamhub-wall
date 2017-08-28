@@ -196,8 +196,8 @@ WallComponent.prototype.enteredView = function () {
   this._wallView.relayout();
 };
 
-WallComponent.prototype.delegateEvents = function () {};
-WallComponent.prototype.undelegateEvents = function () {};
+WallComponent.prototype.delegateEvents = function () { };
+WallComponent.prototype.undelegateEvents = function () { };
 
 /**
  * Clean up things and null out references.
@@ -305,6 +305,7 @@ WallComponent.prototype._initializeWallView = function (opts) {
     autoRender: false,
     collection: this._collection,
     columns: opts.columns,
+    constrainAttachmentsByWidth: opts.constrainAttachmentsByWidth,
     hideSocialBrandingWithRights: opts.hideSocialBrandingWithRights,
     initial: opts.initial,
     liker: opts.liker,
@@ -336,12 +337,12 @@ WallComponent.prototype.render = function () {
   var el = this.el;
   var subviews = [this._headerView, this._wallView];
 
-    // Clear children
+  // Clear children
   while (el.firstChild) {
     el.removeChild(el.firstChild);
   }
 
-    // append container and subviews
+  // append container and subviews
   var container = document.createElement('div');
   $(container).addClass('streamhub-wall-component');
   var frag = document.createDocumentFragment();
