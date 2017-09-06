@@ -7,5 +7,5 @@ deploy:
   commands:
     - make clean dist
   lfcdn: {}
-  appService: true
+  appService: {}
 ''')
