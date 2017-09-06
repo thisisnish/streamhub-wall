@@ -1,5 +1,0 @@
-language: node_js
-node_js:
-  - "0.10"
-env:
-  - bower_storage__packages=bowercache bower_tmp=bowercachetmp
