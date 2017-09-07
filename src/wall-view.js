@@ -32,6 +32,7 @@ define([
     this._numberOfColumns = null;
     this._animate = opts.animate === undefined ? true : opts.animate;
     this._pickColumnIndex = opts.pickColumn || MediaWallView.columnPickers.roundRobin;
+    this._constrainAttachmentsByWidth = opts.constrainAttachmentsByWidth || false;
 
     this.debouncedRelayout = debounce(function () {
       var numColumnsChanged = self.fitColumns();
@@ -76,6 +77,7 @@ define([
 
   MediaWallView.prototype.mediaWallClassName = 'streamhub-media-wall-view';
   MediaWallView.prototype.columnClassName = 'hub-wall-column';
+  MediaWallView.prototype.fitToWidthClassName = 'content-fit-to-width';
 
   MediaWallView.columnPickers = {
     roundRobin: function (contentView, forcedIndex) {
@@ -199,6 +201,10 @@ define([
     this.$el
       .addClass(this.mediaWallClassName)
       .addClass('streamhub-media-wall-' + this._id);
+
+    if (this._constrainAttachmentsByWidth) {
+      this.$el.addClass(this.fitToWidthClassName);
+    }
 
     // If you're changing to a new element, it could have diff dimensions
     // and thus need a diff number of columns
@@ -327,6 +333,7 @@ define([
     var columnView = new ContentListView({
       animate: this._animate,
       autoRender: false,
+      comparator: this.comparator,
       hideSocialBrandingWithRights: this.opts.hideSocialBrandingWithRights,
       maxVisibleItems: this._getMaxVisibleItemsForColumn(),
       modal: this.modal,

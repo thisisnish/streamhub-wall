@@ -95,10 +95,10 @@ describe('A MediaWallComponent', function () {
       var trials = [{
         postButton: 'content',
         buttonHasClass: 'lf-comment-btn'
-      },{
+      }, {
         postButton: 'photo',
         buttonHasClass: 'lf-hub-upload-btn'
-      },{
+      }, {
         postButton: 'contentWithPhoto',
         buttonHasClass: 'lf-comment-btn'
       }];
