@@ -4,11 +4,19 @@
  * @enum {string}
  */
 module.exports = {
+  audio: 'audio',
+  audioAndPhotos: 'audioAndPhoto',
+  audioAndPhotosAndVideos: 'audioAndPhotoAndVideo',
+  audioAndVideos: 'audioAndVideo',
   content: 'content',
+  contentWithAudio: 'contentWithAudio',
+  contentWithAudioAndPhotos: 'contentWithAudioAndPhoto',
+  contentWithAudioAndPhotosAndVideos: 'contentWithAudioAndPhotoAndVideo',
+  contentWithAudioAndVideos: 'contentWithAudioAndVideo',
   contentWithPhotos: 'contentWithPhoto',
-  photo: 'photo',
-  contentWithVideos: 'contentWithVideo',
-  video: 'video',
   contentWithPhotosAndVideos: 'contentWithPhotoAndVideo',
-  photosAndVideos: 'photoAndVideo'
+  contentWithVideos: 'contentWithVideo',
+  photo: 'photo',
+  photosAndVideos: 'photoAndVideo',
+  video: 'video'
 };

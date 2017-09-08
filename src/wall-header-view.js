@@ -144,10 +144,11 @@ function getEditorButtonStyles(opts) {
  * @type {Object<string, Array>}
  */
 WallHeaderView.mimetypes = {
+  audio: [],
+  photo: ['image/*'],
   video: ['video/avi', 'video/mp4', 'video/x-ms-wmv', 'video/x-ms-asf', 'video/x-msvideo',
     'video/mpeg', 'video/quicktime', 'video/x-qtc', 'video/x-dv', 'video/x-m4v',
-    'video/3gpp', 'video/3gpp2', 'video/webm', 'video/ogg'],
-  photo: ['image/*']
+    'video/3gpp', 'video/3gpp2', 'video/webm', 'video/ogg']
 };
 
 /**
@@ -158,8 +159,9 @@ WallHeaderView.mimetypes = {
 WallHeaderView.prototype._createPostButton = function (kind) {
   var button;
   var self = this;
-  var videoMimeTypes = WallHeaderView.mimetypes.video;
+  var audioMimeTypes = WallHeaderView.mimetypes.audio;
   var photoMimeTypes = WallHeaderView.mimetypes.photo;
+  var videoMimeTypes = WallHeaderView.mimetypes.video;
   var postConfig = this.opts.postConfig || {};
   postConfig.maxAttachmentsPerPost = postConfig.maxAttachmentsPerPost || 1;
 
@@ -173,29 +175,22 @@ WallHeaderView.prototype._createPostButton = function (kind) {
     });
   }
 
-  switch (kind) {
-    case postButtons.photo:
-      button = makeUploadButton(this.opts, photoMimeTypes);
-      break;
-    case postButtons.video:
-      button = makeUploadButton(this.opts, videoMimeTypes);
-      break;
-    case postButtons.photosAndVideos:
-      button = makeUploadButton(this.opts, videoMimeTypes.concat(photoMimeTypes));
-      break;
-    case postButtons.content:
-      button = createEditorButton(false);
-      break;
-    case postButtons.contentWithVideos:
-      button = createEditorButton(true, videoMimeTypes);
-      break;
-    case postButtons.contentWithPhotosAndVideos:
-      button = createEditorButton(true, videoMimeTypes.concat(photoMimeTypes));
-      break;
-    case postButtons.contentWithPhotos:
-    case true:
-      button = createEditorButton(true, photoMimeTypes);
-      break;
+  if (kind === true) {
+    return createEditorButton(true, photoMimeTypes);
+  }
+
+  var mimeTypes = [];
+  ['audio', 'photo', 'video'].forEach(function (media) {
+    if (kind.toLowerCase().indexOf(media) > -1) {
+      mimeTypes = mimeTypes.concat(MIMETYPES[media]);
+    }
+  });
+
+  if (kind.indexOf('content') > -1) {
+    return createEditorButton(!!mimeTypes.length, mimeTypes);
+  }
+  if (mimeTypes.length) {
+    return makeUploadButton(this.opts, mimeTypes);
   }
 
   // Create a Modal that will add the streamhub-wall#vN attribute
