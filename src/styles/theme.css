@@ -1,10 +1,10 @@
 article.content {
     background-color: var(--cardBackgroundColor);
 }
-article.content a,
+article.content a:not(.content-source-logo),
 article.content .content-byline .content-author-name a,
 article.content a.content-author-name {
-    color: var(--linkColor);
+    color: var(--linkColor) !important;
 }
 article.content .content-body,
 article.content .content-body p,
