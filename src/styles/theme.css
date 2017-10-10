@@ -4,6 +4,7 @@ article.content {
 article.content a {
     color: var(--linkColor);
 }
+article.content .content-body a,
 article.content .content-byline .content-author-name a,
 article.content a.content-author-name {
     color: var(--linkColor) !important;
