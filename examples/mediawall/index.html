@@ -90,6 +90,12 @@
                 articleId: 'designer-app-1495575581781'
             };
 
+            var wmgCollection = {
+                "network": "wmg.fyre.co",
+                "siteId": "365222",
+                "articleId": "designer-app-1510608384052"
+            }
+
             // Content broke constrainAttachments
             var owl = {
                 "articleId": "designer-app-1502217876516",
@@ -108,19 +114,20 @@
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
-                collection: owl,
+                collection: wmgCollection,
+                initial: 20,
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
-                shareButtonText: 'derp',
-                productDetailShow: 'phototitleprice',
-                showProduct: true,
+                //shareButtonText: 'derp',
+                //productDetailShow: 'phototitleprice',
+                //showProduct: true,
                 constrainAttachmentsByWidth: true,
                 productAnalytics: {
                     cid: 'test:{source}:{contentId}',
                     another: 'more'
                 },
-                productAnalyticsEnabled: true,
-                productRequiresRightsGranted: false
+                //productAnalyticsEnabled: true,
+                //productRequiresRightsGranted: false
             });
 
             view.render();
