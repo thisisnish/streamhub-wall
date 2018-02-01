@@ -6,6 +6,9 @@ deploy:
   git: true
   commands:
     - make clean dist
-  lfcdn: {}
+  lfcdn:
+    maxAge:
+      rc: 100
+      staging: 600
   appService: {}
 ''')
