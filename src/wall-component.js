@@ -306,6 +306,7 @@ WallComponent.prototype._initializeWallView = function (opts) {
     collection: this._collection,
     columns: opts.columns,
     constrainAttachmentsByWidth: opts.constrainAttachmentsByWidth,
+    doNotTrack: opts.doNotTrack,
     hideSocialBrandingWithRights: opts.hideSocialBrandingWithRights,
     initial: opts.initial,
     liker: opts.liker,
