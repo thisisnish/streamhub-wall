@@ -224,6 +224,7 @@ define([
    */
   MediaWallView.prototype.createContentView = function (content) {
     return this.contentViewFactory.createContentView(content, {
+      doNotTrack: this.opts.doNotTrack,
       hideSocialBrandingWithRights: this.opts.hideSocialBrandingWithRights,
       liker: this._liker,
       productOptions: this.opts.productOptions,
