@@ -302,10 +302,12 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
  */
 WallComponent.prototype._initializeWallView = function (opts) {
   this._wallView = opts.wallView || new WallView({
+    animate: opts.animate,
     autoRender: false,
     collection: this._collection,
     columns: opts.columns,
     constrainAttachmentsByWidth: opts.constrainAttachmentsByWidth,
+    doNotTrack: opts.doNotTrack,
     hideSocialBrandingWithRights: opts.hideSocialBrandingWithRights,
     initial: opts.initial,
     liker: opts.liker,
