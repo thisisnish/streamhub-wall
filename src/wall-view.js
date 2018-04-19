@@ -406,6 +406,9 @@ define([
     if (opts.columns) {
       this._autoFitColumns = false;
       this.setColumns(opts.columns);
+    } else if (opts.columns === null) {
+      this._autoFitColumns = true;
+      this.fitColumns();
     } else if (this._autoFitColumns) {
       this.fitColumns();
     }
