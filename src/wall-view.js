@@ -57,7 +57,10 @@ define([
     if (this.modal) {
       // Patch the modal so that it has the right package selector when it
       // is shown (like data-lf-package="streamhub-wall#3.0.0")
-      packageAttribute.decorateModal(this.modal);
+      packageAttribute.decorateModal(this.modal, {
+        appIdKey: opts.appIdKey,
+        appIdValue: opts.appIdValue
+      });
     }
 
     this._onWindowResize = function (e) {

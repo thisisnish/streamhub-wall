@@ -303,6 +303,8 @@ WallComponent.prototype._initializeHeaderView = function (opts) {
 WallComponent.prototype._initializeWallView = function (opts) {
   this._wallView = opts.wallView || new WallView({
     animate: opts.animate,
+    appIdKey: this.getPrefix(),
+    appIdValue: this._uuid,
     autoRender: false,
     collection: this._collection,
     columns: opts.columns,
