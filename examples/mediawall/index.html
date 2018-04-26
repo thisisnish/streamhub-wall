@@ -90,11 +90,12 @@
                 articleId: 'designer-app-1495575581781'
             };
 
-            var wmgCollection = {
-                "network": "wmg.fyre.co",
-                "siteId": "365222",
-                "articleId": "designer-app-1510608384052"
-            }
+            var basicCtas = {
+                env: 'qa-ext.livefyre.com',
+                network: "build-validator-qa-s2.fyre.co",
+                siteId: '291417',
+                articleId: 'designer-app-1521743953387'
+            };
 
             // Content broke constrainAttachments
             var owl = {
@@ -114,7 +115,7 @@
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
-                collection: wmgCollection,
+                collection: basicCtas,
                 initial: 20,
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
