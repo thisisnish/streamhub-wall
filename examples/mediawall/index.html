@@ -32,7 +32,7 @@
             'streamhub-wall',
             'auth'
         ], function (Collection, Content, LiveMediaWall, auth) {
-            auth.delegate({ login: function () { } });
+            auth.delegate({login: function () {}});
 
             // var opts = {
             //   network: 'build-validator-qa-s2.fyre.co',
@@ -109,13 +109,24 @@
                 "objectMode": true
             };
 
+            var instagramVideos = {
+                "articleId": "designer-app-1528739440705",
+                "environment": "qa-ext.livefyre.com",
+                "id": "2900882",
+                "network": "build-validator-qa-s2.fyre.co",
+                "siteId": 291417,
+                "title": "Instagram Videos",
+                "url": "http://designer-app.livefyre.com/app/1528739440705",
+                "objectMode": true
+            };
+
             document.body.addEventListener('insights', function (data) {
                 console.log('Received:', data.detail.type, data);
             });
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
-                collection: basicCtas,
+                collection: instagramVideos,
                 initial: 20,
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
