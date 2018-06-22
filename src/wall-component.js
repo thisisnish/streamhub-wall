@@ -114,10 +114,10 @@ WallComponent.prototype.configureInternal = function (configOpts) {
   }
 
   if ('columns' in configOpts) {
-    this.opts.columns = configOpts.columns;
-    this._wallView.relayout({
-      columns: configOpts.columns
-    });
+    var columns = parseInt(configOpts.columns, 10);
+    columns = isNaN(columns) ? null : columns;
+    this.opts.columns = columns;
+    this._wallView.relayout({columns: columns});
   }
 
   if ('initial' in configOpts) {
