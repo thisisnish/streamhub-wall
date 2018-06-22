@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 </head>
-    <body>
-        <div>
-            <button id="auth-button">Log in</button>
-        </div>
-        <div id="container">
-            <div id="listView"></div>
-        </div>
 
-        <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
-        <script src="/requirejs.conf.js" type="text/javascript"></script>
-        <script>
+<body>
+    <div>
+        <button id="auth-button">Log in</button>
+    </div>
+    <div id="container">
+        <div id="listView"></div>
+    </div>
+
+    <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
+    <script src="/requirejs.conf.js" type="text/javascript"></script>
+    <script>
         requirejs.config({
             baseUrl: '../../',
             deps: ['examples/wall-view/wall-view-demo']
         });
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>
