@@ -45,7 +45,7 @@ require([
         siteId: '291364',
         articleId: 'designer-app-1487964533074'
       },
-      { // basic ctas
+      { // basic ctas (4)
         env: 'qa-ext.livefyre.com',
         network: 'qa-blank.fyre.co',
         siteId: '2873029',

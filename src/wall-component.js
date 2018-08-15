@@ -196,8 +196,8 @@ WallComponent.prototype.enteredView = function () {
   this._wallView.relayout();
 };
 
-WallComponent.prototype.delegateEvents = function () { };
-WallComponent.prototype.undelegateEvents = function () { };
+WallComponent.prototype.delegateEvents = function () {};
+WallComponent.prototype.undelegateEvents = function () {};
 
 /**
  * Clean up things and null out references.
@@ -316,7 +316,8 @@ WallComponent.prototype._initializeWallView = function (opts) {
     pickColumn: opts.pickColumn,
     productOptions: opts.productOptions,
     sharer: opts.sharer,
-    showMore: opts.showMore
+    showMore: opts.showMore,
+    showCTA: opts.showCTA
   });
 
   this.pipe(this._wallView);
