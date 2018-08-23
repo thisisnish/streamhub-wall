@@ -1,43 +1,61 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
-    body {
-        font-family: sans-serif;
-        font-size: 14px;
-        line-height: 18px;
-    }
+        body {
+            font-family: sans-serif;
+            font-size: 14px;
+            line-height: 18px;
+        }
     </style>
+    <script src="https://cdn.livefyre.com/Livefyre.js"></script>
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <script src="https://cdn.livefyre.com/libs/livefyre-auth/0.1.0/livefyre-auth.min.js"></script>
-    <script src="https://cdn.livefyre.com/libs/sdk/v2.13.5/streamhub-sdk.min.js"></script>
-    <script src="../../dist/streamhub-wall.min.js"></script>
 </head>
-    <body>
-        
-        <div id="wall"></div>
 
-        <script>
-        (function () {
-            var SDK = Livefyre.require('streamhub-sdk');
-            var LiveMediaWall = Livefyre.require('streamhub-wall');
-            var auth = Livefyre.auth;
+<body>
 
-            auth.delegate(auth.createDelegate('http://livefyre.com'));
+    <div id="wall"></div>
 
-            var collection = new (SDK.Collection)({
-                "network": "livefyre.com",
-                "siteId": "313878",
-                "articleId": "1",
-                "environment": "livefyre.com"
-            });
-            
+    <script>
+        var qaAudio = {
+            "articleId": "designer-app-1530295880542",
+            "environment": "qa-ext.livefyre.com",
+            "id": "2903029",
+            "network": "rainforest-lfep-qa.fyre.co",
+            "siteId": 291361,
+            "title": "audio test",
+            "url": "http://designer-app.livefyre.com/app/1530295880542"
+        }
+
+        Livefyre.require(['../../dist/streamhub-wall.min.js'], function (LiveMediaWall) {
+            //auth.delegate(auth.createDelegate('http://livefyre.com'));
+
+            //var collection = new (SDK.Collection)(qaAudio);
+
             var wall = window.wall = new LiveMediaWall({
                 el: document.getElementById("wall"),
-                collection: collection,
-                postButton: true
+                collection: qaAudio,
+                initial: 20,
+                postButton: 'content',
+                showMoreButtonText: 'get more sucka',
+                showCTA: true,
+                //shareButtonText: 'derp',
+                //productDetailShow: 'phototitleprice',
+                //showProduct: true,
+                constrainAttachmentsByWidth: true,
+                productAnalytics: {
+                    cid: 'test:{source}:{contentId}',
+                    another: 'more'
+                },
+                //productAnalyticsEnabled: true,
+                //productRequiresRightsGranted: false
             });
-        }());
-        </script>
-    </body>
+        });
+
+
+    </script>
+</body>
+
 </html>
