@@ -50,6 +50,15 @@ require([
         network: 'qa-blank.fyre.co',
         siteId: '2873029',
         articleId: 'designer-app-1521743953387'
+      },
+      {
+        "articleId": "designer-app-1530295880542",
+        "environment": "qa-ext.livefyre.com",
+        "id": "2903029",
+        "network": "rainforest-lfep-qa.fyre.co",
+        "siteId": 291361,
+        "title": "audio test",
+        "url": "http://designer-app.livefyre.com/app/1530295880542"
       }
     ];
 
