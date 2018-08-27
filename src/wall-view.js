@@ -229,6 +229,7 @@ define([
       liker: this._liker,
       productOptions: this.opts.productOptions,
       sharer: this._sharer,
+      showCTA: this.opts.showCTA,
       spectrum: true
     });
   };

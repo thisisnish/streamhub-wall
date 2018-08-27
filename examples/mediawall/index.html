@@ -97,6 +97,27 @@
                 articleId: 'designer-app-1521743953387'
             };
 
+            var qaCta = {
+                "articleId": "designer-app-1532373101658",
+                "environment": "qa-ext.livefyre.com",
+                "id": "2904841",
+                "network": "build-validator-qa-s2.fyre.co",
+                "siteId": 291226,
+                "title": "Mediawall breadth test 7-23-2018_1156",
+                "url": "http://designer-app.livefyre.com/app/1532373101658",
+                "objectMode": true
+            }
+
+            var qaAudio = {
+                "articleId": "designer-app-1530295880542",
+                "environment": "qa-ext.livefyre.com",
+                "id": "2903029",
+                "network": "rainforest-lfep-qa.fyre.co",
+                "siteId": 291361,
+                "title": "audio test",
+                "url": "http://designer-app.livefyre.com/app/1530295880542"
+            }
+
             // Content broke constrainAttachments
             var owl = {
                 "articleId": "designer-app-1502217876516",
@@ -126,10 +147,11 @@
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
-                collection: instagramVideos,
+                collection: qaAudio,
                 initial: 20,
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
+                showCTA: true,
                 //shareButtonText: 'derp',
                 //productDetailShow: 'phototitleprice',
                 //showProduct: true,
