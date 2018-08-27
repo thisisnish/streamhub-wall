@@ -24,3 +24,18 @@
 .call-to-action-popover { 
   z-index: 1; // Prevents other cards from rendering over popover
 }
+
+.content-fit-to-width {
+  .content-default.content-with-image .content-attachment .content-attachment-audio-thumbnail.fycon-audiowave { 
+    height: 310px;
+    
+    &::before {
+      transform: unset;
+      top: 88px;
+    }
+  }
+}
+
+.content-attachment-audio.fycon-audiowave{
+  display: none;
+}
