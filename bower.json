@@ -38,7 +38,6 @@
     "streamhub-sdk": "~2.35.0",
     "streamhub-ui": "0.4.6",
     "view": "1.4.1",
-    "activity-streams-vocabulary": "0.0.7",
-    "insights-emitter": "0.0.16"
+    "streamhub-share": "0.5.2"
   }
 }
