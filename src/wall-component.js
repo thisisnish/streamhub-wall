@@ -55,6 +55,8 @@ var WallComponent = module.exports = function (opts) {
 inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, AppBase);
 
+WallComponent.prototype.elTag = 'div';
+
 /**
  * Map of theme size to theme object.
  * @enum {Object}
