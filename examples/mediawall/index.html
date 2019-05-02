@@ -141,13 +141,24 @@
                 "objectMode": true
             };
 
+            var instagramCdn = {
+                articleId: "designer-app-1547614290934",
+                environment: "livefyre.com",
+                id: "241041112",
+                network: "adobeapac.fyre.co",
+                objectMode: true,
+                siteId: 386018,
+                title: "GWC All | 5 Column",
+                url: "http://designer-app.livefyre.com/app/1547614290934"
+            }
+
             document.body.addEventListener('insights', function (data) {
                 console.log('Received:', data.detail.type, data);
             });
 
             var view = window.view = new LiveMediaWall({
                 el: document.getElementById("view"),
-                collection: qaCta,
+                collection: instagramCdn,
                 initial: 20,
                 postButton: 'content',
                 showMoreButtonText: 'get more sucka',
