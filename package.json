@@ -11,6 +11,7 @@
     "gulp-nodemon": "1.0.4",
     "gulp-rework": "~1.0.2",
     "gulp-util": "*",
+    "http-server": "*",
     "jasmine-core": "^2.3.4",
     "jasmine-jquery": "^2.1.0",
     "jsdoc": "git://github.com/jsdoc3/jsdoc.git",
